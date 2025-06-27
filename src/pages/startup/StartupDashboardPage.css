@@ -277,6 +277,12 @@
   font-weight: 600;
 }
 
+/* Ensure the "Close" button in the finish sprint modal is black */
+.dashboard-modal-btn[variant="secondary"],
+.dashboard-modal-btn.secondary {
+  color: #111 !important;
+}
+
 @media (max-width: 480px) {
   .dashboard-modal {
     padding: 24px 8px 20px 8px;

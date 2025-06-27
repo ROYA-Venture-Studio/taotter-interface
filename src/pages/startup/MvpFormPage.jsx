@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Button, Input, TextArea, Select, RadioButton, BudgetSlider, Icon } from '../../components/ui'
+import { Button, Input, TextArea, Select, RadioButton, Icon } from '../../components/ui'
 import section1Image from '../../assets/images/section1.png'
 import './MvpFormPage.css'
 import { useCreateQuestionnaireMutation } from '../../store/api/questionnairesApi'
@@ -23,9 +23,8 @@ const MvpFormPage = () => {
     timeCommitment: 'full-time',
     
     // Step 2
-    validateIdea: '',
     timeline: '',
-    budgetRange: 0,
+    budgetRange: '',
     
     // Step 3
     selectedSprint: null,
@@ -56,11 +55,7 @@ const MvpFormPage = () => {
     { value: 'growth', label: 'Growth' }
   ]
 
-  const validateIdeaOptions = [
-    { value: 'build-mvp', label: 'Build MVP' },
-    { value: 'market-research', label: 'Market Research' },
-    { value: 'user-testing', label: 'User Testing' }
-  ]
+  // validateIdeaOptions removed
 
   const sprintOptions = [
     {
@@ -111,22 +106,21 @@ const MvpFormPage = () => {
 
   const validateStep2 = () => {
     const newErrors = {}
-    
-    if (!formData.validateIdea) newErrors.validateIdea = 'Please select an option'
+
     if (!formData.timeline.trim()) newErrors.timeline = 'Timeline is required'
-    if (formData.budgetRange <= 0) newErrors.budgetRange = 'Please select a budget range'
-    
+    if (!formData.budgetRange.trim()) newErrors.budgetRange = 'Please enter a budget range'
+
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }
 
   const validateStep3 = () => {
     const newErrors = {}
-    
-    if (!formData.selectedSprint && !formData.customRequest.trim()) {
-      newErrors.selection = 'Please select a sprint option or provide a custom request'
+
+    if (!formData.customRequest.trim()) {
+      newErrors.customRequest = 'Additional Information is required'
     }
-    
+
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }
@@ -180,25 +174,16 @@ const MvpFormPage = () => {
           timeCommitment: formData.timeCommitment,
         },
         requirements: {
-          milestones: formData.validateIdea ? [formData.validateIdea] : [],
+          milestones: [],
           customMilestone: '',
           timeline: formData.timeline,
-          budgetRange: (() => {
-            // Map numeric slider to backend string
-            const val = formData.budgetRange;
-            if (val <= 5000) return 'Under $5,000';
-            if (val <= 10000) return '$5,000 - $10,000';
-            if (val <= 25000) return '$10,000 - $25,000';
-            if (val <= 50000) return '$25,000 - $50,000';
-            if (val <= 100000) return '$50,000 - $100,000';
-            return 'Over $100,000';
-          })(),
+          budgetRange: formData.budgetRange,
           additionalRequirements: ''
         },
         serviceSelection: {
-          selectedService: formData.selectedSprint || '',
+          selectedService: '',
           customRequest: formData.customRequest,
-          isCustom: !!formData.customRequest,
+          isCustom: true,
           urgency: 'medium'
         }
       };
@@ -286,7 +271,7 @@ const MvpFormPage = () => {
         label="Describe Your Task"
         value={formData.taskDescription}
         onChange={(e) => updateFormData('taskDescription', e.target.value)}
-        placeholder="Give us a brief of the task"
+        placeholder="Give us a brief of the task (minimum 10 characters)"
         error={errors.taskDescription}
         required
       />
@@ -334,87 +319,52 @@ const MvpFormPage = () => {
 
   const renderStep2 = () => (
     <div className="form-step">
-      <Select
-        label="Validate Idea"
-        value={formData.validateIdea}
-        onChange={(value) => updateFormData('validateIdea', value)}
-        options={validateIdeaOptions}
-        placeholder="Build MVP"
-        error={errors.validateIdea}
-        required
-      />
-      
       <Input
         label="Timeline in Mind?"
         value={formData.timeline}
         onChange={(e) => updateFormData('timeline', e.target.value)}
-        placeholder="Enter a timeline"
+        placeholder="Enter a timeline (e.g., 1-2 weeks, 3-4 weeks, 1-2 months, 3-6 months, 6+ months)"
         error={errors.timeline}
         required
       />
-      
-      <BudgetSlider
+
+      <Input
         label="Budget range"
         value={formData.budgetRange}
-        onChange={(value) => updateFormData('budgetRange', value)}
-        min={0}
-        max={24000}
-        step={1000}
+        onChange={(e) => updateFormData('budgetRange', e.target.value)}
+        placeholder="Enter an estimated budget (in QAR)"
         error={errors.budgetRange}
+        required
       />
     </div>
   )
 
   const renderStep3 = () => (
     <div className="form-step">
-      <div className="sprint-selection">
-        <h3 className="sprint-subtitle">We Suggest</h3>
-        
-        {sprintOptions.map((option) => (
-          <div 
-            key={option.id}
-            className={`sprint-option ${formData.selectedSprint === option.id ? 'selected' : ''}`}
-            onClick={() => updateFormData('selectedSprint', option.id)}
+      <div className="custom-request-section">
+        <label className="custom-request-label">
+          Additional Information
+          <span className="custom-request-description">Provide any extra details or requirements for your project.</span>
+        </label>
+        <div className="custom-request-input">
+          <TextArea
+            value={formData.customRequest}
+            onChange={(e) => updateFormData('customRequest', e.target.value)}
+            placeholder="Enter any additional information or requirements here."
+            rows={3}
+            error={errors.customRequest}
+            required
+          />
+          <button 
+            type="button" 
+            className="voice-input-btn"
+            onClick={handleVoiceInput}
+            title="Voice input"
           >
-            <div className="sprint-content">
-              <div className="sprint-details">
-                <h4>{option.title}</h4>
-                <p>{option.description}</p>
-                <span className="sprint-timeline">Estimated Time: {option.timeline}</span>
-              </div>
-              <div className="sprint-price">
-                <span className="price">{option.price}</span>
-                <Icon name="Arrow-right" size={16} className="sprint-arrow" />
-              </div>
-            </div>
-          </div>
-        ))}
-        
-        <div className="custom-request-section">
-          <label className="custom-request-label">
-            Post a request
-            <span className="custom-request-description">Tell us what you need and we will set the right tools for you.</span>
-          </label>
-          
-          <div className="custom-request-input">
-            <TextArea
-              value={formData.customRequest}
-              onChange={(e) => updateFormData('customRequest', e.target.value)}
-              placeholder="Tell us what you need and we will set the right tools for you."
-              rows={3}
-            />
-            <button 
-              type="button" 
-              className="voice-input-btn"
-              onClick={handleVoiceInput}
-              title="Voice input"
-            >
-              <Icon name="microphone" size={16} />
-            </button>
-          </div>
+            <Icon name="microphone" size={16} />
+          </button>
         </div>
-        
-        {errors.selection && <div className="error-message">{errors.selection}</div>}
+        {errors.customRequest && <div className="error-message">{errors.customRequest}</div>}
       </div>
     </div>
   )
@@ -422,8 +372,8 @@ const MvpFormPage = () => {
   const getStepTitle = () => {
     switch (currentStep) {
       case 1: return 'Tell us about your startup'
-      case 2: return 'Set Your Milestone and get ready'  
-      case 3: return 'Select Your Sprint'
+      case 2: return 'Set Your Timeline and Budget'
+      case 3: return 'Extras'
       default: return ''
     }
   }

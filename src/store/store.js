@@ -27,15 +27,11 @@ const isDevelopment = import.meta.env.MODE === 'development'
 
 export const store = configureStore({
   reducer: {
-    // API reducers
+    // API reducers - Only include baseApi since other APIs inject into it
     [baseApi.reducerPath]: baseApi.reducer,
     [authApi.reducerPath]: authApi.reducer,
     [startupApi.reducerPath]: startupApi.reducer,
-    [adminApi.reducerPath]: adminApi.reducer,
     [questionnairesApi.reducerPath]: questionnairesApi.reducer,
-    [sprintsApi.reducerPath]: sprintsApi.reducer,
-    [boardsApi.reducerPath]: boardsApi.reducer,
-    [tasksApi.reducerPath]: tasksApi.reducer,
     [analyticsApi.reducerPath]: analyticsApi.reducer,
     [chatApi.reducerPath]: chatApi.reducer,
     
@@ -79,11 +75,10 @@ export const store = configureStore({
       },
     })
     .concat(
-      // Add RTK Query middleware - only baseApi since boardsApi, tasksApi, and sprintsApi inject into it
+      // Add RTK Query middleware - only for standalone APIs, not injected ones
       baseApi.middleware,
       authApi.middleware,
       startupApi.middleware,
-      adminApi.middleware,
       questionnairesApi.middleware,
       analyticsApi.middleware,
       chatApi.middleware,

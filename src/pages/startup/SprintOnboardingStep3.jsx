@@ -1,29 +1,67 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useState, useEffect, useRef } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import { Button } from '../../components/ui'
+import { useScheduleMeetingMutation } from '../../store/api/sprintsApi'
 import './SprintOnboardingStep3.css'
 
 const SprintOnboardingStep3 = () => {
   const navigate = useNavigate()
+  const { sprintId } = useParams()
   const [isScheduled, setIsScheduled] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [meetingDetails, setMeetingDetails] = useState(null)
+  const iframeRef = useRef(null)
+  const [showIframe, setShowIframe] = useState(false)
+  
+  const [scheduleMeeting] = useScheduleMeetingMutation()
 
-  // Placeholder Calendly URL - replace with actual Calendly link
   const calendlyUrl = 'https://calendly.com/taotter/kickoff-call'
 
+  useEffect(() => {
+    const handleCalendlyMessage = (event) => {
+      if (event.origin !== 'https://calendly.com') return
+
+      if (event.data.event && event.data.event === 'calendly.event_scheduled') {
+        const eventData = event.data.event_details
+        setMeetingDetails({
+          eventUri: eventData.uri,
+          eventName: eventData.event_type.name,
+          startTime: eventData.start_time,
+          endTime: eventData.end_time,
+          inviteeEmail: eventData.invitee.email,
+          inviteeName: eventData.invitee.name,
+          scheduledAt: new Date().toISOString()
+        })
+        setIsScheduled(true)
+        setShowIframe(false)
+      }
+
+      if (event.data.event && event.data.event === 'calendly.profile_page_viewed') {
+        console.log('User is viewing Calendly calendar')
+      }
+
+      if (event.data.event && event.data.event === 'calendly.date_and_time_selected') {
+        console.log('User selected a date and time')
+      }
+    }
+
+    window.addEventListener('message', handleCalendlyMessage)
+
+    return () => {
+      window.removeEventListener('message', handleCalendlyMessage)
+    }
+  }, [])
+
   const handleScheduleCall = () => {
-    // Open Calendly in a new tab
-    window.open(calendlyUrl, '_blank', 'noopener,noreferrer')
-    
-    // For demo purposes, automatically mark as scheduled after a short delay
-    // In real implementation, you'd listen for Calendly webhook or user confirmation
-    setTimeout(() => {
-      setIsScheduled(true)
-    }, 2000)
+    setShowIframe(true)
+  }
+
+  const handleCloseIframe = () => {
+    setShowIframe(false)
   }
 
   const handleFinish = async () => {
-    if (!isScheduled) {
+    if (!isScheduled || !meetingDetails) {
       alert('Please schedule your kickoff call before proceeding.')
       return
     }
@@ -31,24 +69,32 @@ const SprintOnboardingStep3 = () => {
     setIsSubmitting(true)
     
     try {
-      // TODO: Mark onboarding as complete via API
-      console.log('Onboarding completed')
+      await scheduleMeeting({
+        id: sprintId,
+        meetingUrl: meetingDetails.eventUri,
+        scheduledAt: meetingDetails.startTime,
+        meetingType: 'kickoff',
+        meetingDetails: meetingDetails
+      }).unwrap()
       
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      
-      // Navigate to dashboard
-      navigate('/dashboard')
+      navigate('/startup/dashboard')
       
     } catch (error) {
-      console.error('Error completing onboarding:', error)
+      console.error('Error scheduling meeting:', error)
+      alert('Failed to save meeting details. Please try again.')
     } finally {
       setIsSubmitting(false)
     }
   }
 
   const handleBack = () => {
-    navigate('/sprint/onboarding/step-2')
+    navigate('/startup/dashboard')
+  }
+
+  const formatDateTime = (dateString) => {
+    if (!dateString) return ''
+    const date = new Date(dateString)
+    return date.toLocaleDateString() + ' at ' + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
   }
 
   return (
@@ -88,20 +134,22 @@ const SprintOnboardingStep3 = () => {
             </div>
             
             <div className="schedule-action">
-              <Button
-                variant="primary"
-                onClick={handleScheduleCall}
-                className="schedule-button"
-                size="large"
-              >
-                Schedule with Calendly
-              </Button>
-              
-              {isScheduled && (
+              {!isScheduled ? (
+                <Button
+                  variant="primary"
+                  onClick={handleScheduleCall}
+                  className="schedule-button"
+                  size="large"
+                >
+                  Schedule with Calendly
+                </Button>
+              ) : (
                 <div className="schedule-confirmation">
                   <div className="confirmation-icon">✅</div>
                   <div className="confirmation-text">
                     <h4>Call Scheduled!</h4>
+                    <p>Meeting: {meetingDetails?.eventName}</p>
+                    <p>Time: {formatDateTime(meetingDetails?.startTime)}</p>
                     <p>You'll receive a calendar invitation shortly. We're excited to start your sprint!</p>
                   </div>
                 </div>
@@ -109,7 +157,6 @@ const SprintOnboardingStep3 = () => {
             </div>
           </div>
 
-          {/* Navigation Buttons */}
           <div className="onboarding-navigation">
             <Button
               variant="secondary"
@@ -130,6 +177,29 @@ const SprintOnboardingStep3 = () => {
           </div>
         </div>
       </div>
+
+      {showIframe && (
+        <div className="calendly-modal-overlay">
+          <div className="calendly-modal">
+            <div className="calendly-modal-header">
+              <h3>Schedule Your Kickoff Call</h3>
+              <button className="calendly-close-btn" onClick={handleCloseIframe}>
+                ×
+              </button>
+            </div>
+            <div className="calendly-iframe-container">
+              <iframe
+                ref={iframeRef}
+                src={`${calendlyUrl}?embed_domain=${window.location.hostname}&embed_type=Inline`}
+                width="100%"
+                height="600"
+                frameBorder="0"
+                title="Schedule Kickoff Call"
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

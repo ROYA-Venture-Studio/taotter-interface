@@ -36,6 +36,9 @@ export default function BoardKanban({ columns, onMoveTask }) {
                 draggable
                 onDragStart={() => handleDragStart(task.id)}
                 onDragEnd={handleDragEnd}
+                columns={columns}
+                onMoveTask={onMoveTask}
+                currentColumnId={col.key}
               />
             ))}
           </div>

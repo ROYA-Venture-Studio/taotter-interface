@@ -43,6 +43,11 @@ function emptySprint() {
     priority: "medium",
     objective: "",
     deliverables: "",
+    enabledTiers: {
+      starter: false,
+      growth: false,
+      scale: false,
+    },
     packageOptions: [
       { tier: "starter", hourlyRate: "", amount: "", qty: "", discount: "" },
       { tier: "growth", hourlyRate: "", amount: "", qty: "", discount: "" },
@@ -63,6 +68,23 @@ export default function ResponseModal({ onClose }) {
     setSprints((prev) =>
       prev.map((s, i) =>
         i === idx ? { ...s, [field]: value } : s
+      )
+    );
+  };
+
+  // Handle tier enable/disable
+  const handleTierToggle = (sprintIdx, tierKey) => {
+    setSprints((prev) =>
+      prev.map((s, i) =>
+        i === sprintIdx
+          ? {
+              ...s,
+              enabledTiers: {
+                ...s.enabledTiers,
+                [tierKey]: !s.enabledTiers[tierKey],
+              },
+            }
+          : s
       )
     );
   };
@@ -100,20 +122,28 @@ export default function ResponseModal({ onClose }) {
         !s.objective ||
         !s.deliverables
       ) {
-        setError(`All fields are required for Sprint ${i + 1}.`);
+        setError(`All sprint fields are required for Sprint ${i + 1}.`);
         return false;
       }
+
+      // Check if at least one tier is enabled
+      const hasEnabledTier = Object.values(s.enabledTiers).some(enabled => enabled);
+      if (!hasEnabledTier) {
+        setError(`At least one credit tier must be enabled for Sprint ${i + 1}.`);
+        return false;
+      }
+
+      // Validate only enabled tiers
       for (let j = 0; j < 3; j++) {
-        const p = s.packageOptions[j];
-        if (
-          !p.hourlyRate ||
-          !p.amount ||
-          !p.qty
-        ) {
-          setError(
-            `All credit tier fields are required for Sprint ${i + 1}, Tier ${CREDIT_TIERS[j].label}.`
-          );
-          return false;
+        const tierKey = CREDIT_TIERS[j].key;
+        if (s.enabledTiers[tierKey]) {
+          const p = s.packageOptions[j];
+          if (!p.hourlyRate || !p.amount || !p.qty) {
+            setError(
+              `All fields are required for enabled tier "${CREDIT_TIERS[j].label}" in Sprint ${i + 1}.`
+            );
+            return false;
+          }
         }
       }
     }
@@ -129,22 +159,31 @@ export default function ResponseModal({ onClose }) {
       type: s.type,
       estimatedDuration: parseInt(s.estimatedDuration, 10) || 1,
       priority: s.priority,
-      packageOptions: s.packageOptions.map((p, idx) => ({
-        name: CREDIT_TIERS[idx].label,
-        description: s.objective,
-        price: parseFloat(p.amount) || 0,
-        currency: "USD",
-        engagementHours: parseInt(p.qty, 10) || 0,
-        duration: parseInt(s.estimatedDuration, 10) || 1,
-        features: [],
-        teamSize: 1,
-        communicationLevel: "standard",
-        isRecommended: idx === 1, // Growth as recommended
-        deliverables: [{ name: "Deliverables", description: s.deliverables, estimatedHours: parseInt(p.qty, 10) || 0 }],
-        hourlyRate: parseFloat(p.hourlyRate) || 0,
-        discount: p.discount ? parseFloat(p.discount) : 0,
-        tier: p.tier,
-      })),
+      packageOptions: s.packageOptions
+        .filter((p, idx) => s.enabledTiers[CREDIT_TIERS[idx].key])
+        .map((p, originalIdx) => {
+          const tierIndex = s.packageOptions.indexOf(p);
+          return {
+            name: CREDIT_TIERS[tierIndex].label,
+            description: s.objective,
+            price: parseFloat(p.amount) || 0,
+            currency: "USD",
+            engagementHours: parseInt(p.qty, 10) || 0,
+            duration: parseInt(s.estimatedDuration, 10) || 1,
+            features: [],
+            teamSize: 1,
+            communicationLevel: "standard",
+            isRecommended: CREDIT_TIERS[tierIndex].key === "growth",
+            deliverables: [{ 
+              name: "Deliverables", 
+              description: s.deliverables, 
+              estimatedHours: parseInt(p.qty, 10) || 0 
+            }],
+            hourlyRate: parseFloat(p.hourlyRate) || 0,
+            discount: p.discount ? parseFloat(p.discount) : 0,
+            tier: p.tier,
+          };
+        }),
     }));
   };
 
@@ -283,75 +322,88 @@ export default function ResponseModal({ onClose }) {
                   Taotter Credits
                 </h3>
                 <p className="response-modal-section-subtitle">
-                  Enter the credits for this sprint.
+                  Select and configure the credit tiers you want to offer for this sprint.
                 </p>
                 {CREDIT_TIERS.map((tier, tierIdx) => (
                   <div className="response-modal-credit-tier" key={tier.key}>
-                    <div className="response-modal-credit-tier-label">{tier.label}</div>
-                    <div className="response-modal-form-row">
-                      <div className="response-modal-form-section">
-                        <label>
-                          Hourly Rate
-                          <input
-                            type="number"
-                            min={0}
-                            placeholder="Enter hourly rate"
-                            className="response-modal-input"
-                            value={s.packageOptions[tierIdx].hourlyRate}
-                            onChange={(e) =>
-                              handlePackageChange(idx, tierIdx, "hourlyRate", e.target.value)
-                            }
-                          />
-                        </label>
-                      </div>
-                      <div className="response-modal-form-section">
-                        <label>
-                          Amount
-                          <input
-                            type="number"
-                            min={0}
-                            placeholder="Enter amount"
-                            className="response-modal-input"
-                            value={s.packageOptions[tierIdx].amount}
-                            onChange={(e) =>
-                              handlePackageChange(idx, tierIdx, "amount", e.target.value)
-                            }
-                          />
-                        </label>
-                      </div>
+                    <div className="response-modal-credit-tier-header">
+                      <label className="response-modal-tier-checkbox">
+                        <input
+                          type="checkbox"
+                          checked={s.enabledTiers[tier.key]}
+                          onChange={() => handleTierToggle(idx, tier.key)}
+                        />
+                        <span className="response-modal-credit-tier-label">{tier.label}</span>
+                      </label>
                     </div>
-                    <div className="response-modal-form-row">
-                      <div className="response-modal-form-section">
-                        <label>
-                          QTY (hours)
-                          <input
-                            type="number"
-                            min={1}
-                            placeholder="Enter qty in hours"
-                            className="response-modal-input"
-                            value={s.packageOptions[tierIdx].qty}
-                            onChange={(e) =>
-                              handlePackageChange(idx, tierIdx, "qty", e.target.value)
-                            }
-                          />
-                        </label>
+                    {s.enabledTiers[tier.key] && (
+                      <div className="response-modal-credit-tier-fields">
+                        <div className="response-modal-form-row">
+                          <div className="response-modal-form-section">
+                            <label>
+                              Hourly Rate
+                              <input
+                                type="number"
+                                min={0}
+                                placeholder="Enter hourly rate"
+                                className="response-modal-input"
+                                value={s.packageOptions[tierIdx].hourlyRate}
+                                onChange={(e) =>
+                                  handlePackageChange(idx, tierIdx, "hourlyRate", e.target.value)
+                                }
+                              />
+                            </label>
+                          </div>
+                          <div className="response-modal-form-section">
+                            <label>
+                              Amount
+                              <input
+                                type="number"
+                                min={0}
+                                placeholder="Enter amount"
+                                className="response-modal-input"
+                                value={s.packageOptions[tierIdx].amount}
+                                onChange={(e) =>
+                                  handlePackageChange(idx, tierIdx, "amount", e.target.value)
+                                }
+                              />
+                            </label>
+                          </div>
+                        </div>
+                        <div className="response-modal-form-row">
+                          <div className="response-modal-form-section">
+                            <label>
+                              QTY (hours)
+                              <input
+                                type="number"
+                                min={1}
+                                placeholder="Enter qty in hours"
+                                className="response-modal-input"
+                                value={s.packageOptions[tierIdx].qty}
+                                onChange={(e) =>
+                                  handlePackageChange(idx, tierIdx, "qty", e.target.value)
+                                }
+                              />
+                            </label>
+                          </div>
+                          <div className="response-modal-form-section">
+                            <label>
+                              Discount
+                              <input
+                                type="number"
+                                min={0}
+                                placeholder="Enter discount"
+                                className="response-modal-input"
+                                value={s.packageOptions[tierIdx].discount}
+                                onChange={(e) =>
+                                  handlePackageChange(idx, tierIdx, "discount", e.target.value)
+                                }
+                              />
+                            </label>
+                          </div>
+                        </div>
                       </div>
-                      <div className="response-modal-form-section">
-                        <label>
-                          Discount
-                          <input
-                            type="number"
-                            min={0}
-                            placeholder="Enter discount"
-                            className="response-modal-input"
-                            value={s.packageOptions[tierIdx].discount}
-                            onChange={(e) =>
-                              handlePackageChange(idx, tierIdx, "discount", e.target.value)
-                            }
-                          />
-                        </label>
-                      </div>
-                    </div>
+                    )}
                   </div>
                 ))}
               </div>

@@ -22,6 +22,8 @@ import RequestDetailPage from './pages/admin/RequestDetailPage'
 import AdminChatPage from './pages/admin/AdminChatPage'
 import BoardPage from './pages/admin/BoardPage'
 import AdminSprintListPage from './pages/admin/AdminSprintListPage'
+import StartupsPage from './pages/admin/StartupsPage'
+import StartupSprintsPage from './pages/admin/StartupSprintsPage'
 
 function App() {
   return (
@@ -77,6 +79,8 @@ function App() {
       <Route path="/admin/dashboard" element={<AdminProtectedRoute><AdminLayout><AdminDashboardPage /></AdminLayout></AdminProtectedRoute>} />
       <Route path="/admin/table" element={<AdminProtectedRoute><AdminLayout><TablePage /></AdminLayout></AdminProtectedRoute>} />
       <Route path="/admin/request/:id" element={<AdminProtectedRoute><AdminLayout><RequestDetailPage /></AdminLayout></AdminProtectedRoute>} />
+      <Route path="/admin/startups" element={<AdminProtectedRoute><AdminLayout><StartupsPage /></AdminLayout></AdminProtectedRoute>} />
+      <Route path="/admin/startups/:startupId/sprints" element={<AdminProtectedRoute><AdminLayout><StartupSprintsPage /></AdminLayout></AdminProtectedRoute>} />
       <Route path="/admin/chat" element={<AdminProtectedRoute><AdminChatPage /></AdminProtectedRoute>} />
       <Route path="/admin/chat/:id" element={<AdminProtectedRoute><AdminChatPage /></AdminProtectedRoute>} />
       <Route path="/admin/board" element={<AdminProtectedRoute><AdminSprintListPage /></AdminProtectedRoute>} />

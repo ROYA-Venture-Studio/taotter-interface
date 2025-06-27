@@ -21,6 +21,26 @@ export const tasksApi = api.injectEndpoints({
       }),
       invalidatesTags: ["Board", "Boards"],
     }),
+    
+    // Create a new task (startup)
+    createStartupTask: builder.mutation({
+      query: (body) => ({
+        url: "/tasks/startup",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["Board", "Boards"],
+    }),
+    
+    // Move a task (startup)
+    moveStartupTask: builder.mutation({
+      query: ({ taskId, columnId, position }) => ({
+        url: `/tasks/startup/${taskId}/move`,
+        method: "POST",
+        body: { columnId, position },
+      }),
+      invalidatesTags: ["Board", "Boards"],
+    }),
     // ...other endpoints
   }),
 });
@@ -28,4 +48,6 @@ export const tasksApi = api.injectEndpoints({
 export const {
   useCreateTaskMutation,
   useMoveTaskMutation,
+  useCreateStartupTaskMutation,
+  useMoveStartupTaskMutation,
 } = tasksApi;

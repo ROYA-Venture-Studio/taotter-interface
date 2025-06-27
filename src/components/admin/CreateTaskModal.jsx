@@ -21,7 +21,7 @@ const PRIORITIES = [
   { value: "critical", label: "Critical" },
 ];
 
-export default function CreateTaskModal({ open, onClose, onCreate, columns, admins = [] }) {
+export default function CreateTaskModal({ open, onClose, onCreate, columns, admins = [], hideAssignment = false }) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [columnId, setColumnId] = useState(columns?.[0]?._id || "");
@@ -126,20 +126,22 @@ export default function CreateTaskModal({ open, onClose, onCreate, columns, admi
               ))}
             </select>
           </label>
-          <label>
-            Assign To
-            <select
-              value={assigneeId}
-              onChange={e => setAssigneeId(e.target.value)}
-            >
-              <option value="">-- Unassigned --</option>
-              {admins.map(admin => (
-                <option key={admin._id} value={admin._id}>
-                  {admin.profile?.firstName} {admin.profile?.lastName} ({admin.email})
-                </option>
-              ))}
-            </select>
-          </label>
+          {!hideAssignment && (
+            <label>
+              Assign To
+              <select
+                value={assigneeId}
+                onChange={e => setAssigneeId(e.target.value)}
+              >
+                <option value="">-- Unassigned --</option>
+                {admins.map(admin => (
+                  <option key={admin._id} value={admin._id}>
+                    {admin.profile?.firstName} {admin.profile?.lastName} ({admin.email})
+                  </option>
+                ))}
+              </select>
+            </label>
+          )}
           <label>
             Due Date
             <input

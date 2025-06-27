@@ -1,327 +1,131 @@
-/* Sprint Onboarding Step 3 Styles */
-.schedule-card {
-  height: auto;
-  min-height: 600px;
-}
-
-/* Schedule Content */
-.schedule-content {
-  display: flex;
-  flex-direction: column;
-  gap: 32px;
-  width: 100%;
-}
-
-.schedule-info {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  width: 100%;
-}
-
-.info-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 16px;
-  width: 100%;
-  padding: 16px;
-  background: rgba(8, 127, 192, 0.05);
-  border-radius: 8px;
-  border: 1px solid rgba(8, 127, 192, 0.1);
-}
-
-.info-icon {
-  font-size: 24px;
-  flex-shrink: 0;
-  width: 32px;
-  height: 32px;
+.calendly-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 9999;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 20px;
 }
 
-.info-text {
-  flex: 1;
+.calendly-modal {
+  background: white;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 900px;
+  max-height: 90vh;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
 }
 
-.info-text h3 {
-  color: #333;
-  font-family: 'Outfit', sans-serif;
-  font-size: 18px;
-  font-weight: 700;
-  line-height: 24px;
-  margin: 0 0 8px 0;
-}
-
-.info-text p {
-  color: #666;
-  font-family: 'Outfit', sans-serif;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 20px;
-  margin: 0;
-}
-
-.info-text ul {
-  color: #666;
-  font-family: 'Outfit', sans-serif;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 20px;
-  margin: 8px 0 0 0;
-  padding-left: 16px;
-}
-
-.info-text li {
-  margin-bottom: 4px;
-}
-
-.info-text li:last-child {
-  margin-bottom: 0;
-}
-
-/* Schedule Action */
-.schedule-action {
+.calendly-modal-header {
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
   align-items: center;
-  gap: 24px;
-  width: 100%;
+  padding: 16px 20px;
+  border-bottom: 1px solid #e5e7eb;
+  background: #f9fafb;
 }
 
-.schedule-button {
-  padding: 16px 32px;
-  border-radius: 8px;
-  background: linear-gradient(90deg, #087fc0 0%, #1bb3c9 100%);
-  border: none;
-  color: #fff;
-  font-family: 'Outfit', sans-serif;
+.calendly-modal-header h3 {
+  margin: 0;
   font-size: 18px;
   font-weight: 600;
-  line-height: 24px;
-  min-width: 200px;
-  box-shadow: 0 2px 4px rgba(8, 127, 192, 0.2);
+  color: #111827;
+}
+
+.calendly-close-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  color: #6b7280;
+  padding: 4px;
+  line-height: 1;
+  border-radius: 4px;
+  transition: background-color 0.2s;
 }
 
-.schedule-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(8, 127, 192, 0.3);
+.calendly-close-btn:hover {
+  background: #e5e7eb;
+  color: #374151;
 }
 
-.schedule-button:active {
-  transform: translateY(0);
+.calendly-iframe-container {
+  width: 100%;
+  height: 600px;
+  overflow: hidden;
 }
 
-/* Schedule Confirmation */
+.calendly-iframe-container iframe {
+  border: none;
+  width: 100%;
+  height: 100%;
+}
+
 .schedule-confirmation {
   display: flex;
   align-items: flex-start;
-  gap: 16px;
-  width: 100%;
-  padding: 16px;
-  background: rgba(34, 197, 94, 0.1);
+  gap: 12px;
+  background: #f0f9ff;
+  border: 1px solid #0ea5e9;
   border-radius: 8px;
-  border: 1px solid rgba(34, 197, 94, 0.2);
-  animation: slideIn 0.3s ease-out;
-}
-
-@keyframes slideIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  padding: 16px;
+  margin-top: 20px;
 }
 
 .confirmation-icon {
   font-size: 24px;
   flex-shrink: 0;
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.confirmation-text {
-  flex: 1;
 }
 
 .confirmation-text h4 {
-  color: #16a34a;
-  font-family: 'Outfit', sans-serif;
-  font-size: 16px;
-  font-weight: 700;
-  line-height: 22px;
   margin: 0 0 8px 0;
+  color: #0c4a6e;
+  font-size: 16px;
+  font-weight: 600;
 }
 
 .confirmation-text p {
-  color: #15803d;
-  font-family: 'Outfit', sans-serif;
+  margin: 4px 0;
+  color: #0369a1;
   font-size: 14px;
-  font-weight: 400;
-  line-height: 20px;
-  margin: 0;
 }
 
-/* Global font for all text in onboarding step 3 */
-.schedule-card,
-.schedule-card * {
-  font-family: 'Outfit', sans-serif !important;
+@media (max-width: 768px) {
+  .calendly-modal {
+    width: 95%;
+    max-height: 85vh;
+  }
+  
+  .calendly-iframe-container {
+    height: 500px;
+  }
+  
+  .calendly-modal-overlay {
+    padding: 10px;
+  }
 }
 
-/* Navigation - inherits from previous steps */
-.schedule-card .onboarding-navigation {
-  margin-top: auto;
-  padding-top: 32px;
-}
-
-.finish-button {
-  background: linear-gradient(90deg, #087fc0 0%, #1bb3c9 100%);
-  border: none;
-  color: #fff;
-}
-
-.finish-button:not(:disabled) {
-  opacity: 1;
-}
-
-.finish-button:not(:disabled):hover {
-  opacity: 0.9;
-  background: linear-gradient(90deg, #0666a3 0%, #1496ad 100%);
-}
-
-.finish-button:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
-
-/* Responsive Design */
 @media (max-width: 480px) {
-  .schedule-card {
-    min-height: 500px;
+  .calendly-modal {
+    width: 98%;
+    max-height: 80vh;
   }
   
-  .schedule-content {
-    gap: 24px;
+  .calendly-iframe-container {
+    height: 400px;
   }
   
-  .info-item {
-    padding: 12px;
-    gap: 12px;
+  .calendly-modal-header {
+    padding: 12px 16px;
   }
   
-  .info-icon {
-    font-size: 20px;
-    width: 28px;
-    height: 28px;
-  }
-  
-  .info-text h3 {
+  .calendly-modal-header h3 {
     font-size: 16px;
-    line-height: 22px;
   }
-  
-  .info-text p,
-  .info-text ul {
-    font-size: 13px;
-    line-height: 18px;
-  }
-  
-  .schedule-button {
-    font-size: 16px;
-    padding: 14px 24px;
-    min-width: 180px;
-  }
-  
-  .schedule-confirmation {
-    padding: 12px;
-    gap: 12px;
-  }
-  
-  .confirmation-icon {
-    font-size: 20px;
-    width: 28px;
-    height: 28px;
-  }
-  
-  .confirmation-text h4 {
-    font-size: 14px;
-    line-height: 20px;
-  }
-  
-  .confirmation-text p {
-    font-size: 13px;
-    line-height: 18px;
-  }
-}
-
-@media (max-width: 390px) {
-  .schedule-card {
-    min-height: 450px;
-  }
-  
-  .schedule-content {
-    gap: 20px;
-  }
-  
-  .info-item {
-    padding: 10px;
-    gap: 10px;
-  }
-  
-  .info-text h3 {
-    font-size: 15px;
-    line-height: 20px;
-  }
-  
-  .info-text p,
-  .info-text ul {
-    font-size: 12px;
-    line-height: 16px;
-  }
-  
-  .schedule-button {
-    font-size: 15px;
-    padding: 12px 20px;
-    min-width: 160px;
-  }
-  
-  .schedule-confirmation {
-    padding: 10px;
-  }
-  
-  .confirmation-text h4 {
-    font-size: 13px;
-    line-height: 18px;
-  }
-  
-  .confirmation-text p {
-    font-size: 12px;
-    line-height: 16px;
-  }
-}
-
-/* Focus States */
-.schedule-button:focus-visible {
-  outline: 2px solid #087fc0;
-  outline-offset: 2px;
-}
-
-/* Loading State */
-.schedule-button:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
-  transform: none;
-}
-
-.schedule-button:disabled:hover {
-  transform: none;
-  box-shadow: 0 2px 4px rgba(8, 127, 192, 0.2);
 }

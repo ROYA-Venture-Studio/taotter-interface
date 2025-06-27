@@ -1,12 +1,20 @@
 import React from "react";
 import "./BoardTaskCard.css";
 
+import { useState } from "react";
+import MoveTaskModal from "./MoveTaskModal";
+
 export default function BoardTaskCard({
   task,
   draggable,
   onDragStart,
-  onDragEnd
+  onDragEnd,
+  columns,
+  onMoveTask,
+  currentColumnId
 }) {
+  const [showMoveModal, setShowMoveModal] = useState(false);
+
   return (
     <div
       className="board-task-card"
@@ -17,6 +25,20 @@ export default function BoardTaskCard({
       <div className="board-task-card__top">
         <div className="board-task-card__title">{task.title}</div>
         <img src={task.avatar} alt="avatar" className="board-task-card__avatar" />
+        <button
+          className="board-task-card__menu-btn"
+          onClick={e => {
+            e.stopPropagation();
+            setShowMoveModal(true);
+          }}
+          aria-label="Task options"
+        >
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <circle cx="4" cy="10" r="1.5" fill="#667085"/>
+            <circle cx="10" cy="10" r="1.5" fill="#667085"/>
+            <circle cx="16" cy="10" r="1.5" fill="#667085"/>
+          </svg>
+        </button>
       </div>
       <div className="board-task-card__desc">{task.description}</div>
       <div className="board-task-card__meta-row">
@@ -47,6 +69,16 @@ export default function BoardTaskCard({
           {task.category}
         </span>
       </div>
+      {showMoveModal && columns && onMoveTask && (
+        <MoveTaskModal
+          open={showMoveModal}
+          onClose={() => setShowMoveModal(false)}
+          task={task}
+          columns={columns}
+          onMoveTask={onMoveTask}
+          currentColumnId={currentColumnId}
+        />
+      )}
     </div>
   );
 }

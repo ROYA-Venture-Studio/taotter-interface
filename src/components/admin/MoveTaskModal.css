@@ -1,0 +1,139 @@
+.move-task-modal-backdrop {
+  position: fixed;
+  z-index: 1000;
+  inset: 0;
+  background: rgba(0,0,0,0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.move-task-modal {
+  background: #fff;
+  border-radius: 10px;
+  max-width: 95vw;
+  width: 350px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+  padding: 0;
+  animation: fadeIn 0.2s;
+  display: flex;
+  flex-direction: column;
+}
+
+.move-task-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 20px 10px 20px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.move-task-modal-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #222;
+}
+
+.move-task-modal-header .close-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #888;
+  cursor: pointer;
+  padding: 0 2px;
+}
+
+.move-task-modal-content {
+  padding: 18px 20px 0 20px;
+}
+
+.task-info h4 {
+  margin: 0 0 4px 0;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #333;
+}
+
+.task-info p {
+  margin: 0 0 12px 0;
+  color: #666;
+  font-size: 0.95rem;
+  word-break: break-word;
+}
+
+.column-selection {
+  margin-bottom: 18px;
+}
+
+.column-selection label {
+  font-size: 0.97rem;
+  color: #444;
+  margin-bottom: 4px;
+  display: block;
+}
+
+.column-selection select {
+  width: 100%;
+  padding: 7px 10px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  font-size: 1rem;
+  margin-top: 3px;
+  color: #111 !important;
+  background: #fff !important;
+}
+
+.column-selection select option {
+  color: #111 !important;
+  background: #fff !important;
+}
+
+.move-task-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 14px 20px 18px 20px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.move-task-modal-actions .cancel-btn,
+.move-task-modal-actions .move-btn {
+  padding: 7px 18px;
+  border-radius: 6px;
+  border: none;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.18s;
+}
+
+.move-task-modal-actions .cancel-btn {
+  background: #f3f4f6;
+  color: #444;
+}
+
+.move-task-modal-actions .move-btn {
+  background: #3b82f6;
+  color: #fff;
+}
+
+.move-task-modal-actions .move-btn:disabled {
+  background: #bcd3fa;
+  color: #fff;
+  cursor: not-allowed;
+}
+
+@media (max-width: 600px) {
+  .move-task-modal {
+    width: 98vw;
+    min-width: 0;
+    padding: 0;
+  }
+  .move-task-modal-header,
+  .move-task-modal-content,
+  .move-task-modal-actions {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}

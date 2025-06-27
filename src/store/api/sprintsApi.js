@@ -51,6 +51,15 @@ export const sprintsApi = api.injectEndpoints({
       }),
       invalidatesTags: ["Sprints", "MySprintQuery"],
     }),
+    // Startup: Finish sprint (NEW)
+    finishSprint: builder.mutation({
+      query: ({ id }) => ({
+        url: `/sprints/startup/${id}/finish`,
+        method: "PUT",
+        body: { status: "completed" },
+      }),
+      invalidatesTags: ["Sprints", "MySprints", "Sprint"],
+    }),
     // Admin: Get all sprints
     getAllSprints: builder.query({
       query: (params) => ({
@@ -88,6 +97,7 @@ export const {
   useSelectPackageMutation,
   useUploadDocumentsMutation,
   useScheduleMeetingMutation,
+  useFinishSprintMutation,
   // Admin exports
   useGetAllSprintsQuery,
   useCreateSprintMutation,

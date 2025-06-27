@@ -3,6 +3,8 @@ import Breadcrumb from "../../components/ui/Breadcrumb/Breadcrumb";
 import BoardKanban from "../../components/admin/BoardKanban";
 import { useParams } from "react-router-dom";
 import { useGetStartupBoardBySprintQuery } from "../../store/api/boardsApi";
+import { useCreateStartupTaskMutation, useMoveStartupTaskMutation } from "../../store/api/tasksApi";
+import CreateTaskModal from "../../components/admin/CreateTaskModal";
 import "./StartupBoardPage.css";
 
 const FILTERS = [
@@ -22,9 +24,14 @@ export default function StartupBoardPage() {
   const { sprintId } = useParams();
   const [filter, setFilter] = useState("all");
   const [selectedTask, setSelectedTask] = useState(null);
+  const [showCreateModal, setShowCreateModal] = useState(false);
 
-  // Fetch board by sprintId (startup readonly)
-  const { data, isLoading, error } = useGetStartupBoardBySprintQuery(sprintId);
+  // Fetch board by sprintId
+  const { data, isLoading, error, refetch } = useGetStartupBoardBySprintQuery(sprintId);
+
+  // Create and move task mutations
+  const [createStartupTask, { isLoading: isCreating }] = useCreateStartupTaskMutation();
+  const [moveStartupTask] = useMoveStartupTaskMutation();
 
   // Transform backend data to columns/tasks for BoardKanban
   const columns = useMemo(() => {
@@ -69,6 +76,45 @@ export default function StartupBoardPage() {
     setSelectedTask(null);
   }
 
+  const boardId = data?.data?.board?.id;
+  const boardColumns = data?.data?.board?.columns || [];
+
+  const handleCreateTask = async (taskData) => {
+    if (!boardId) return;
+    
+    try {
+      const payload = {
+        boardId,
+        title: taskData.title,
+        description: taskData.description,
+        columnId: taskData.columnId,
+        dueDate: taskData.dueDate,
+        taskType: taskData.taskType,
+        priority: taskData.priority,
+      };
+      
+      await createStartupTask(payload).unwrap();
+      setShowCreateModal(false);
+      refetch();
+    } catch (err) {
+      alert("Failed to create task: " + (err?.data?.message || err.message));
+    }
+  };
+
+  // Move task handler for drag-and-drop
+  const handleMoveTask = async (taskId, targetColumnId) => {
+    // Find the target column and the new position (end of column)
+    const col = columns.find(c => c.key === targetColumnId);
+    const position = col ? col.tasks.length : 0;
+    
+    try {
+      await moveStartupTask({ taskId, columnId: targetColumnId, position }).unwrap();
+      refetch();
+    } catch (err) {
+      alert("Failed to move task: " + (err?.data?.message || err.message));
+    }
+  };
+
   return (
     <div className="board-page">
         <div className="board-page-header-row">
@@ -96,6 +142,25 @@ export default function StartupBoardPage() {
                 </button>
               ))}
             </div>
+            <button
+              className="create-task-btn"
+              onClick={() => setShowCreateModal(true)}
+              style={{
+                marginLeft: "auto",
+                background: "#3b82f6",
+                color: "#fff",
+                border: "none",
+                borderRadius: "6px",
+                padding: "8px 16px",
+                fontSize: "1rem",
+                fontWeight: 500,
+                cursor: "pointer",
+                transition: "background 0.2s"
+              }}
+              disabled={isCreating}
+            >
+              + New Task
+            </button>
           </div>
           {isLoading ? (
             <div>Loading...</div>
@@ -104,9 +169,8 @@ export default function StartupBoardPage() {
           ) : (
             <BoardKanban
               columns={columns}
-              onMoveTask={null}
+              onMoveTask={handleMoveTask}
               onCardClick={handleCardClick}
-              readOnly
             />
           )}
         </div>
@@ -124,6 +188,14 @@ export default function StartupBoardPage() {
             </div>
           </div>
         )}
+        <CreateTaskModal
+          open={showCreateModal}
+          onClose={() => setShowCreateModal(false)}
+          onCreate={handleCreateTask}
+          columns={boardColumns}
+          admins={[]} // Empty array since startups can't assign
+          hideAssignment={true}
+        />
       </div>
   );
 }

@@ -1,63 +1,57 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import { Button } from '../../components/ui'
+import { useGetSprintByIdQuery, useSelectPackageMutation } from '../../store/api/sprintsApi'
 import './SprintOnboardingStep2.css'
 
 const SprintOnboardingStep2 = () => {
   const navigate = useNavigate()
+  const { sprintId } = useParams()
   const [selectedTier, setSelectedTier] = useState(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  
+  const { data: sprintData, isLoading, error } = useGetSprintByIdQuery(sprintId)
+  const [selectPackage] = useSelectPackageMutation()
 
-  const creditTiers = [
-    {
-      id: 'starter',
-      icon: '🚀',
-      name: 'Starter',
-      description: 'For engagements between 10 to 150 hours',
-      hourlyRate: '$12.00/hour',
-      originalRate: null,
-      details: 'Perfect for short-term sprints or getting started with focused goals.',
-      idealFor: 'Ideal for 1–2 sprint cycles',
-      pricing: {
-        amount: '$12.00',
-        quantity: 150,
-        discount: 0,
-        total: '$1,800'
+  const [creditTiers, setCreditTiers] = useState([])
+
+  useEffect(() => {
+    if (sprintData?.data?.sprint?.packageOptions) {
+      const packages = sprintData.data.sprint.packageOptions
+      
+      const tierMapping = {
+        'starter': { icon: '🚀', baseDescription: 'For engagements between 10 to 150 hours' },
+        'growth': { icon: '🌱', baseDescription: 'For engagements between 151 to 250 hours' },
+        'scale': { icon: '🏗', baseDescription: 'For engagements of 251 hours or more' }
       }
-    },
-    {
-      id: 'growth',
-      icon: '🌱',
-      name: 'Growth',
-      description: 'For engagements between 151 to 250 hours',
-      hourlyRate: '$10.80/hour',
-      originalRate: '$12.00/hour',
-      details: 'Ideal for teams looking to build momentum with broader execution.',
-      idealFor: 'Best for 2–3 sprints or milestone-based work',
-      pricing: {
-        amount: '$12.00',
-        quantity: 250,
-        discount: '-10% ($300.00)',
-        total: '$2,700'
-      }
-    },
-    {
-      id: 'scale',
-      icon: '🏗',
-      name: 'Scale',
-      description: 'For engagements of 251 hours or more',
-      hourlyRate: '$10.20/hour',
-      originalRate: '$12.00/hour',
-      details: 'Designed for fast-moving teams who need ongoing support at scale.',
-      idealFor: 'Ideal for full builds, multi-track execution, or long-term support',
-      pricing: {
-        amount: '$12.00',
-        quantity: 300,
-        discount: '-15% ($540.00)',
-        total: '$3,060.00'
-      }
+
+      const formattedTiers = packages.map((pkg, index) => {
+        const tierKey = pkg.tier || 'starter'
+        const tierInfo = tierMapping[tierKey] || tierMapping['starter']
+        
+        return {
+          id: pkg._id,
+          tierKey: tierKey,
+          icon: tierInfo.icon,
+          name: pkg.name.split(':')[0].replace(/🚀|🌱|🏗/g, '').trim(),
+          description: pkg.name.split(':')[1]?.trim() || tierInfo.baseDescription,
+          hourlyRate: `$${pkg.hourlyRate?.toFixed(2) || '0.00'}/hour`,
+          originalRate: null,
+          details: pkg.description || 'Sprint package details',
+          idealFor: `Ideal for ${pkg.engagementHours} hours of engagement`,
+          pricing: {
+            amount: `$${pkg.hourlyRate?.toFixed(2) || '0.00'}`,
+            quantity: pkg.engagementHours || 0,
+            discount: pkg.discount ? `-${pkg.discount}%` : '0%',
+            total: `$${(pkg.price || 0).toFixed(2)}`
+          },
+          packageData: pkg
+        }
+      })
+
+      setCreditTiers(formattedTiers)
     }
-  ]
+  }, [sprintData])
 
   const handleTierSelection = (tierId) => {
     setSelectedTier(tierId)
@@ -69,24 +63,53 @@ const SprintOnboardingStep2 = () => {
     setIsSubmitting(true)
     
     try {
-      // TODO: Save selected tier to API
-      console.log('Selected tier:', selectedTier)
+      await selectPackage({
+        id: sprintId,
+        packageId: selectedTier
+      }).unwrap()
       
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      
-      // Navigate to next step
-      navigate('/sprint/onboarding/step-3')
+      navigate('/startup/dashboard')
       
     } catch (error) {
-      console.error('Error saving tier selection:', error)
+      console.error('Error selecting package:', error)
+      alert('Failed to select package. Please try again.')
     } finally {
       setIsSubmitting(false)
     }
   }
 
   const handleBack = () => {
-    navigate('/sprint/onboarding/step-1')
+    navigate('/startup/dashboard')
+  }
+
+  if (isLoading) {
+    return (
+      <div className="sprint-onboarding-page">
+        <div className="sprint-onboarding-card">
+          <div className="loading">Loading sprint details...</div>
+        </div>
+      </div>
+    )
+  }
+
+  if (error || !sprintData?.data?.sprint) {
+    return (
+      <div className="sprint-onboarding-page">
+        <div className="sprint-onboarding-card">
+          <div className="error">Error loading sprint details.</div>
+        </div>
+      </div>
+    )
+  }
+
+  if (creditTiers.length === 0) {
+    return (
+      <div className="sprint-onboarding-page">
+        <div className="sprint-onboarding-card">
+          <div className="error">No credit tiers available for this sprint.</div>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -99,6 +122,7 @@ const SprintOnboardingStep2 = () => {
         <div className="sprint-onboarding-content">
           <div className="onboarding-title">
             <h2>Confirm your preferred Taotter Credit Tier</h2>
+            <p>Select from the available tiers for {sprintData.data.sprint.name}</p>
           </div>
           
           <div className="credit-tiers">
@@ -115,11 +139,8 @@ const SprintOnboardingStep2 = () => {
                     
                     <div className="tier-pricing">
                       <div className="hourly-rate">
-                        {tier.originalRate && (
-                          <span className="original-rate">Hourly Rate: {tier.originalRate}</span>
-                        )}
                         <span className="current-rate">
-                          {!tier.originalRate && 'Hourly Rate: '}{tier.hourlyRate}
+                          Hourly Rate: {tier.hourlyRate}
                         </span>
                       </div>
                       
@@ -127,7 +148,7 @@ const SprintOnboardingStep2 = () => {
                       <div className="tier-ideal">{tier.idealFor}</div>
                       <div className="tier-breakdown">
                         <span className="breakdown-label">Amount:</span> {tier.pricing.amount} <br />
-                        <span className="breakdown-label">Qty:</span> {tier.pricing.quantity}<br />
+                        <span className="breakdown-label">Qty:</span> {tier.pricing.quantity} hours<br />
                         <span className="breakdown-label">Discount:</span> {tier.pricing.discount}
                       </div>
                     </div>
@@ -148,7 +169,6 @@ const SprintOnboardingStep2 = () => {
             ))}
           </div>
 
-          {/* Navigation Buttons */}
           <div className="onboarding-navigation">
             <Button
               variant="secondary"
@@ -164,7 +184,7 @@ const SprintOnboardingStep2 = () => {
               disabled={!selectedTier || isSubmitting}
               className="nav-button next-button"
             >
-              {isSubmitting ? 'Saving...' : 'Next'}
+              {isSubmitting ? 'Selecting...' : 'Select Package'}
             </Button>
           </div>
         </div>
