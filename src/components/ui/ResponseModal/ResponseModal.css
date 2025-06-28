@@ -75,6 +75,7 @@
   flex-direction: column;
   gap: 6px;
   width: 100%;
+  margin-top: 16px;
 }
 .response-modal-form-row {
   display: flex;
@@ -94,7 +95,8 @@
   gap: 6px;
 }
 .response-modal-form input,
-.response-modal-form textarea {
+.response-modal-form textarea,
+.response-modal-form select {
   border-radius: 8px;
   border: 1px solid #d0d5dd;
   background: #fff;
@@ -106,7 +108,26 @@
   outline: none;
   box-shadow: 0 1px 2px #1018280d;
   resize: none;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
 }
+
+.response-modal-form select {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right 12px center;
+  background-repeat: no-repeat;
+  background-size: 16px 16px;
+  padding-right: 40px;
+}
+
+.response-modal-form input:focus,
+.response-modal-form textarea:focus,
+.response-modal-form select:focus {
+  border-color: #1378d1;
+  box-shadow: 0 0 0 2px rgba(19, 120, 209, 0.1);
+}
+
 .response-modal-form textarea {
   min-height: 80px;
 }
@@ -181,6 +202,36 @@
   height: 18px;
   margin: 0;
   cursor: pointer;
+  border: 2px solid #d0d5dd;
+  border-radius: 4px;
+  background: #fff;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.response-modal-tier-checkbox input[type="checkbox"]:checked {
+  background: #1378d1;
+  border-color: #1378d1;
+}
+
+.response-modal-tier-checkbox input[type="checkbox"]:checked::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 4px;
+  height: 8px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.response-modal-tier-checkbox input[type="checkbox"]:hover {
+  border-color: #1378d1;
 }
 
 .response-modal-credit-tier-label {

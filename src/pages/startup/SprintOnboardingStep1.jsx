@@ -1,10 +1,12 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import { Button, Input, TextArea } from '../../components/ui'
 import './SprintOnboardingStep1.css'
 
 const SprintOnboardingStep1 = () => {
   const navigate = useNavigate()
+  const { sprintId } = useParams()
+  
   const [formData, setFormData] = useState({
     brandGuidelines: null,
     contactLists: '',
@@ -12,6 +14,8 @@ const SprintOnboardingStep1 = () => {
   })
   const [errors, setErrors] = useState({})
   const [isSubmitting, setIsSubmitting] = useState(false)
+
+  // REMOVED: All the problematic redirect logic that was causing the loop
 
   const updateFormData = (field, value) => {
     setFormData(prev => ({
@@ -55,22 +59,9 @@ const SprintOnboardingStep1 = () => {
   }
 
   const validateForm = () => {
-    const newErrors = {}
-    
-    if (!formData.brandGuidelines) {
-      newErrors.brandGuidelines = 'Brand guidelines document is required'
-    }
-    
-    if (!formData.contactLists.trim()) {
-      newErrors.contactLists = 'Contact lists/networks information is required'
-    }
-    
-    if (!formData.appDemo.trim()) {
-      newErrors.appDemo = 'App/demo access information is required'
-    }
-    
-    setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
+    // All fields are now optional - no validation required
+    // Users can proceed to step 2 with empty fields
+    return true
   }
 
   const handleNext = async () => {
@@ -81,12 +72,13 @@ const SprintOnboardingStep1 = () => {
     try {
       // TODO: Upload file and save form data to API
       console.log('Form data:', formData)
+      console.log('Sprint ID:', sprintId)
       
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000))
       
-      // Navigate to next step
-      navigate('/sprint/onboarding/step-2')
+      // Navigate to next step with sprint ID
+      navigate(`/sprint/${sprintId}/onboarding/step-2`)
       
     } catch (error) {
       console.error('Error saving data:', error)
@@ -100,6 +92,24 @@ const SprintOnboardingStep1 = () => {
     navigate('/sprint/status')
   }
 
+  // Simple check for sprintId
+  if (!sprintId) {
+    return (
+      <div className="sprint-onboarding-page">
+        <div className="sprint-onboarding-card">
+          <div className="sprint-onboarding-header">
+            <h1>Start Your Sprint</h1>
+          </div>
+          <div className="sprint-onboarding-content">
+            <h2>Error</h2>
+            <p>Sprint ID not found. Please go back to sprint selection.</p>
+            <button onClick={() => navigate('/sprint/status')}>Back to Sprint Selection</button>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="sprint-onboarding-page">
       <div className="sprint-onboarding-card">
@@ -110,13 +120,13 @@ const SprintOnboardingStep1 = () => {
         <div className="sprint-onboarding-content">
           <div className="onboarding-title">
             <h2>Your Startup Material</h2>
-            <p>To begin efficiently, we kindly request access to the following:</p>
+            <p>To begin efficiently, we kindly request access to the following (all fields are optional):</p>
           </div>
           
           <div className="onboarding-form">
             {/* Brand Guidelines Upload */}
             <div className="form-field">
-              <label className="field-label">Brand Guidelines</label>
+              <label className="field-label">Brand Guidelines (Optional)</label>
               <div className="file-upload-container">
                 <input
                   type="file"
@@ -149,7 +159,7 @@ const SprintOnboardingStep1 = () => {
             {/* Contact Lists */}
             <div className="form-field">
               <label className="field-label">
-                Existing teacher contact lists, partner networks, or lead sources
+                Existing teacher contact lists, partner networks, or lead sources (Optional)
               </label>
               <TextArea
                 value={formData.contactLists}
@@ -163,7 +173,7 @@ const SprintOnboardingStep1 = () => {
             {/* App/Demo Access */}
             <div className="form-field">
               <label className="field-label">
-                Access to the app or demo (if available)
+                Access to the app or demo (if available) (Optional)
               </label>
               <Input
                 type="url"

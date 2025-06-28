@@ -6,9 +6,13 @@
   align-items: center;
   justify-content: center;
   padding: 64px 19.5px 27.3px;
-  width: 100%;
-  max-width: 390px;
-  margin: 0 auto;
+  width: 100vw;
+  margin: 0;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
 }
 
 .sprint-status-card {
@@ -22,7 +26,8 @@
 
 .sprint-status-card.sprint-approved {
   height: auto;
-  min-height: 1724.59px;
+  min-height: auto;
+  max-width: 800px;
 }
 
 /* Header */
@@ -84,46 +89,46 @@
 .sprint-options {
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  gap: 24px;
   width: 100%;
 }
 
 .sprint-option {
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  padding: 8px;
+  border: 1px solid #e4e7ec;
+  border-radius: 12px;
+  padding: 24px;
   width: 100%;
-  max-width: 299px;
-  margin: 0 auto;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
 }
 
-.sprint-details {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  width: 100%;
+.sprint-option:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-color: #1378d1;
 }
 
 .sprint-info {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: 20px;
+  gap: 12px;
   width: 100%;
-  max-width: 284px;
+  flex: 1;
 }
 
-.sprint-info h3 {
+.sprint-project-name {
   color: #333;
   font-family: 'Montserrat', sans-serif;
-  font-size: 16px;
-  font-weight: 700;
+  font-size: 18px;
+  font-weight: 600;
   line-height: 24px;
   margin: 0;
 }
 
 .sprint-number {
-  color: #333;
+  color: #1378d1;
   font-family: 'Montserrat', sans-serif;
   font-size: 16px;
   font-weight: 700;
@@ -133,51 +138,78 @@
 .sprint-title {
   color: #333;
   font-family: 'Montserrat', sans-serif;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 24px;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 28px;
 }
 
 .sprint-timeframe {
-  color: #aaa;
+  color: #666;
   font-family: 'Montserrat', sans-serif;
-  font-size: 12px;
-  font-weight: 700;
-  line-height: 24px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
 }
 
 .sprint-objective {
-  color: #212121;
+  color: #333;
   font-family: 'Montserrat', sans-serif;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 400;
-  line-height: 24px;
+  line-height: 20px;
 }
 
 .sprint-deliverables {
-  color: #212121;
+  color: #333;
   font-family: 'Montserrat', sans-serif;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 400;
-  line-height: 24px;
+  line-height: 20px;
+}
+
+.sprint-deliverables strong {
+  font-weight: 600;
 }
 
 .sprint-hours {
-  color: #aaa;
+  color: #e67e22;
   font-family: 'Montserrat', sans-serif;
-  font-size: 12px;
-  font-weight: 700;
-  line-height: 24px;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
 }
 
 /* Sprint Action */
 .sprint-action {
   display: flex;
-  align-items: flex-start;
+  justify-content: flex-start;
   width: 100%;
-  margin-top: 40px;
+  margin-top: 16px;
 }
 
+.sprint-get-started-btn {
+  background: none;
+  color: #1378d1;
+  border: none;
+  padding: 0;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 20px! important;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.sprint-get-started-btn:hover:not(:disabled) {
+  color: #0f6ba8;
+}
+
+.sprint-get-started-btn:disabled {
+  color: #ccc;
+  cursor: not-allowed;
+}
+
+/* Legacy styles for backward compatibility */
 .sprint-select-btn {
   background: none;
   border: none;
@@ -234,25 +266,24 @@
   }
   
   .sprint-option {
-    max-width: 100%;
+    padding: 16px;
   }
   
-  .sprint-info {
-    max-width: 100%;
-  }
-  
-  .sprint-select-btn {
-    max-width: 100%;
-  }
-  
-  .sprint-select-btn span {
+  .sprint-project-name {
     font-size: 16px;
+  }
+  
+  .sprint-title {
+    font-size: 18px;
+  }
+  
+  .sprint-get-started-btn {
+    font-size: 14px;
   }
 }
 
 @media (max-width: 390px) {
   .sprint-status-page {
-    max-width: 100%;
     padding: 16px 8px;
   }
   
@@ -275,8 +306,8 @@
 }
 
 /* Focus States */
-.sprint-select-btn:focus-visible {
-  outline: 2px solid #087fc0;
+.sprint-get-started-btn:focus-visible {
+  outline: 2px solid #1378d1;
   outline-offset: 2px;
   border-radius: 4px;
 }

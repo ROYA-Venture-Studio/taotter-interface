@@ -96,9 +96,22 @@ const MvpFormPage = () => {
     
     if (!formData.startupName.trim()) newErrors.startupName = 'Startup name is required'
     if (!formData.taskName.trim()) newErrors.taskName = 'Task name is required'  
-    if (!formData.taskDescription.trim()) newErrors.taskDescription = 'Task description is required'
+    
+    // Task description validation with minimum 10 characters
+    if (!formData.taskDescription.trim()) {
+      newErrors.taskDescription = 'Task description is required'
+    } else if (formData.taskDescription.trim().length < 10) {
+      newErrors.taskDescription = 'Task description must be at least 10 characters long'
+    }
+    
     if (!formData.stage) newErrors.stage = 'Please select a stage'
-    if (!formData.keyGoals.trim()) newErrors.keyGoals = 'Key goals are required'
+    
+    // Key goals validation with minimum 10 characters
+    if (!formData.keyGoals.trim()) {
+      newErrors.keyGoals = 'Key goals are required'
+    } else if (formData.keyGoals.trim().length < 10) {
+      newErrors.keyGoals = 'Key goals must be at least 10 characters long'
+    }
     
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
@@ -290,7 +303,7 @@ const MvpFormPage = () => {
         label="Key Goals"
         value={formData.keyGoals}
         onChange={(e) => updateFormData('keyGoals', e.target.value)}
-        placeholder="e.g. Build MVP, Get First Users"
+        placeholder="e.g. Build MVP, Get First Users (minimum 10 characters)"
         error={errors.keyGoals}
         required
       />

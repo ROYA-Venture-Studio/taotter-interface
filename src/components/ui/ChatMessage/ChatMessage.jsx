@@ -5,6 +5,13 @@ import Avatar from '../Avatar/Avatar';
 export default function ChatMessage({ message }) {
   const { user, content, timestamp, isOwnMessage, hasImage } = message;
 
+  // Debug log to see what isOwnMessage value is received
+  console.log('ChatMessage received:', {
+    content: content?.substring(0, 30),
+    isOwnMessage,
+    senderName: user?.name
+  });
+
   // Support for multi-line content
   const contentArray = Array.isArray(content) ? content : [content];
 

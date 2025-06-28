@@ -53,6 +53,20 @@ export default function ChatMessageArea({ searchQuery }) {
     onMessage: (msg) => {
       console.log('Socket message received:', msg);
       if (msg.conversationId === chatId) {
+        // Get current user ID for comparison
+        const currentUserId = String(currentUser?.id || currentUser?._id || '');
+        const msgSenderId = String(msg.senderId || msg.userId || '');
+        
+        // Determine if this is the current user's message
+        const isMyMessage = msg.senderType === 'startup' && msgSenderId === currentUserId;
+        
+        console.log('Real-time message alignment check:', {
+          senderType: msg.senderType,
+          msgSenderId,
+          currentUserId,
+          isMyMessage
+        });
+        
         // Transform the real-time message to match our format
         const transformedMsg = {
           id: msg._id,
@@ -61,7 +75,7 @@ export default function ChatMessageArea({ searchQuery }) {
             : { name: currentUser?.profile?.founderFirstName || "Me", avatar: "/assets/icons/User.svg", isOnline: true },
           content: msg.content || "",
           timestamp: msg.createdAt ? new Date(msg.createdAt).toLocaleTimeString() : new Date().toLocaleTimeString(),
-          isOwnMessage: msg.senderType === 'startup' && String(msg.senderId || msg.userId) === String(currentUser?.id || currentUser?._id),
+          isOwnMessage: isMyMessage,
           hasImage: !!msg.imageUrl,
           imageUrl: msg.imageUrl || null
         };
@@ -101,12 +115,24 @@ export default function ChatMessageArea({ searchQuery }) {
       // Only set messages from API if messages array is empty (initial load)
       setMessages(prev => {
         if (prev.length > 0) return prev;
+        
+        // Get current user ID for comparison
+        const currentUserId = String(currentUser?.id || currentUser?._id || '');
+        
         const transformedMessages = data.data.messages.map(msg => {
           // Debug logs for alignment
           const senderType = msg.senderType;
-          const senderId = String(msg.senderId);
-          const userId = String(currentUser?.id || currentUser?._id);
-          const isMine = senderType === 'startup' && senderId === userId;
+          const senderId = String(msg.senderId || '');
+          const isMine = senderType === 'startup' && senderId === currentUserId;
+          
+          console.log('API message alignment check:', {
+            msgId: msg._id,
+            senderType,
+            senderId,
+            currentUserId,
+            isMine
+          });
+          
           return {
             id: msg._id,
             user: msg.senderType === 'admin'

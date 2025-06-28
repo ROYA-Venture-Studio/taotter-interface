@@ -121,7 +121,7 @@ const SignUpPage = () => {
       }
 
       // Navigate to dashboard or welcome page
-      navigate('/dashboard') // Update this to your desired route
+      navigate('/startup/login') // Update this to your desired route
 
     } catch (error) {
       console.error('Signup error:', error)

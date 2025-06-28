@@ -10,7 +10,7 @@ export default function SidebarChatList({ onClose, isClosing = false }) {
   const { data, isLoading, error } = useGetChatListQuery();
 
   const handleChatClick = (chatId) => {
-    navigate(`/chat/${chatId}`);
+    navigate(`/startup/chat/${chatId}`);
     onClose && onClose();
   };
 
@@ -49,6 +49,11 @@ export default function SidebarChatList({ onClose, isClosing = false }) {
       <div className={styles.chatItems}>
         {isLoading && <div>Loading chats...</div>}
         {error && <div style={{ color: "red" }}>Failed to load chats.</div>}
+        {!isLoading && !error && chats.length === 0 && (
+          <div style={{ padding: "20px", textAlign: "center", color: "#667085", fontSize: "14px" }}>
+            No chats available yet
+          </div>
+        )}
         {chats.map((chat) => (
           <div
             key={chat.id}

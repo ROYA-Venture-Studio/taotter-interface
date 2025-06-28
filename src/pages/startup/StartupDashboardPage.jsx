@@ -25,10 +25,11 @@ function getStatusLabel(status) {
 }
 
 // Helper component for each sprint card
-function SprintCard({ sprint, onClick }) {
+function SprintCard({ sprint, onNoBoardClick }) {
   const { data, isLoading, error } = useGetStartupBoardBySprintQuery(sprint.id, { skip: !sprint.id })
   const [showFinishModal, setShowFinishModal] = useState(false)
   const [finishSprint, { isLoading: isFinishing }] = useFinishSprintMutation()
+  const navigate = useNavigate()
   let percent = 0
 
   if (data && data.data && data.data.board) {
@@ -53,16 +54,27 @@ function SprintCard({ sprint, onClick }) {
     }
   }
 
+  const handleCardClick = () => {
+    // Check if board exists before navigating
+    if (error || !data?.data?.board) {
+      // No board exists, show popup
+      onNoBoardClick()
+    } else {
+      // Board exists, navigate to it
+      navigate(`/startup/sprint/${sprint.id}/board`)
+    }
+  }
+
   return (
     <div
       className="dashboard-card"
-      onClick={onClick}
+      onClick={handleCardClick}
       tabIndex={0}
       role="button"
       style={{ outline: 'none' }}
       onKeyDown={e => {
         if (e.key === 'Enter' || e.key === ' ') {
-          onClick()
+          handleCardClick()
         }
       }}
     >
@@ -86,7 +98,7 @@ function SprintCard({ sprint, onClick }) {
           {isLoading ? '...' : `${percent}%`}
         </span>
       </div>
-      {error && <div style={{ color: 'red', fontSize: 12 }}>Board error</div>}
+      {/* REMOVED: Board error display - no longer showing error when no board exists */}
       {/* Finish Sprint Button */}
       {sprint.status !== 'completed' && (
         <Button
@@ -114,6 +126,7 @@ function SprintCard({ sprint, onClick }) {
                 type="button"
                 variant="secondary"
                 className="dashboard-modal-btn"
+                style={{ color: '#000' }}
                 onClick={e => {
                   e.stopPropagation()
                   setShowFinishModal(false)
@@ -140,6 +153,7 @@ function SprintCard({ sprint, onClick }) {
 
 const StartupDashboardPage = () => {
   const [showModal, setShowModal] = useState(false)
+  const [showNoBoardModal, setShowNoBoardModal] = useState(false)
   const { data, isLoading, error } = useGetMySprintsQuery()
   const navigate = useNavigate()
 
@@ -166,10 +180,32 @@ const StartupDashboardPage = () => {
           <SprintCard
             key={sprint.id}
             sprint={sprint}
-            onClick={() => navigate(`/startup/sprint/${sprint.id}/board`)}
+            onNoBoardClick={() => setShowNoBoardModal(true)}
           />
         ))}
       </div>
+
+      {/* No Board Modal */}
+      {showNoBoardModal && (
+        <div className="dashboard-modal-backdrop">
+          <div className="dashboard-modal">
+            <h2>Board Not Available</h2>
+            <p className="dashboard-modal-subtitle">
+              The admin has not yet created a task board for this sprint.
+            </p>
+            <div className="dashboard-modal-actions">
+              <Button
+                type="button"
+                variant="primary"
+                className="dashboard-modal-btn"
+                onClick={() => setShowNoBoardModal(false)}
+              >
+                OK
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

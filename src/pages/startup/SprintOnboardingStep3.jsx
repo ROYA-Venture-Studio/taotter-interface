@@ -10,54 +10,52 @@ const SprintOnboardingStep3 = () => {
   const [isScheduled, setIsScheduled] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [meetingDetails, setMeetingDetails] = useState(null)
-  const iframeRef = useRef(null)
-  const [showIframe, setShowIframe] = useState(false)
+  const [calendlyClicked, setCalendlyClicked] = useState(false) // Track if Calendly button was clicked
   
   const [scheduleMeeting] = useScheduleMeetingMutation()
 
-  const calendlyUrl = 'https://calendly.com/taotter/kickoff-call'
-
-  useEffect(() => {
-    const handleCalendlyMessage = (event) => {
-      if (event.origin !== 'https://calendly.com') return
-
-      if (event.data.event && event.data.event === 'calendly.event_scheduled') {
-        const eventData = event.data.event_details
-        setMeetingDetails({
-          eventUri: eventData.uri,
-          eventName: eventData.event_type.name,
-          startTime: eventData.start_time,
-          endTime: eventData.end_time,
-          inviteeEmail: eventData.invitee.email,
-          inviteeName: eventData.invitee.name,
-          scheduledAt: new Date().toISOString()
-        })
-        setIsScheduled(true)
-        setShowIframe(false)
-      }
-
-      if (event.data.event && event.data.event === 'calendly.profile_page_viewed') {
-        console.log('User is viewing Calendly calendar')
-      }
-
-      if (event.data.event && event.data.event === 'calendly.date_and_time_selected') {
-        console.log('User selected a date and time')
-      }
-    }
-
-    window.addEventListener('message', handleCalendlyMessage)
-
-    return () => {
-      window.removeEventListener('message', handleCalendlyMessage)
-    }
-  }, [])
+  const calendlyUrl = 'https://calendly.com/taottertest'
 
   const handleScheduleCall = () => {
-    setShowIframe(true)
+    // Mark that Calendly button was clicked
+    setCalendlyClicked(true)
+    
+    // Open Calendly in a new window/tab
+    const calendlyWindow = window.open(
+      calendlyUrl,
+      'calendly',
+      'width=800,height=600,scrollbars=yes,resizable=yes'
+    )
+
+    // Focus the new window
+    if (calendlyWindow) {
+      calendlyWindow.focus()
+    }
+
+    // Show instructions to user
+    alert('Please complete your scheduling in the new window/tab. Once you have scheduled your meeting, come back here and click "I\'ve Scheduled My Meeting" below.')
   }
 
-  const handleCloseIframe = () => {
-    setShowIframe(false)
+  const handleConfirmScheduled = () => {
+    // Check if Calendly was opened first
+    if (!calendlyClicked) {
+      alert('Please use the "Schedule with Calendly" button first to open the scheduling page.')
+      return
+    }
+    
+    // Simulate meeting details for now
+    const simulatedMeetingDetails = {
+      eventUri: 'https://calendly.com/events/scheduled',
+      eventName: 'Kickoff Call',
+      startTime: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // Tomorrow
+      endTime: new Date(Date.now() + 24 * 60 * 60 * 1000 + 30 * 60 * 1000).toISOString(), // Tomorrow + 30 mins
+      inviteeEmail: 'user@example.com',
+      inviteeName: 'User',
+      scheduledAt: new Date().toISOString()
+    }
+    
+    setMeetingDetails(simulatedMeetingDetails)
+    setIsScheduled(true)
   }
 
   const handleFinish = async () => {
@@ -135,14 +133,48 @@ const SprintOnboardingStep3 = () => {
             
             <div className="schedule-action">
               {!isScheduled ? (
-                <Button
-                  variant="primary"
-                  onClick={handleScheduleCall}
-                  className="schedule-button"
-                  size="large"
-                >
-                  Schedule with Calendly
-                </Button>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}>
+                  <Button
+                    variant="primary"
+                    onClick={handleScheduleCall}
+                    className="schedule-button"
+                    size="large"
+                  >
+                    Schedule with Calendly
+                  </Button>
+                  
+                  {calendlyClicked && (
+                    <div style={{ 
+                      textAlign: 'center', 
+                      padding: '8px', 
+                      background: '#e3f2fd', 
+                      borderRadius: '6px',
+                      fontSize: '14px',
+                      color: '#1565c0',
+                      marginBottom: '8px'
+                    }}>
+                      ✓ Calendly opened! Once you've scheduled your meeting, click the button below.
+                    </div>
+                  )}
+                  
+                  <Button
+                    variant="secondary"
+                    onClick={handleConfirmScheduled}
+                    disabled={!calendlyClicked}
+                    style={{ 
+                      background: calendlyClicked ? '#059669' : '#9ca3af', 
+                      color: '#fff', 
+                      border: 'none',
+                      fontSize: '14px',
+                      padding: '10px 20px',
+                      cursor: calendlyClicked ? 'pointer' : 'not-allowed',
+                      opacity: calendlyClicked ? 1 : 0.6,
+                      transition: 'all 0.3s ease'
+                    }}
+                  >
+                    I've Scheduled My Meeting
+                  </Button>
+                </div>
               ) : (
                 <div className="schedule-confirmation">
                   <div className="confirmation-icon">✅</div>
@@ -177,29 +209,6 @@ const SprintOnboardingStep3 = () => {
           </div>
         </div>
       </div>
-
-      {showIframe && (
-        <div className="calendly-modal-overlay">
-          <div className="calendly-modal">
-            <div className="calendly-modal-header">
-              <h3>Schedule Your Kickoff Call</h3>
-              <button className="calendly-close-btn" onClick={handleCloseIframe}>
-                ×
-              </button>
-            </div>
-            <div className="calendly-iframe-container">
-              <iframe
-                ref={iframeRef}
-                src={`${calendlyUrl}?embed_domain=${window.location.hostname}&embed_type=Inline`}
-                width="100%"
-                height="600"
-                frameBorder="0"
-                title="Schedule Kickoff Call"
-              />
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   )
 }

@@ -72,26 +72,22 @@ const LoginPage = () => {
           userType: 'startup',
           permissions: [],
         }))
-        // Routing logic based on onboarding status
-        const onboarding = response.data.startup.onboarding || {}
-        const step = onboarding.currentStep
-        if (
-          step === 'pending_review' ||
-          step === 'questionnaire' ||
-          step === 'sprint_selection'
-        ) {
-          navigate('/sprint/status')
-        } else if (step === 'document_upload') {
-          navigate('/sprint/onboarding/step-1')
-        } else if (step === 'meeting_scheduling') {
-          navigate('/sprint/onboarding/step-3')
-        } else if (step === 'meeting_scheduled' || step === 'completed') {
-          navigate('/dashboard')
-        } else if (step === 'sprint_onboarding' || step === 'sprint-selection') {
-          navigate('/sprint-onboarding')
+        
+        // CORRECTED ROUTING LOGIC:
+        // Check user's onboarding status to determine where to send them
+        const onboardingStep = response.data.startup.onboarding?.currentStep
+        
+        // If onboarding is complete or user has active sprint, go to dashboard
+        if (onboardingStep === 'completed' || 
+            onboardingStep === 'active_sprint' ||
+            onboardingStep === 'document_upload' ||  
+            onboardingStep === 'meeting_scheduled') {
+          navigate('/startup/dashboard')
         } else {
-          navigate('/dashboard')
+          // Only send to sprint status if onboarding is incomplete
+          navigate('/sprint/status')
         }
+        
       } else {
         setErrors({ submit: 'Login failed. Please try again.' })
       }

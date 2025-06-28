@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useGetCurrentUserQuery } from '../../store/api/authApi'
-import { useGetSprintsQuery, useSelectPackageMutation } from '../../store/api/sprintsApi'
+import { useGetSprintsQuery, useGetMySprintsQuery } from '../../store/api/sprintsApi'
 import './SprintStatusPage.css'
 
 const SprintStatusPage = () => {
@@ -9,19 +9,23 @@ const SprintStatusPage = () => {
   const { data: userData, isLoading: userLoading } = useGetCurrentUserQuery()
   const [showSprints, setShowSprints] = useState(false)
   const [sprintData, setSprintData] = useState(null)
-  const [selecting, setSelecting] = useState(false)
-  const [error, setError] = useState("")
 
-  // Fetch sprints only if onboarding step is 'sprint_selection'
+  // Fetch available sprints only if onboarding step is 'sprint_selection'
   const { data: sprintsData, isLoading: sprintsLoading } = useGetSprintsQuery(
     {},
     { skip: !showSprints }
   )
-  const [selectPackage] = useSelectPackageMutation()
+  
+  // Always fetch user's current sprints to check for active ones
+  const { data: mySprintsData, isLoading: mySprintsLoading } = useGetMySprintsQuery({})
 
+  // REMOVED: Smart routing that was causing redirect loops
+  // Only set showSprints based on onboarding step
   useEffect(() => {
     if (userData && userData.data && userData.data.user && userData.data.user.onboarding) {
       const step = userData.data.user.onboarding.currentStep
+      
+      // If step is sprint_selection, show sprint selection
       if (step === 'sprint_selection') {
         setShowSprints(true)
       } else {
@@ -38,33 +42,23 @@ const SprintStatusPage = () => {
           id: s.id,
           number: idx + 1,
           title: s.name,
-          timeframe: s.estimatedDuration ? `~${s.estimatedDuration} days` : '',
-          objective: s.description,
-          deliverables: s.packageOptions?.[0]?.features || [],
-          estimatedHours: s.packageOptions?.[0]?.engagementHours || 0,
+          estimatedWeeks: s.estimatedDuration || 0,
+          objective: s.packageOptions?.[0]?.description || 'No objective available',
+          deliverables: s.description || 'No deliverables specified',
+          estimatedTotalHours: (s.estimatedDuration || 0) * 30, // weeks * 5 days * 6 hours
           packageOptions: s.packageOptions || []
         }))
       })
     }
   }, [sprintsData, userData])
 
-  const handleSprintSelection = async (sprintId, packageId) => {
-    setSelecting(true)
-    setError("")
-    try {
-      await selectPackage({ sprintId, packageId }).unwrap()
-      navigate('/sprint/onboarding/step-1')
-    } catch (err) {
-      setError(
-        err?.data?.message ||
-        "Failed to select sprint package. Please try again."
-      )
-    } finally {
-      setSelecting(false)
-    }
+  const handleGetStarted = (sprint) => {
+    // Navigate to step 1 - no package selection here!
+    // Let the user choose their package in step 2
+    navigate(`/sprint/${sprint.id}/onboarding/step-1`)
   }
 
-  if (userLoading) {
+  if (userLoading || mySprintsLoading) {
     return (
       <div className="sprint-status-page">
         <div className="sprint-status-card">
@@ -122,53 +116,64 @@ const SprintStatusPage = () => {
           </div>
           <div className="sprint-status-content">
             <h2>Select Your Sprint</h2>
-            {error && <div style={{ color: "red", marginBottom: 12 }}>{error}</div>}
             <div className="sprint-options">
               {sprintData?.sprints.map((sprint) => (
                 <div key={sprint.id} className="sprint-option">
-                  <div className="sprint-details">
-                    <div className="sprint-info">
-                      <h3>Project: {sprintData.projectName}</h3>
-                      <div className="sprint-number">⚙ Sprint {sprint.number}</div>
-                      <div className="sprint-title">{sprint.title}</div>
-                      <div className="sprint-timeframe">Estimated Time: ({sprint.timeframe})</div>
-                      <div className="sprint-objective">Sprint Objective: {sprint.objective}</div>
-                      <div className="sprint-deliverables">
-                        <strong>Deliverables:</strong>
-                        <br />
-                        {Array.isArray(sprint.deliverables) ? sprint.deliverables.join(' ') : sprint.deliverables}
-                      </div>
-                      <div className="sprint-hours">⚠ Estimated Total Hours for Sprint {sprint.number}: {sprint.estimatedHours} working hours</div>
+                  <div className="sprint-info">
+                    <div className="sprint-project-name">Project: {sprintData.projectName}</div>
+                    <div className="sprint-number">⚙ Sprint {sprint.number}</div>
+                    <div className="sprint-title">{sprint.title}</div>
+                    <div className="sprint-timeframe">Estimated Time: {sprint.estimatedWeeks} weeks</div>
+                    <div className="sprint-objective">Sprint Objective: {sprint.objective}</div>
+                    <div className="sprint-deliverables">
+                      <strong>Deliverables:</strong>
+                      <br />
+                      {sprint.deliverables}
                     </div>
+                    <div className="sprint-hours">⚠ Estimated Total Hours for Sprint {sprint.number}: {sprint.estimatedTotalHours} working hours</div>
                   </div>
                   <div className="sprint-action">
-                    {sprint.packageOptions && sprint.packageOptions.length > 0 ? (
-                      <div>
-                        <div style={{ marginBottom: 8 }}>Choose a package:</div>
-                        {sprint.packageOptions.map((pkg) => (
-                          <button
-                            key={pkg.id}
-                            className="sprint-select-btn"
-                            disabled={selecting}
-                            onClick={() => handleSprintSelection(sprint.id, pkg.id)}
-                          >
-                            <span>
-                              {pkg.name} - {pkg.price} {pkg.currency} / {pkg.engagementHours} hours
-                            </span>
-                          </button>
-                        ))}
-                      </div>
-                    ) : (
-                      <button
-                        className="sprint-select-btn"
-                        disabled
-                      >
-                        No packages available
-                      </button>
-                    )}
+                    <button
+                      className="sprint-get-started-btn"
+                      onClick={() => handleGetStarted(sprint)}
+                    >
+                      Let's Get Started ----&gt;
+                    </button>
                   </div>
                 </div>
               ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // If user has active sprints but is on sprint status page, show a message
+  if (mySprintsData && mySprintsData.data && mySprintsData.data.sprints && mySprintsData.data.sprints.length > 0) {
+    const activeSprint = mySprintsData.data.sprints[0]
+    return (
+      <div className="sprint-status-page">
+        <div className="sprint-status-card">
+          <div className="sprint-status-header">
+            <h1>Sprint In Progress</h1>
+          </div>
+          <div className="sprint-status-content">
+            <h2>You have an active sprint!</h2>
+            <p>Continue with your current sprint or go to your dashboard.</p>
+            <div style={{ marginTop: '20px', display: 'flex', gap: '10px', justifyContent: 'center' }}>
+              <button 
+                className="sprint-get-started-btn"
+                onClick={() => navigate('/startup/dashboard')}
+              >
+                Go to Dashboard
+              </button>
+              <button 
+                className="sprint-get-started-btn"
+                onClick={() => navigate(`/startup/sprint/${activeSprint.id}/board`)}
+              >
+                View Sprint Board
+              </button>
             </div>
           </div>
         </div>

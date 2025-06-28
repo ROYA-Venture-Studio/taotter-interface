@@ -1,3 +1,137 @@
+/* Sprint Onboarding Step 3 Specific Styles */
+
+/* Override any inherited white text styles */
+.schedule-card .onboarding-title h2 {
+  color: #333 !important;
+  font-family: 'Outfit', sans-serif;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 32px;
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.schedule-content {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.schedule-info {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.info-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 20px;
+  background: #f8fafc;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+}
+
+.info-icon {
+  font-size: 32px;
+  flex-shrink: 0;
+  margin-top: 4px;
+}
+
+.info-text {
+  flex: 1;
+}
+
+.info-text h3 {
+  color: #333 !important;
+  font-family: 'Outfit', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 24px;
+  margin: 0 0 8px 0;
+  text-align: left;
+}
+
+.info-text p {
+  color: #555 !important;
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  margin: 0;
+  text-align: left;
+}
+
+.info-text ul {
+  margin: 8px 0 0 0;
+  padding-left: 0;
+  list-style: none;
+}
+
+.info-text li {
+  color: #555 !important;
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  margin-bottom: 4px;
+  text-align: left;
+  position: relative;
+  padding-left: 16px;
+}
+
+.info-text li::before {
+  content: '•';
+  color: #1378d1;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.schedule-action {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 24px 0;
+}
+
+.schedule-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px 36px;
+  background: #1378d1;
+  color: #fff !important;
+  border: none;
+  border-radius: 8px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 18px !important;
+  font-weight: 600;
+  line-height: 24px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(19, 120, 209, 0.2);
+  min-width: 220px;
+  text-decoration: none;
+}
+
+.schedule-button:hover {
+  background: #0f6ba8;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(19, 120, 209, 0.3);
+  color: #fff !important;
+}
+
+.schedule-button:active {
+  transform: translateY(0);
+}
+
+/* Calendly Modal Styles */
 .calendly-modal-overlay {
   position: fixed;
   top: 0;
@@ -76,6 +210,9 @@
   border-radius: 8px;
   padding: 16px;
   margin-top: 20px;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .confirmation-icon {
@@ -85,17 +222,21 @@
 
 .confirmation-text h4 {
   margin: 0 0 8px 0;
-  color: #0c4a6e;
+  color: #0c4a6e !important;
   font-size: 16px;
   font-weight: 600;
+  font-family: 'Outfit', sans-serif;
 }
 
 .confirmation-text p {
   margin: 4px 0;
-  color: #0369a1;
+  color: #0369a1 !important;
   font-size: 14px;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 400;
 }
 
+/* Responsive Design */
 @media (max-width: 768px) {
   .calendly-modal {
     width: 95%;
@@ -108,6 +249,34 @@
   
   .calendly-modal-overlay {
     padding: 10px;
+  }
+  
+  .schedule-card .onboarding-title h2 {
+    font-size: 20px;
+    line-height: 28px;
+  }
+  
+  .info-item {
+    padding: 16px;
+  }
+  
+  .info-icon {
+    font-size: 28px;
+  }
+  
+  .info-text h3 {
+    font-size: 16px;
+  }
+  
+  .info-text p,
+  .info-text li {
+    font-size: 13px;
+  }
+  
+  .schedule-button {
+    min-width: 200px;
+    padding: 16px 28px;
+    font-size: 16px !important;
   }
 }
 
@@ -128,4 +297,68 @@
   .calendly-modal-header h3 {
     font-size: 16px;
   }
+  
+  .schedule-content {
+    gap: 24px;
+  }
+  
+  .schedule-card .onboarding-title h2 {
+    font-size: 18px;
+    line-height: 24px;
+    margin-bottom: 24px;
+  }
+  
+  .info-item {
+    padding: 12px;
+    gap: 12px;
+  }
+  
+  .info-icon {
+    font-size: 24px;
+  }
+  
+  .info-text h3 {
+    font-size: 15px;
+  }
+  
+  .info-text p,
+  .info-text li {
+    font-size: 12px;
+    line-height: 18px;
+  }
+  
+  .schedule-button {
+    min-width: 180px;
+    padding: 14px 24px;
+    font-size: 16px !important;
+  }
+  
+  .schedule-confirmation {
+    padding: 12px;
+    margin-top: 16px;
+  }
+  
+  .confirmation-text h4 {
+    font-size: 14px;
+  }
+  
+  .confirmation-text p {
+    font-size: 12px;
+  }
+}
+
+/* Make sure navigation buttons inherit proper styling */
+.schedule-card .onboarding-navigation {
+  margin-top: 40px;
+  padding-top: 24px;
+  border-top: 1px solid #e2e8f0;
+}
+
+/* Override any inherited styles that might affect text color */
+.schedule-card * {
+  color: inherit;
+}
+
+.schedule-card .sprint-onboarding-content {
+  color: #333;
 }

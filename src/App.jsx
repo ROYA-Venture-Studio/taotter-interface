@@ -37,44 +37,82 @@ function App() {
         <Route path="mvp/form" element={<MvpFormPage />} />
         <Route path="signup" element={<SignUpPage />} />
         <Route path="startup/login" element={<LoginPage />} />
-        <Route path="sprint/status" element={<SprintStatusPage />} />
-        <Route path="sprint/onboarding/step-1" element={<SprintOnboardingStep1 />} />
-        <Route path="sprint/onboarding/step-2" element={<SprintOnboardingStep2 />} />
-        <Route path="sprint/onboarding/step-3" element={<SprintOnboardingStep3 />} />
       </Route>
-<Route
-  path="/startup/sprint/:sprintId/board"
-  element={
-    <StartupProtectedRoute>
-      <DashboardLayout>
-        <StartupBoardPage />
-      </DashboardLayout>
-    </StartupProtectedRoute>
-  }
-/>
-{/* Dashboard page with dashboard layout */}
-<Route
-  path="dashboard"
-  element={
-    <StartupProtectedRoute>
-      <DashboardLayout>
-        <StartupDashboardPage />
-      </DashboardLayout>
-    </StartupProtectedRoute>
-  }
-/>
-<Route
-  path="chat/:id"
-  element={
-    <StartupProtectedRoute>
-      <DashboardLayout>
-        <StartupChatPage />
-      </DashboardLayout>
-    </StartupProtectedRoute>
-  }
-/>
+
+      {/* Protected Startup routes */}
+      <Route
+        path="/sprint/status"
+        element={
+          <StartupProtectedRoute>
+            <SprintStatusPage />
+          </StartupProtectedRoute>
+        }
+      />
+      
+      <Route
+        path="/sprint/:sprintId/onboarding/step-1"
+        element={
+          <StartupProtectedRoute>
+            <SprintOnboardingStep1 />
+          </StartupProtectedRoute>
+        }
+      />
+      
+      <Route
+        path="/sprint/:sprintId/onboarding/step-2"
+        element={
+          <StartupProtectedRoute>
+            <SprintOnboardingStep2 />
+          </StartupProtectedRoute>
+        }
+      />
+      
+      <Route
+        path="/sprint/:sprintId/onboarding/step-3"
+        element={
+          <StartupProtectedRoute>
+            <SprintOnboardingStep3 />
+          </StartupProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/startup/sprint/:sprintId/board"
+        element={
+          <StartupProtectedRoute>
+            <DashboardLayout>
+              <StartupBoardPage />
+            </DashboardLayout>
+          </StartupProtectedRoute>
+        }
+      />
+
+      {/* Dashboard page with dashboard layout */}
+      <Route
+        path="/startup/dashboard"
+        element={
+          <StartupProtectedRoute>
+            <DashboardLayout>
+              <StartupDashboardPage />
+            </DashboardLayout>
+          </StartupProtectedRoute>
+        }
+      />
+      
+      <Route
+        path="/startup/chat/:id"
+        element={
+          <StartupProtectedRoute>
+            <DashboardLayout>
+              <StartupChatPage />
+            </DashboardLayout>
+          </StartupProtectedRoute>
+        }
+      />
+
       {/* Admin authentication */}
       <Route path="/admin/login" element={<AdminLoginPage />} />
+      
       {/* Protected Admin routes */}
       <Route path="/admin/dashboard" element={<AdminProtectedRoute><AdminLayout><AdminDashboardPage /></AdminLayout></AdminProtectedRoute>} />
       <Route path="/admin/table" element={<AdminProtectedRoute><AdminLayout><TablePage /></AdminLayout></AdminProtectedRoute>} />

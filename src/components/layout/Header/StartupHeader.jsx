@@ -78,7 +78,7 @@ const StartupHeader = () => {
             <div className="startup-sidebar__section">
               <div className="startup-sidebar__subtitle">MENU</div>
               <nav>
-                <a href="/dashboard" className="startup-sidebar__link">Dashboard</a>
+                <a href="/startup/dashboard" className="startup-sidebar__link">Dashboard</a>
                 {/* <a href="/boards" className="startup-sidebar__link">Board</a> */}
               </nav>
             </div>

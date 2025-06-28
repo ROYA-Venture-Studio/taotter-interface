@@ -29,27 +29,33 @@ const SprintOnboardingStep2 = () => {
         const tierKey = pkg.tier || 'starter'
         const tierInfo = tierMapping[tierKey] || tierMapping['starter']
         
+        // Calculate hourly rate: total amount / number of hours
+        const calculatedHourlyRate = pkg.engagementHours > 0 ? (pkg.price || 0) / pkg.engagementHours : 0
+        
         return {
           id: pkg._id,
           tierKey: tierKey,
           icon: tierInfo.icon,
           name: pkg.name.split(':')[0].replace(/🚀|🌱|🏗/g, '').trim(),
           description: pkg.name.split(':')[1]?.trim() || tierInfo.baseDescription,
-          hourlyRate: `$${pkg.hourlyRate?.toFixed(2) || '0.00'}/hour`,
+          hourlyRate: `QAR ${calculatedHourlyRate.toFixed(2)}/hour`,
           originalRate: null,
           details: pkg.description || 'Sprint package details',
           idealFor: `Ideal for ${pkg.engagementHours} hours of engagement`,
           pricing: {
-            amount: `$${pkg.hourlyRate?.toFixed(2) || '0.00'}`,
+            amount: `QAR ${calculatedHourlyRate.toFixed(2)}`,
             quantity: pkg.engagementHours || 0,
             discount: pkg.discount ? `-${pkg.discount}%` : '0%',
-            total: `$${(pkg.price || 0).toFixed(2)}`
+            total: `QAR ${(pkg.price || 0).toFixed(2)}`
           },
           packageData: pkg
         }
       })
 
       setCreditTiers(formattedTiers)
+      
+      // DO NOT auto-select any package - let user choose
+      // Remove any previous auto-selection logic
     }
   }, [sprintData])
 
@@ -68,7 +74,7 @@ const SprintOnboardingStep2 = () => {
         packageId: selectedTier
       }).unwrap()
       
-      navigate('/startup/dashboard')
+      navigate(`/sprint/${sprintId}/onboarding/step-3`)
       
     } catch (error) {
       console.error('Error selecting package:', error)
@@ -79,7 +85,7 @@ const SprintOnboardingStep2 = () => {
   }
 
   const handleBack = () => {
-    navigate('/startup/dashboard')
+    navigate(`/sprint/${sprintId}/onboarding/step-1`)
   }
 
   if (isLoading) {
@@ -121,7 +127,7 @@ const SprintOnboardingStep2 = () => {
         
         <div className="sprint-onboarding-content">
           <div className="onboarding-title">
-            <h2>Confirm your preferred Taotter Credit Tier</h2>
+            <h2>Choose your preferred Taotter Credit Tier</h2>
             <p>Select from the available tiers for {sprintData.data.sprint.name}</p>
           </div>
           
@@ -161,7 +167,7 @@ const SprintOnboardingStep2 = () => {
                     onClick={() => handleTierSelection(tier.id)}
                     className={`tier-select-btn ${selectedTier === tier.id ? 'selected' : ''}`}
                   >
-                    Select
+                    {selectedTier === tier.id ? 'Selected' : 'Select'}
                   </Button>
                   <div className="tier-total">{tier.pricing.total}</div>
                 </div>

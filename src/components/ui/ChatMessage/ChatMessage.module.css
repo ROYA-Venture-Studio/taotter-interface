@@ -7,10 +7,16 @@
 
 .own {
   flex-direction: row-reverse;
+  /* Debug: Make it super obvious when this class is applied */
+  background-color: rgba(255, 0, 0, 0.1) !important;
+  border: 2px solid red !important;
 }
 
 .other {
   flex-direction: row;
+  /* Debug: Make it obvious when this class is applied */
+  background-color: rgba(0, 255, 0, 0.1) !important;
+  border: 2px solid green !important;
 }
 
 .avatarWrapper {
