@@ -1,45 +1,24 @@
-name: Deploy Frontend to Staging VM
+name: Test Self-Hosted Runner
 
 on:
   push:
     branches:
       - staging
+  workflow_dispatch: # Allows manual trigger
 
 jobs:
-  deploy:
-    runs-on: self-hosted # Will pick up the organization-level runner
+  test-connectivity:
+    runs-on: self-hosted # Use your runner's labels
 
     steps:
-    - name: Checkout Frontend code
-      uses: actions/checkout@v4
-      # This checks out the 'taotter-interface' repo into the runner's workspace
+    - name: Simple Echo
+      run: echo "Hello from self-hosted runner!"
 
-    - name: Install Frontend Dependencies and Build
+    - name: Check VM Details
       run: |
-        # Commands run in the checked out repo directory
-        npm install # Install all dependencies including devDependencies for build
-        npm run build # Build your frontend project, creates 'dist' folder
-
-    - name: Clean and Copy Frontend Build to VM Destination
-      run: |
-        # Define the target directory on your VM for the frontend served by npx serve
-        DEPLOY_DIR="/home/azureuser/taotter-interface" # This is where 'npx serve' looks for 'dist'
-
-        echo "Clearing old frontend build from ${DEPLOY_DIR}..."
-        sudo rm -rf "${DEPLOY_DIR}/dist" # Clean only the dist folder
-        # Ensure the directory itself exists
-        sudo mkdir -p "${DEPLOY_DIR}"
-
-        echo "Copying new frontend build from checkout to ${DEPLOY_DIR}..."
-        # Copy the *built* 'dist' folder
-        sudo cp -R "${{ github.workspace }}/dist" "${DEPLOY_DIR}/"
-
-    - name: Restart PM2 Frontend Process
-      run: |
-        echo "Restarting PM2 frontend process..."
-        # Assuming ecosystem.config.js is in /home/azureuser/
-        # Make sure ecosystem.config.js correctly points to /home/azureuser/taotter-interface for CWD
-        cd /home/azureuser/
-        pm2 restart taotter-frontend
-
-        echo "Frontend deployment complete!"
+        echo "Current User: $(whoami)"
+        echo "Current Directory: $(pwd)"
+        echo "Node Version: $(node -v)"
+        echo "NPM Version: $(npm -v)"
+        echo "PM2 Version: $(pm2 -v)"
+        echo "PATH: $PATH"  
