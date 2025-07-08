@@ -7,7 +7,7 @@ on:
 
 jobs:
   deploy:
-    runs-on: [x64] # Will pick up the organization-level runner
+    runs-on: stage # Will pick up the organization-level runner
 
     steps:
     - name: Checkout Frontend code
