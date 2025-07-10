@@ -16,7 +16,7 @@ jobs:
     - name: Install Frontend Dependencies and Build
       run: |
         npm install # Install all dependencies including devDependencies for build
-        npm run build # Build your frontend project, creates 'dist' folder
+        sudo npm run build # Build your frontend project, creates 'dist' folder
       working-directory: ${{ github.workspace }} # This is the default if not specified
 
     - name: Clean and Copy Frontend Build to VM Destination
