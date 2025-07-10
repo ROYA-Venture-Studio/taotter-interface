@@ -22,7 +22,7 @@ export default function AdminLoginPage() {
   // Redirect if already authenticated as admin
   useEffect(() => {
     if (isAuthenticated && userType === 'admin') {
-      const from = location.state?.from?.pathname || '/admin/dashboard';
+      const from = location.state?.from?.pathname || '/admin/board';
       navigate(from, { replace: true });
     }
   }, [isAuthenticated, userType, navigate, location]);
@@ -71,7 +71,7 @@ export default function AdminLoginPage() {
       }));
       
       // Redirect to intended page or dashboard
-      const from = location.state?.from?.pathname || '/admin/dashboard';
+      const from = location.state?.from?.pathname || '/admin/table';
       navigate(from, { replace: true });
       
     } catch (err) {

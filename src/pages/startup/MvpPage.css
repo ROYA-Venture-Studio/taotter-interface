@@ -223,7 +223,7 @@
 }
 
 .lets-start-btn {
-  opacity: 0.4;
+  opacity: 1;
   background: linear-gradient(90deg, #087fc0 0%, #1bb3c9 100%) !important;
   border-radius: 24px !important;
   border: none !important;

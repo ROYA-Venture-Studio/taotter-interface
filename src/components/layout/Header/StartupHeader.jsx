@@ -2,9 +2,8 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import "./StartupHeader.css";
-import MenuFriesLeft from "../../../assets/icons/menu-fries-left.svg";
+import Icon from "../../ui/Icon/Icon";
 import TaotterBlueLogo from "../../../assets/logo/Taotter_blue_logo.png";
-import LogoutIcon from "../../../assets/icons/Logout.svg";
 import SidebarChatList from "../SidebarChatList/SidebarChatList";
 import { logout } from "../../../store/slices/authSlice";
 
@@ -50,11 +49,7 @@ const StartupHeader = () => {
             onClick={() => setSidebarOpen(true)}
             aria-label="Open menu"
           >
-            <img
-              src={MenuFriesLeft}
-              alt="Menu"
-              className="startup-header__menu-icon"
-            />
+            <Icon name="menu-fries-left" size={24} className="startup-header__menu-icon" />
           </button>
         )}
         <div className="startup-header__logo-center">
@@ -79,7 +74,6 @@ const StartupHeader = () => {
               <div className="startup-sidebar__subtitle">MENU</div>
               <nav>
                 <a href="/startup/dashboard" className="startup-sidebar__link">Dashboard</a>
-                {/* <a href="/boards" className="startup-sidebar__link">Board</a> */}
               </nav>
             </div>
             <div className="startup-sidebar__section">
@@ -106,7 +100,7 @@ const StartupHeader = () => {
                     font: "inherit"
                   }}
                 >
-                  <img src={LogoutIcon} alt="Logout" style={{ width: 18, height: 18 }} />
+                  <Icon name="Logout" size={18} />
                   Logout
                 </button>
               </nav>
