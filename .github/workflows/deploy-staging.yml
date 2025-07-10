@@ -7,31 +7,46 @@ on:
 
 jobs:
   deploy:
-    runs-on: self-hosted # This targets the Frontend-specific runner
+    runs-on: self-hosted
 
     steps:
     - name: Checkout Frontend code
       uses: actions/checkout@v4
 
-    - name: Install Frontend Dependencies and Build
-      run: |
-        npm install # Install all dependencies including devDependencies for build
-        sudo npm run build # Build your frontend project, creates 'dist' folder
-      working-directory: ${{ github.workspace }} # This is the default if not specified
-
-    - name: Clean and Copy Frontend Build to VM Destination
+    - name: Set Permissions on Deployment Directory
+      # Ensure the final deployment directory for frontend code is owned by azureuser and writable.
+      # This prevents permission denied errors when copying or cleaning.
       run: |
         DEPLOY_DIR="/home/azureuser/taotter-interface"
-        echo "Clearing old frontend build from ${DEPLOY_DIR}..."
-        sudo rm -rf "${DEPLOY_DIR}/dist" # Clean only the dist folder
-        sudo mkdir -p "${DEPLOY_DIR}" # Ensure directory exists
+        sudo mkdir -p "${DEPLOY_DIR}"
+        sudo chown -R azureuser:azureuser "${DEPLOY_DIR}"
+        sudo chmod -R u+rwx "${DEPLOY_DIR}"
 
-        echo "Copying new frontend build from checkout to ${DEPLOY_DIR}..."
-        sudo cp -R "${{ github.workspace }}/dist" "${DEPLOY_DIR}/"
+    - name: Copy Frontend .env file for Build
+      # Copies the environment variables (like VITE_API_URL) from the VM to the build workspace.
+      # This is crucial because frontend builds embed these variables.
+      run: |
+        ENV_FILE_VM_PATH="/home/azureuser/taotter-interface/.env"
+        BUILD_TARGET_DIR="${{ github.workspace }}"
+        sudo cp "${ENV_FILE_VM_PATH}" "${BUILD_TARGET_DIR}/.env"
+      # (Remove the echo/cat statements once you confirm it's working)
+
+    - name: Install Frontend Dependencies and Build
+      # Installs all necessary Node.js packages and runs the Vite build process.
+      run: |
+        npm install
+        npm run build # Creates the 'dist' folder in the runner's workspace
+      working-directory: ${{ github.workspace }} # Ensures commands run in the checked out repo root
+
+    - name: Clean and Copy Frontend Build to VM Destination
+      # Removes the old deployed frontend build and copies the new one.
+      run: |
+        DEPLOY_DIR="/home/azureuser/taotter-interface"
+        sudo rm -rf "${DEPLOY_DIR}/dist" # Clean old build
+        sudo cp -R "${{ github.workspace }}/dist" "${DEPLOY_DIR}/" # Copy new build
 
     - name: Restart PM2 Frontend Process
+      # Restarts the PM2 process to serve the newly deployed frontend.
       run: |
-        echo "Restarting PM2 frontend process..."
-        cd /home/azureuser/ # Assuming ecosystem.config.js is here
-        pm2 restart taotter-frontend # Make sure this matches your ecosystem.config.js name
-        echo "Frontend deployment complete!"
+        cd /home/azureuser/
+        pm2 restart taotter-frontend
