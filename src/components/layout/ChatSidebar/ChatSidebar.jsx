@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useGetChatListQuery } from '../../../store/api/chatApi';
 import styles from './ChatSidebar.module.css';
-import SearchIcon from '../../../assets/icons/Search.svg';
+import Icon from '../../ui/Icon/Icon';
 
 export default function ChatSidebar({ searchQuery, setSearchQuery }) {
   const navigate = useNavigate();
@@ -61,7 +61,7 @@ export default function ChatSidebar({ searchQuery, setSearchQuery }) {
         
         <div className={styles.searchInputWrapper}>
           <div className={styles.searchIconContainer}>
-            <img src={SearchIcon} alt="search" className={styles.searchIcon} />
+            <Icon name="Search" size={18} className={styles.searchIcon} />
           </div>
           <input
             type="text"

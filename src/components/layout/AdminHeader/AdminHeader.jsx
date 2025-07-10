@@ -1,6 +1,6 @@
 import React from "react";
 import "./AdminHeader.css";
-import menuIcon from "../../../assets/icons/Menu-2.svg";
+import Icon from "../../ui/Icon/Icon";
 
 export default function AdminHeader({ onMenuClick }) {
   return (
@@ -10,7 +10,7 @@ export default function AdminHeader({ onMenuClick }) {
         aria-label="Open sidebar"
         onClick={onMenuClick}
       >
-        <img src={menuIcon} alt="Menu" />
+        <Icon name="Menu-2" size={24} />
       </button>
       <div className="admin-header__content">
         {/* Add any additional header content here */}

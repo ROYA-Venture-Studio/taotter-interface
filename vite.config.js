@@ -13,5 +13,10 @@ export default defineConfig({
         secure: false
       }
     }
-  }
+  },
+  build: {
+    assetsDir: 'assets',
+    copyPublicDir: true
+  },
+  publicDir: 'public'
 })

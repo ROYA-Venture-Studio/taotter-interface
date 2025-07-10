@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import Breadcrumb from "../../components/ui/Breadcrumb/Breadcrumb";
-import trashIcon from "../../assets/icons/trash.svg";
+import Icon from "../../components/ui/Icon/Icon";
 import "./TablePage.css";
 import { useGetAllAdminQuestionnairesQuery } from "../../store/api/questionnairesApi";
 import { useState } from "react";
@@ -152,7 +152,7 @@ export default function TablePage() {
                       title="Delete"
                       onClick={e => e.stopPropagation()}
                     >
-                      <img src={trashIcon} alt="Delete" />
+                      <Icon name="trash" size={20} />
                     </button>
                   </td>
                 </tr>

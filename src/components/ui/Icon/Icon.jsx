@@ -21,14 +21,14 @@ const Icon = ({
   }
 
   // Dynamic import of SVG icons
-  const getIconPath = () => {
-    try {
-      return `/src/assets/icons/${name}.svg`
-    } catch (error) {
-      console.warn(`Icon "${name}" not found`)
-      return null
-    }
+const getIconPath = () => {
+  try {
+    return `/assets/icons/${name}.svg`
+  } catch (error) {
+    console.warn(`Icon "${name}" not found`)
+    return null
   }
+}
 
   const iconPath = getIconPath()
 

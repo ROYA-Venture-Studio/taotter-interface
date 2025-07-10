@@ -188,7 +188,7 @@ const SprintOnboardingStep2 = () => {
               variant="primary"
               onClick={handleNext}
               disabled={!selectedTier || isSubmitting}
-              className="nav-button next-button"
+              className="nav-button next-button select-package-button"
             >
               {isSubmitting ? 'Selecting...' : 'Select Package'}
             </Button>
