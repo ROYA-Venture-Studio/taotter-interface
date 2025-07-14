@@ -2,16 +2,18 @@ import { configureStore } from '@reduxjs/toolkit'
 import { setupListeners } from '@reduxjs/toolkit/query'
 
 // API slices
-import { api as baseApi } from './api/api'
-import { authApi } from './api/authApi'
-import { startupApi } from './api/startupApi'
-import { adminApi } from './api/adminApi'
-import { questionnairesApi } from './api/questionnairesApi'
-import { sprintsApi } from './api/sprintsApi'
-import { boardsApi } from './api/boardsApi'
-import { tasksApi } from './api/tasksApi'
-import { analyticsApi } from './api/analyticsApi'
-import { chatApi } from './api/chatApi'
+import { api } from './api/api'
+
+// Import all API modules to ensure they inject their endpoints
+import './api/authApi'
+import './api/startupApi'
+import './api/adminApi'
+import './api/questionnairesApi'
+import './api/sprintsApi'
+import './api/boardsApi'
+import './api/tasksApi'
+import './api/analyticsApi'
+import './api/chatApi'
 
 // Redux slices
 import authReducer from './slices/authSlice'
@@ -27,13 +29,8 @@ const isDevelopment = import.meta.env.MODE === 'development'
 
 export const store = configureStore({
   reducer: {
-    // API reducers - Only include baseApi since other APIs inject into it
-    [baseApi.reducerPath]: baseApi.reducer,
-    [authApi.reducerPath]: authApi.reducer,
-    [startupApi.reducerPath]: startupApi.reducer,
-    [questionnairesApi.reducerPath]: questionnairesApi.reducer,
-    [analyticsApi.reducerPath]: analyticsApi.reducer,
-    [chatApi.reducerPath]: chatApi.reducer,
+    // API reducer - Only the main api since all others inject into it
+    [api.reducerPath]: api.reducer,
     
     // State slices
     auth: authReducer,
@@ -75,13 +72,8 @@ export const store = configureStore({
       },
     })
     .concat(
-      // Add RTK Query middleware - only for standalone APIs, not injected ones
-      baseApi.middleware,
-      authApi.middleware,
-      startupApi.middleware,
-      questionnairesApi.middleware,
-      analyticsApi.middleware,
-      chatApi.middleware,
+      // Add RTK Query middleware - only need the main api middleware
+      api.middleware,
     ),
   
   // Enable Redux DevTools in development

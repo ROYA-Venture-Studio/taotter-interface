@@ -1,18 +1,6 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { api } from "./api";
 
-export const chatApi = createApi({
-  reducerPath: 'chatApi',
-  baseQuery: fetchBaseQuery({
-    baseUrl: '/api',
-    prepareHeaders: (headers, { getState }) => {
-      const token = getState().auth.token
-      if (token) {
-        headers.set('authorization', `Bearer ${token}`)
-      }
-      return headers
-    },
-  }),
-  tagTypes: ['Chat', 'Message'],
+export const chatApi = api.injectEndpoints({
   endpoints: (builder) => ({
     startChat: builder.mutation({
       query: ({ startupId }) => ({
@@ -51,11 +39,12 @@ export const chatApi = createApi({
       invalidatesTags: (result, error, { chatId }) => [{ type: 'Message', id: chatId }],
     }),
   }),
-})
+  overrideExisting: false,
+});
 
 export const {
   useStartChatMutation,
   useGetChatListQuery,
   useGetMessagesQuery,
   useSendMessageMutation,
-} = chatApi
+} = chatApi;

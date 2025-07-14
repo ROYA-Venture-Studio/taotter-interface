@@ -1,18 +1,6 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { api } from "./api";
 
-export const startupApi = createApi({
-  reducerPath: 'startupApi',
-  baseQuery: fetchBaseQuery({
-    baseUrl: '/api',
-    prepareHeaders: (headers, { getState }) => {
-      const token = getState().auth.token
-      if (token) {
-        headers.set('authorization', `Bearer ${token}`)
-      }
-      return headers
-    },
-  }),
-  tagTypes: ['Startup', 'StartupProfile'],
+export const startupApi = api.injectEndpoints({
   endpoints: (builder) => ({
     // Profile Management
     getStartupProfile: builder.query({
@@ -76,7 +64,8 @@ export const startupApi = createApi({
       providesTags: ['Startup'],
     }),
   }),
-})
+  overrideExisting: false,
+});
 
 export const {
   useGetStartupProfileQuery,
@@ -87,24 +76,24 @@ export const {
   useDeactivateAccountMutation,
   useReactivateAccountMutation,
   useGetDashboardDataQuery,
-} = startupApi
+} = startupApi;
 
 // Export aliases for store.js compatibility
-export const useGetStartupsQuery = useGetDashboardDataQuery
+export const useGetStartupsQuery = useGetDashboardDataQuery;
 export const useGetStartupByIdQuery = () => {
-  throw new Error('useGetStartupByIdQuery not implemented')
-}
-export const useGetMyStartupQuery = useGetStartupProfileQuery
+  throw new Error('useGetStartupByIdQuery not implemented');
+};
+export const useGetMyStartupQuery = useGetStartupProfileQuery;
 export const useCreateStartupMutation = () => {
-  throw new Error('useCreateStartupMutation not implemented')
-}
-export const useUpdateStartupMutation = useUpdateStartupProfileMutation
-export const useDeleteStartupMutation = useDeactivateAccountMutation
+  throw new Error('useCreateStartupMutation not implemented');
+};
+export const useUpdateStartupMutation = useUpdateStartupProfileMutation;
+export const useDeleteStartupMutation = useDeactivateAccountMutation;
 export const useUploadStartupDocumentsMutation = () => {
-  throw new Error('useUploadStartupDocumentsMutation not implemented')
-}
+  throw new Error('useUploadStartupDocumentsMutation not implemented');
+};
 export const useGetStartupAnalyticsQuery = () => {
-  throw new Error('useGetStartupAnalyticsQuery not implemented')
-}
-export const useGetProfileQuery = useGetStartupProfileQuery
-export const useUpdateProfileMutation = useUpdateStartupProfileMutation
+  throw new Error('useGetStartupAnalyticsQuery not implemented');
+};
+export const useGetProfileQuery = useGetStartupProfileQuery;
+export const useUpdateProfileMutation = useUpdateStartupProfileMutation;

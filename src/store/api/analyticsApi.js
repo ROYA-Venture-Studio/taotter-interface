@@ -1,18 +1,6 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { api } from "./api";
 
-export const analyticsApi = createApi({
-  reducerPath: 'analyticsApi',
-  baseQuery: fetchBaseQuery({
-    baseUrl: '/api',
-    prepareHeaders: (headers, { getState }) => {
-      const token = getState().auth.token
-      if (token) {
-        headers.set('authorization', `Bearer ${token}`)
-      }
-      return headers
-    },
-  }),
-  tagTypes: ['Analytics'],
+export const analyticsApi = api.injectEndpoints({
   endpoints: (builder) => ({
     // Dashboard Analytics
     getDashboardAnalytics: builder.query({
@@ -265,7 +253,8 @@ export const analyticsApi = createApi({
       providesTags: ['Analytics'],
     }),
   }),
-})
+  overrideExisting: false,
+});
 
 export const {
   useGetDashboardAnalyticsQuery,
@@ -296,4 +285,4 @@ export const {
   useGetCapacityAnalyticsQuery,
   useGetHistoricalDataQuery,
   useGetBenchmarkAnalyticsQuery,
-} = analyticsApi
+} = analyticsApi;
