@@ -1,18 +1,6 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { api } from "./api";
 
-export const authApi = createApi({
-  reducerPath: 'authApi',
-  baseQuery: fetchBaseQuery({
-    baseUrl: `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}/api`,
-    prepareHeaders: (headers, { getState }) => {
-      const token = getState().auth.token
-      if (token) {
-        headers.set('authorization', `Bearer ${token}`)
-      }
-      return headers
-    },
-  }),
-  tagTypes: ['Auth'],
+export const authApi = api.injectEndpoints({
   endpoints: (builder) => ({
     // Startup Authentication
     startupLogin: builder.mutation({
@@ -104,7 +92,8 @@ export const authApi = createApi({
       providesTags: ['Auth'],
     }),
   }),
-})
+  overrideExisting: false,
+});
 
 export const {
   useStartupLoginMutation,
@@ -118,19 +107,19 @@ export const {
   useRefreshTokenMutation,
   useLogoutMutation,
   useGetCurrentUserQuery,
-} = authApi
+} = authApi;
 
 // Export aliases for store.js compatibility
-export const useLoginMutation = useStartupLoginMutation
-export const useRegisterMutation = useStartupRegisterMutation
-export const useForgotPasswordMutation = useStartupForgotPasswordMutation
-export const useResetPasswordMutation = useStartupResetPasswordMutation
-export const useVerifyEmailMutation = useVerifyStartupEmailMutation
-export const useResendVerificationMutation = useVerifyStartupEmailMutation // Using same endpoint
+export const useLoginMutation = useStartupLoginMutation;
+export const useRegisterMutation = useStartupRegisterMutation;
+export const useForgotPasswordMutation = useStartupForgotPasswordMutation;
+export const useResetPasswordMutation = useStartupResetPasswordMutation;
+export const useVerifyEmailMutation = useVerifyStartupEmailMutation;
+export const useResendVerificationMutation = useVerifyStartupEmailMutation; // Using same endpoint
 export const useChangePasswordMutation = () => {
-  throw new Error('useChangePasswordMutation should be imported from startupApi')
-}
+  throw new Error('useChangePasswordMutation should be imported from startupApi');
+};
 export const useUpdateProfileMutation = () => {
-  throw new Error('useUpdateProfileMutation should be imported from startupApi')
-}
-export const useGetProfileQuery = useGetCurrentUserQuery
+  throw new Error('useUpdateProfileMutation should be imported from startupApi');
+};
+export const useGetProfileQuery = useGetCurrentUserQuery;

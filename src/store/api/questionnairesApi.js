@@ -1,18 +1,6 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { api } from "./api";
 
-export const questionnairesApi = createApi({
-  reducerPath: 'questionnairesApi',
-  baseQuery: fetchBaseQuery({
-    baseUrl: `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}/api`,
-    prepareHeaders: (headers, { getState }) => {
-      const token = getState().auth.token
-      if (token) {
-        headers.set('authorization', `Bearer ${token}`)
-      }
-      return headers
-    },
-  }),
-  tagTypes: ['Questionnaire', 'QuestionnaireTemplate'],
+export const questionnairesApi = api.injectEndpoints({
   endpoints: (builder) => ({
     // For Startups
     getMyQuestionnaire: builder.query({
@@ -180,7 +168,8 @@ export const questionnairesApi = createApi({
       invalidatesTags: ['Questionnaire'],
     }),
   }),
-})
+  overrideExisting: false,
+});
 
 export const {
   useGetMyQuestionnaireQuery,
@@ -203,9 +192,9 @@ export const {
   useGetAllAdminQuestionnairesQuery,
   useGetAdminQuestionnaireByIdQuery,
   useCreateSprintsForQuestionnaireMutation,
-} = questionnairesApi
+} = questionnairesApi;
 
 // Export aliases for store.js compatibility
-export const useDeleteQuestionnaireMutation = useDeleteQuestionnaireTemplateMutation
-export const useCreateQuestionnaireFromTemplateMutation = useCreateQuestionnaireTemplateMutation
-export const useSaveQuestionnaireAsTemplateMutation = useCreateQuestionnaireTemplateMutation
+export const useDeleteQuestionnaireMutation = useDeleteQuestionnaireTemplateMutation;
+export const useCreateQuestionnaireFromTemplateMutation = useCreateQuestionnaireTemplateMutation;
+export const useSaveQuestionnaireAsTemplateMutation = useCreateQuestionnaireTemplateMutation;
