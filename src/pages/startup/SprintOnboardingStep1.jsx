@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Button, Input, TextArea } from '../../components/ui'
+import { useUploadDocumentsMutation } from '../../store/api/sprintsApi'
 import './SprintOnboardingStep1.css'
 
 const SprintOnboardingStep1 = () => {
@@ -14,6 +15,7 @@ const SprintOnboardingStep1 = () => {
   })
   const [errors, setErrors] = useState({})
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [uploadDocuments] = useUploadDocumentsMutation()
 
   // REMOVED: All the problematic redirect logic that was causing the loop
 
@@ -70,19 +72,29 @@ const SprintOnboardingStep1 = () => {
     setIsSubmitting(true)
     
     try {
-      // TODO: Upload file and save form data to API
-      console.log('Form data:', formData)
-      console.log('Sprint ID:', sprintId)
+      // Create FormData for file upload
+      const formDataToSend = new FormData()
       
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000))
+      // Add file if selected
+      if (formData.brandGuidelines) {
+        formDataToSend.append('brandGuidelines', formData.brandGuidelines)
+      }
       
+      // Add text fields
+      formDataToSend.append('contactLists', formData.contactLists)
+      formDataToSend.append('appDemo', formData.appDemo)
+      
+      // Use RTK Query mutation for upload
+      const result = await uploadDocuments({ id: sprintId, body: formDataToSend }).unwrap()
+
+      console.log('Upload successful:', result)
+
       // Navigate to next step with sprint ID
       navigate(`/sprint/${sprintId}/onboarding/step-2`)
       
     } catch (error) {
       console.error('Error saving data:', error)
-      setErrors({ submit: 'Failed to save data. Please try again.' })
+      setErrors({ submit: error.message || 'Failed to save data. Please try again.' })
     } finally {
       setIsSubmitting(false)
     }

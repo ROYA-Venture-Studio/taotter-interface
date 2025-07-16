@@ -55,6 +55,21 @@ const MvpFormPage = () => {
     { value: 'growth', label: 'Growth' }
   ]
 
+  const timelineOptions = [
+    { value: '1-2 weeks', label: '1-2 weeks' },
+    { value: '3-4 weeks', label: '3-4 weeks' },
+    { value: '1-2 months', label: '1-2 months' },
+    { value: '3-6 months', label: '3-6 months' },
+    { value: '6+ months', label: '6+ months' }
+  ]
+
+  const handleBudgetBlur = () => {
+    const val = formData.budgetRange.trim()
+    if (val && !val.toLowerCase().includes('qar')) {
+      updateFormData('budgetRange', val + ' QAR')
+    }
+  }
+
   // validateIdeaOptions removed
 
   const sprintOptions = [
@@ -332,11 +347,12 @@ const MvpFormPage = () => {
 
   const renderStep2 = () => (
     <div className="form-step">
-      <Input
+      <Select
         label="Timeline in Mind?"
         value={formData.timeline}
-        onChange={(e) => updateFormData('timeline', e.target.value)}
-        placeholder="Enter a timeline (e.g., 1-2 weeks, 3-4 weeks, 1-2 months, 3-6 months, 6+ months)"
+        onChange={(value) => updateFormData('timeline', value)}
+        options={timelineOptions}
+        placeholder="Select a timeline"
         error={errors.timeline}
         required
       />
@@ -345,6 +361,7 @@ const MvpFormPage = () => {
         label="Budget range"
         value={formData.budgetRange}
         onChange={(e) => updateFormData('budgetRange', e.target.value)}
+        onBlur={handleBudgetBlur}
         placeholder="Enter an estimated budget (in QAR)"
         error={errors.budgetRange}
         required
