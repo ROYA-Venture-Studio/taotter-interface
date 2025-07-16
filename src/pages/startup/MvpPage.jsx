@@ -2,8 +2,8 @@ import { useNavigate } from 'react-router-dom'
 import { Button, Icon } from '../../components/ui'
 import './MvpPage.css'
 
-// Import images
 import mvpImage from '../../assets/images/mvp.png'
+import mvpDesktopImage from '../../assets/images/mvp-desktop.png'
 
 const MvpPage = () => {
   const navigate = useNavigate()
@@ -21,7 +21,13 @@ const MvpPage = () => {
             
             {/* Profile Image */}
             <div className="profile-image-container">
-              <img src={mvpImage} alt="Taotter Expert" className="profile-image" />
+              <picture>
+                <source
+                  srcSet={mvpDesktopImage}
+                  media="(min-width:1024px)"
+                />
+                <img src={mvpImage} alt="Taotter Expert" className="profile-image" />
+              </picture>
             </div>
 
             {/* Content Area */}
@@ -36,9 +42,12 @@ const MvpPage = () => {
               </div>
 
               {/* Main Heading */}
-              <div className="main-heading">
-                <h1>Build Your<br />Startup</h1>
-              </div>
+<div className="main-heading">
+  <h1>
+    <span className="build-your">Build Your </span>
+    <span className="startup-text">Startup</span>
+  </h1>
+</div>
 
               {/* Subtitle */}
               <div className="subtitle-container">

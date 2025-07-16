@@ -53,8 +53,7 @@ const SprintStatusPage = () => {
   }, [sprintsData, userData])
 
   const handleGetStarted = (sprint) => {
-    // Navigate to step 1 - no package selection here!
-    // Let the user choose their package in step 2
+    // Navigate to step 1 (document upload) first
     navigate(`/sprint/${sprint.id}/onboarding/step-1`)
   }
 
