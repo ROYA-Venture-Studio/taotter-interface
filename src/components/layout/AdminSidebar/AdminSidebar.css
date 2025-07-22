@@ -1,5 +1,13 @@
+.admin-layout {
+  display: flex;
+  height: 100vh;
+  min-height: 100vh;
+  width: 100vw;
+  position: relative;
+  background: #fff;
+}
+
 .admin-sidebar {
-  position: fixed;
   top: 0;
   left: 0;
   width: 290px;
@@ -10,13 +18,30 @@
   flex-direction: column;
   z-index: 1200;
   transform: translateX(-100%);
-  transition: transform 0.2s;
+  opacity: 0;
+  transition: transform 0.25s cubic-bezier(.4,0,.2,1), opacity 0.25s cubic-bezier(.4,0,.2,1);
   box-shadow: 0 0 24px 0 rgba(52,64,84,0.04);
   padding-bottom: 32px; /* leave blank space at the bottom */
+  background-clip: padding-box;
+  position: fixed;
 }
 
 .admin-sidebar.open {
   transform: translateX(0);
+  opacity: 1;
+}
+
+@media (min-width: 768px) {
+  .admin-sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    min-width: 290px;
+    transform: translateX(0);
+    opacity: 1;
+    transition: none;
+  }
 }
 
 .admin-sidebar__close {

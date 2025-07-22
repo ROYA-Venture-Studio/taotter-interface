@@ -1,4 +1,15 @@
 /* Startup Layout Styles */
+.admin-layout-content {
+  margin-left: 0;
+  transition: margin-left 0.2s;
+}
+
+@media (min-width: 768px) {
+  .admin-layout-content {
+    margin-left: 290px;
+  }
+}
+
 .startup-layout {
   min-height: 100vh;
   display: flex;
