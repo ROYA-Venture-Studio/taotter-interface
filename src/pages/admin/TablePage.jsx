@@ -114,52 +114,54 @@ export default function TablePage() {
         </div>
       </div>
       <div className="admin-table-container">
-        {isLoading ? (
-          <div style={{ padding: 24 }}>Loading...</div>
-        ) : error ? (
-          <div style={{ color: "red", padding: 24 }}>Error loading requests.</div>
-        ) : (
-          <table className="admin-table">
-            <thead>
-              <tr>
-                <th>Request ID</th>
-                <th>Customer</th>
-                <th>Product/Service</th>
-                <th>Deal Value</th>
-                <th>Close Date</th>
-                <th>Status</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {tableRows.map((req) => (
-                <tr
-                  key={req.id}
-                  className="admin-table-row"
-                  onClick={() => handleRowClick(req.id)}
-                  tabIndex={0}
-                  style={{ cursor: "pointer" }}
-                >
-                  <td>{req.id.slice(-8).toUpperCase()}</td>
-                  <td><CustomerCell customer={req.customer} /></td>
-                  <td>{req.product}</td>
-                  <td>{req.value}</td>
-                  <td>{req.closeDate}</td>
-                  <td><StatusPill status={req.status} /></td>
-                  <td>
-                    <button
-                      className="admin-table-action-btn"
-                      title="Delete"
-                      onClick={e => e.stopPropagation()}
-                    >
-                      <Icon name="trash" size={20} />
-                    </button>
-                  </td>
+        <div className="admin-table-responsive">
+          {isLoading ? (
+            <div style={{ padding: 24 }}>Loading...</div>
+          ) : error ? (
+            <div style={{ color: "red", padding: 24 }}>Error loading requests.</div>
+          ) : (
+            <table className="admin-table">
+              <thead>
+                <tr>
+                  <th>Request ID</th>
+                  <th>Customer</th>
+                  <th>Product/Service</th>
+                  <th>Deal Value</th>
+                  <th>Close Date</th>
+                  <th>Status</th>
+                  <th>Action</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
+              </thead>
+              <tbody>
+                {tableRows.map((req) => (
+                  <tr
+                    key={req.id}
+                    className="admin-table-row"
+                    onClick={() => handleRowClick(req.id)}
+                    tabIndex={0}
+                    style={{ cursor: "pointer" }}
+                  >
+                    <td>{req.id.slice(-8).toUpperCase()}</td>
+                    <td><CustomerCell customer={req.customer} /></td>
+                    <td>{req.product}</td>
+                    <td>{req.value}</td>
+                    <td>{req.closeDate}</td>
+                    <td><StatusPill status={req.status} /></td>
+                    <td>
+                      <button
+                        className="admin-table-action-btn"
+                        title="Delete"
+                        onClick={e => e.stopPropagation()}
+                      >
+                        <Icon name="trash" size={20} />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
       </div>
       {/* Pagination controls */}
       {data?.data?.pagination && (
