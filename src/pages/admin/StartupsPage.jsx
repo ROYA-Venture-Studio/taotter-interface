@@ -130,49 +130,51 @@ export default function StartupsPage() {
       </div>
 
       <div className="admin-table-container">
-        {isLoading ? (
-          <div style={{ padding: 24 }}>Loading startups...</div>
-        ) : error ? (
-          <div style={{ color: "red", padding: 24 }}>Error loading startups.</div>
-        ) : (
-          <table className="admin-table">
-            <thead>
-              <tr>
-                <th>Startup Name</th>
-                <th>Number of Sprints</th>
-                <th>Date Joined</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {startups.map((startup) => (
-                <tr
-                  key={startup._id}
-                  className="admin-table-row"
-                  onClick={() => handleRowClick(startup._id)}
-                  tabIndex={0}
-                  style={{ cursor: "pointer" }}
-                >
-                  <td>
-                    <StartupCell startup={startup} />
-                  </td>
-                  <td>
-                    <span style={{ 
-                      fontWeight: 600, 
-                      color: startup.sprintCount > 0 ? "#1378d1" : "#667085" 
-                    }}>
-                      {startup.sprintCount}
-                    </span>
-                  </td>
-                  <td>{formatDate(startup.dateJoined)}</td>
-                  <td>
-                    <StatusPill status={startup.status} />
-                  </td>
+        <div className="admin-table-responsive">
+          {isLoading ? (
+            <div style={{ padding: 24 }}>Loading startups...</div>
+          ) : error ? (
+            <div style={{ color: "red", padding: 24 }}>Error loading startups.</div>
+          ) : (
+            <table className="admin-table">
+              <thead>
+                <tr>
+                  <th>Startup Name</th>
+                  <th>Number of Sprints</th>
+                  <th>Date Joined</th>
+                  <th>Status</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
+              </thead>
+              <tbody>
+                {startups.map((startup) => (
+                  <tr
+                    key={startup._id}
+                    className="admin-table-row"
+                    onClick={() => handleRowClick(startup._id)}
+                    tabIndex={0}
+                    style={{ cursor: "pointer" }}
+                  >
+                    <td>
+                      <StartupCell startup={startup} />
+                    </td>
+                    <td>
+                      <span style={{ 
+                        fontWeight: 600, 
+                        color: startup.sprintCount > 0 ? "#1378d1" : "#667085" 
+                      }}>
+                        {startup.sprintCount}
+                      </span>
+                    </td>
+                    <td>{formatDate(startup.dateJoined)}</td>
+                    <td>
+                      <StatusPill status={startup.status} />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
       </div>
 
       {data?.data?.pagination && (
