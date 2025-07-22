@@ -1,4 +1,22 @@
 .request-detail-page {
+/* Responsive table container for admin request detail */
+.admin-table-responsive {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.admin-table-responsive table {
+  min-width: 600px;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+@media (max-width: 767px) {
+  .admin-table-responsive table {
+    min-width: 400px;
+    font-size: 13px;
+  }
+}
   background: #fff;
   color: #101828;
   max-width: 1100px;

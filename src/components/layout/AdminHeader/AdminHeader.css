@@ -9,6 +9,27 @@
   z-index: 1100;
   position: relative;
 }
+
+.admin-header__menu-btn {
+  background: none;
+  border: none;
+  font-size: 1.8rem;
+  color: #1378d1;
+  cursor: pointer;
+  margin-right: 16px;
+  padding: 4px 8px;
+  border-radius: 8px;
+  transition: background 0.13s;
+  display: flex;
+  align-items: center;
+}
+
+@media (min-width: 768px) {
+  .admin-header__menu-btn {
+    display: none;
+  }
+}
+
 .menu-btn {
   background: none;
   border: none;

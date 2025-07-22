@@ -2,6 +2,26 @@
   width: 100%;
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
+  background: #f8fafc;
+}
+/* Responsive table container for admin table */
+.admin-table-responsive {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.admin-table-responsive table {
+  min-width: 600px;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+@media (max-width: 767px) {
+  .admin-table-responsive table {
+    min-width: 400px;
+    font-size: 13px;
+  }
 }
 
 .admin-table-header-row {

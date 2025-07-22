@@ -1,4 +1,22 @@
 .board-page {
+/* Responsive table container for admin board */
+.admin-table-responsive {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.admin-table-responsive table {
+  min-width: 600px;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+@media (max-width: 767px) {
+  .admin-table-responsive table {
+    min-width: 400px;
+    font-size: 13px;
+  }
+}
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;

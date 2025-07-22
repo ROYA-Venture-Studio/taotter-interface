@@ -3,17 +3,57 @@ import AdminHeader from "../components/layout/AdminHeader/AdminHeader";
 import AdminSidebar from "../components/layout/AdminSidebar/AdminSidebar";
 
 export default function AdminLayout({ children }) {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  // Sidebar is open by default on desktop, closed by default on mobile
+  const [sidebarOpen, setSidebarOpen] = useState(() => window.innerWidth >= 768);
 
-  // Use useCallback to avoid unnecessary re-renders
+  // Responsive sidebar toggle
   const handleMenuClick = useCallback(() => {
     setSidebarOpen((open) => !open);
   }, []);
 
+  // Listen for window resize to auto-open sidebar on desktop
+  React.useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        setSidebarOpen(true);
+      } else {
+        setSidebarOpen(false);
+      }
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // Calculate margin-left for content area
+  const getContentMargin = () => {
+    if (window.innerWidth >= 768 && sidebarOpen) {
+      return 290;
+    }
+    return 0;
+  };
+
+  // Use state to trigger re-render on resize for margin
+  const [contentMargin, setContentMargin] = useState(getContentMargin());
+  React.useEffect(() => {
+    const handleResize = () => setContentMargin(getContentMargin());
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [sidebarOpen]);
+
   return (
-    <div className="admin-layout" style={{ display: "flex", minHeight: "100vh", position: "relative" }}>
+    <div className="admin-layout">
       <AdminSidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-      <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+      <div
+        className="admin-layout-content"
+        style={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          marginLeft: contentMargin,
+          transition: "margin-left 0.2s",
+          minHeight: "100vh"
+        }}
+      >
         <AdminHeader onMenuClick={handleMenuClick} />
         <main style={{ flex: 1, background: "#f8fafc", padding: "24px" }}>
           {children}
