@@ -1,4 +1,14 @@
 .request-detail-page {
+  background: #fff;
+  color: #101828;
+  max-width: 1100px;
+  margin: 32px auto;
+  padding: 32px 32px 48px 32px;
+  border-radius: 18px;
+  box-shadow: 0 2px 8px rgba(52,64,84,0.06);
+  font-family: 'Montserrat', sans-serif;
+}
+
 /* Responsive table container for admin request detail */
 .admin-table-responsive {
   width: 100%;
@@ -16,15 +26,6 @@
     min-width: 400px;
     font-size: 13px;
   }
-}
-  background: #fff;
-  color: #101828;
-  max-width: 1100px;
-  margin: 32px auto;
-  padding: 32px 32px 48px 32px;
-  border-radius: 18px;
-  box-shadow: 0 2px 8px rgba(52,64,84,0.06);
-  font-family: 'Montserrat', sans-serif;
 }
 
 .request-detail-breadcrumb {
@@ -47,7 +48,7 @@
 }
 
 .request-detail-breadcrumb-home {
-  color: #667085;
+  color: #101828;
   font-size: 14px;
   cursor: pointer;
   text-decoration: underline;
@@ -92,9 +93,9 @@
 .request-detail-action-btn {
   padding: 10px 18px;
   border-radius: 8px;
-  border: 1px solid #d0d5dd;
+  border: 1px solid #e4e7ec;
   background: #fff;
-  color: #344054;
+  color: #101828;
   font-size: 15px;
   font-weight: 500;
   cursor: pointer;
@@ -102,9 +103,9 @@
   box-shadow: 0 1px 2px #1018280d;
 }
 .request-detail-action-btn.primary {
-  background: #1378d1;
+  background: #EB5E28;
   color: #fff;
-  border: 1px solid #1378d1;
+  border: 1px solid #EB5E28;
 }
 
 .request-detail-section {
@@ -187,7 +188,7 @@
 
 .request-detail-attachment-file {
   font-size: 13px;
-  color: #344054;
+  color: #667085;
 }
 
 .request-detail-attachment-type {
@@ -201,7 +202,7 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(52, 64, 84, 0.18);
+  background: rgba(52,64,84,0.18);
   z-index: 2000;
   display: flex;
   align-items: center;

@@ -1,4 +1,9 @@
 .sprint-list-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 32px 16px;
+}
+
 /* Responsive table container for admin sprint list */
 .admin-table-responsive {
   width: 100%;
@@ -16,10 +21,6 @@
     min-width: 400px;
     font-size: 13px;
   }
-}
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 32px 16px;
 }
 
 .sprint-list-header {
@@ -145,7 +146,7 @@
 }
 
 .view-board-btn {
-  background: #3b82f6;
+  background: #EB5E28;
   color: #fff;
   border: none;
   border-radius: 6px;
@@ -160,7 +161,7 @@
 }
 
 .view-board-btn:hover {
-  background: #2563eb;
+  background: #EB5E28;
 }
 
 .no-sprints, .loading, .error {

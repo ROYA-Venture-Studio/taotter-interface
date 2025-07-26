@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import "./StartupHeader.css";
 import Icon from "../../ui/Icon/Icon";
-import TaotterBlueLogo from "../../../assets/logo/Taotter_blue_logo.png";
 import SidebarChatList from "../SidebarChatList/SidebarChatList";
 import { logout } from "../../../store/slices/authSlice";
 
@@ -54,8 +53,8 @@ const StartupHeader = () => {
         )}
         <div className="startup-header__logo-center">
           <img
-            src={TaotterBlueLogo}
-            alt="Taotter"
+            src="/assets/logo/leansprintr.png"
+            alt="LeanSprint"
             className="startup-header__logo-img"
           />
         </div>

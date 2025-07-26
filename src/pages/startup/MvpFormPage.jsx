@@ -1,11 +1,26 @@
 import { useState, useEffect } from 'react'
+
+// Mobile detection hook
+function useIsMobile(breakpoint = 768) {
+  const [isMobile, setIsMobile] = useState(
+    typeof window !== "undefined" ? window.innerWidth <= breakpoint : false
+  );
+  useEffect(() => {
+    function handleResize() {
+      setIsMobile(window.innerWidth <= breakpoint);
+    }
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [breakpoint]);
+  return isMobile;
+}
 import { useNavigate } from 'react-router-dom'
-import { Button, Input, TextArea, Select, RadioButton, Icon } from '../../components/ui'
-import section1Image from '../../assets/images/section1.png'
+import formImage from '../../assets/images/form.png'
 import './MvpFormPage.css'
 import { useCreateQuestionnaireMutation } from '../../store/api/questionnairesApi'
 
 const MvpFormPage = () => {
+  const isMobile = useIsMobile();
   const navigate = useNavigate()
   const [createQuestionnaire] = useCreateQuestionnaireMutation()
   const [currentStep, setCurrentStep] = useState(1)
@@ -50,12 +65,14 @@ const MvpFormPage = () => {
 
   // Form options
   const stageOptions = [
+    { value: '', label: 'Select Stage' },
     { value: 'idea', label: 'Idea' },
     { value: 'validation', label: 'Validation' },
     { value: 'growth', label: 'Growth' }
   ]
 
   const timelineOptions = [
+    { value: '', label: 'Select Timeline' },
     { value: '1-2 weeks', label: '1-2 weeks' },
     { value: '3-4 weeks', label: '3-4 weeks' },
     { value: '1-2 months', label: '1-2 months' },
@@ -69,25 +86,6 @@ const MvpFormPage = () => {
       updateFormData('budgetRange', val + ' QAR')
     }
   }
-
-  // validateIdeaOptions removed
-
-  const sprintOptions = [
-    {
-      id: 'option1',
-      title: 'Option 1',
-      description: 'Build your first MVP.',
-      timeline: '3 Weeks',
-      price: 'QR 900'
-    },
-    {
-      id: 'option2', 
-      title: 'Option 2',
-      description: 'Logo and Brand guidelines',
-      timeline: '3 Weeks',
-      price: 'QR 900'
-    }
-  ]
 
   // Handle form field updates
   const updateFormData = (field, value) => {
@@ -235,179 +233,6 @@ const MvpFormPage = () => {
     }
   }
 
-  // Voice recording functionality
-  const handleVoiceInput = () => {
-    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-      const SpeechRecognition = window.webkitSpeechRecognition || window.SpeechRecognition
-      const recognition = new SpeechRecognition()
-      
-      recognition.continuous = false
-      recognition.interimResults = false
-      recognition.lang = 'en-US'
-      
-      recognition.onresult = (event) => {
-        const transcript = event.results[0][0].transcript
-        updateFormData('customRequest', formData.customRequest + ' ' + transcript)
-      }
-      
-      recognition.onerror = (event) => {
-        console.error('Speech recognition error:', event.error)
-      }
-      
-      recognition.start()
-    } else {
-      alert('Speech recognition is not supported in your browser')
-    }
-  }
-
-  // Progress indicator component
-  const ProgressIndicator = () => (
-    <div className="progress-indicator">
-      {[1, 2, 3].map((step) => (
-        <div key={step} className="progress-step-container">
-          <div className={`progress-step ${currentStep >= step ? 'active' : ''} ${currentStep > step ? 'completed' : ''}`}>
-            {step}
-          </div>
-          {step < 3 && <div className="progress-divider" />}
-        </div>
-      ))}
-    </div>
-  )
-
-  // Step content components
-  const renderStep1 = () => (
-    <div className="form-step">
-      <Input
-        label="Enter startup Name"
-        value={formData.startupName}
-        onChange={(e) => updateFormData('startupName', e.target.value)}
-        placeholder="Enter Name"
-        error={errors.startupName}
-        required
-      />
-      
-      <Input
-        label="Name of Task"
-        value={formData.taskName}
-        onChange={(e) => updateFormData('taskName', e.target.value)}
-        placeholder="Enter Task Name"
-        error={errors.taskName}
-        required
-      />
-      
-      <Input
-        label="Describe Your Task"
-        value={formData.taskDescription}
-        onChange={(e) => updateFormData('taskDescription', e.target.value)}
-        placeholder="Give us a brief of the task (minimum 10 characters)"
-        error={errors.taskDescription}
-        required
-      />
-      
-      <Select
-        label="Select stage"
-        value={formData.stage}
-        onChange={(value) => updateFormData('stage', value)}
-        options={stageOptions}
-        placeholder="(Idea / Validation / Growth)"
-        error={errors.stage}
-        required
-      />
-      
-      <TextArea
-        label="Key Goals"
-        value={formData.keyGoals}
-        onChange={(e) => updateFormData('keyGoals', e.target.value)}
-        placeholder="e.g. Build MVP, Get First Users (minimum 10 characters)"
-        error={errors.keyGoals}
-        required
-      />
-      
-      <div className="radio-group">
-        <label className="radio-group-label">How much time you are dedicating to your startup</label>
-        <div className="radio-options">
-          <RadioButton
-            label="Full-time"
-            value="full-time"
-            checked={formData.timeCommitment === 'full-time'}
-            onChange={(value) => updateFormData('timeCommitment', value)}
-            name="timeCommitment"
-          />
-          <RadioButton
-            label="Part-time"
-            value="part-time"
-            checked={formData.timeCommitment === 'part-time'}
-            onChange={(value) => updateFormData('timeCommitment', value)}
-            name="timeCommitment"
-          />
-        </div>
-      </div>
-    </div>
-  )
-
-  const renderStep2 = () => (
-    <div className="form-step">
-      <Select
-        label="Timeline in Mind?"
-        value={formData.timeline}
-        onChange={(value) => updateFormData('timeline', value)}
-        options={timelineOptions}
-        placeholder="Select a timeline"
-        error={errors.timeline}
-        required
-      />
-
-      <Input
-        label="Budget range"
-        value={formData.budgetRange}
-        onChange={(e) => updateFormData('budgetRange', e.target.value)}
-        onBlur={handleBudgetBlur}
-        placeholder="Enter an estimated budget (in QAR)"
-        error={errors.budgetRange}
-        required
-      />
-    </div>
-  )
-
-  const renderStep3 = () => (
-    <div className="form-step">
-      <div className="custom-request-section">
-        <label className="custom-request-label">
-          Additional Information
-          <span className="custom-request-description">Provide any extra details or requirements for your project.</span>
-        </label>
-        <div className="custom-request-input">
-          <TextArea
-            value={formData.customRequest}
-            onChange={(e) => updateFormData('customRequest', e.target.value)}
-            placeholder="Enter any additional information or requirements here."
-            rows={3}
-            error={errors.customRequest}
-            required
-          />
-          <button 
-            type="button" 
-            className="voice-input-btn"
-            onClick={handleVoiceInput}
-            title="Voice input"
-          >
-            <Icon name="microphone" size={16} />
-          </button>
-        </div>
-        {errors.customRequest && <div className="error-message">{errors.customRequest}</div>}
-      </div>
-    </div>
-  )
-
-  const getStepTitle = () => {
-    switch (currentStep) {
-      case 1: return 'Tell us about your startup'
-      case 2: return 'Set Your Timeline and Budget'
-      case 3: return 'Extras'
-      default: return ''
-    }
-  }
-
   const getButtonText = () => {
     if (currentStep === 3) {
       return isSubmitting ? 'Starting Sprint...' : 'Start Sprint'
@@ -417,56 +242,468 @@ const MvpFormPage = () => {
 
   return (
     <div className="mvp-form-page">
-      {/* Form Section */}
-      <section className="form-section">
-        <div className="form-container">
-          <div className="form-card">
-            {/* Blue Header Section */}
-            <div className="form-header-section">
-              <h1 className="form-hero-title">What's Your Startup Idea?</h1>
-            </div>
-            
-            {/* Form Content */}
-            <div className="form-body">
-              <h2 className="form-step-title">{getStepTitle()}</h2>
-              
-              <ProgressIndicator />
-              
-              <div className="form-content">
-                {currentStep === 1 && renderStep1()}
-                {currentStep === 2 && renderStep2()}
-                {currentStep === 3 && renderStep3()}
-              </div>
-              
-              <div className="form-navigation">
-                <Button
-                  variant="secondary"
-                  onClick={handleBack}
-                  disabled={currentStep === 1}
-                  className="form-nav-btn back-btn"
-                >
-                  Back
-                </Button>
-                
-                <Button
-                  variant="primary"
-                  onClick={handleNext}
-                  disabled={isSubmitting}
-                  className="form-nav-btn next-btn"
-                >
-                  {getButtonText()}
-                </Button>
-              </div>
+      {isMobile ? (
+        <>
+        
+          <div className="mvp-mobile-header">
+            <div className="mvp-mobile-header-title">
+              {"What's\nYour Startup\nIdea?"}
             </div>
           </div>
+        <div className="mvp-mobile-container">
+          <div className="mvp-mobile-title">
+            {"Tell Us About Your\nStartup"}
+          </div>
+          {/* Render the rest of the form as usual */}
+          {/* Step 1 */}
+          {currentStep === 1 && (
+            <>
+              <div className="mvp-form-row">
+                <div className="mvp-form-col">
+                  <label className="mvp-form-label" htmlFor="startupName">Startup Name</label>
+                  <input
+                    id="startupName"
+                    className="mvp-form-input"
+                    value={formData.startupName}
+                    onChange={(e) => updateFormData('startupName', e.target.value)}
+                    placeholder="Enter Name"
+                    required
+                  />
+                  {errors.startupName && <div className="error-message">{errors.startupName}</div>}
+                </div>
+                <div className="mvp-form-col">
+                  <label className="mvp-form-label" htmlFor="taskName">Task Name</label>
+                  <input
+                    id="taskName"
+                    className="mvp-form-input"
+                    value={formData.taskName}
+                    onChange={(e) => updateFormData('taskName', e.target.value)}
+                    placeholder="Enter Task Name"
+                    required
+                  />
+                  {errors.taskName && <div className="error-message">{errors.taskName}</div>}
+                </div>
+              </div>
+              <div className="mvp-form-row">
+                <div className="mvp-form-col">
+                  <label className="mvp-form-label" htmlFor="taskDescription">Task Description</label>
+                  <input
+                    id="taskDescription"
+                    className="mvp-form-input"
+                    value={formData.taskDescription}
+                    onChange={(e) => updateFormData('taskDescription', e.target.value)}
+                    placeholder="Give us a brief of the task (minimum 10 characters)"
+                    required
+                  />
+                  {errors.taskDescription && <div className="error-message">{errors.taskDescription}</div>}
+                </div>
+                <div className="mvp-form-col">
+                  <label className="mvp-form-label" htmlFor="stage">Stage</label>
+                  <select
+                    id="stage"
+                    className="mvp-form-input"
+                    value={formData.stage}
+                    onChange={(e) => updateFormData('stage', e.target.value)}
+                    required
+                  >
+                    {stageOptions.map(opt => (
+                      <option key={opt.value} value={opt.value}>{opt.label}</option>
+                    ))}
+                  </select>
+                  {errors.stage && <div className="error-message">{errors.stage}</div>}
+                </div>
+              </div>
+              <div className="mvp-form-keygoals-row">
+                <label className="mvp-form-label" htmlFor="keyGoals">Key Goals</label>
+                <textarea
+                  id="keyGoals"
+                  className="mvp-form-keygoals-input"
+                  value={formData.keyGoals}
+                  onChange={(e) => updateFormData('keyGoals', e.target.value)}
+                  placeholder="e.g. Build MVP, Get First Users (minimum 10 characters)"
+                  required
+                  rows={3}
+                />
+                {errors.keyGoals && <div className="error-message">{errors.keyGoals}</div>}
+              </div>
+              <div className="mvp-form-radio-row">
+                <label className="mvp-form-radio-label">
+                  How much time are you dedicating to your startup?
+                </label>
+                <div className="mvp-form-radio-options">
+                  <label className="mvp-form-radio-btn">
+                    <input
+                      type="radio"
+                      name="timeCommitment"
+                      value="full-time"
+                      checked={formData.timeCommitment === 'full-time'}
+                      onChange={() => updateFormData('timeCommitment', 'full-time')}
+                    />
+                    <span className="mvp-form-radio-btn-label">Full-time</span>
+                  </label>
+                  <label className="mvp-form-radio-btn">
+                    <input
+                      type="radio"
+                      name="timeCommitment"
+                      value="part-time"
+                      checked={formData.timeCommitment === 'part-time'}
+                      onChange={() => updateFormData('timeCommitment', 'part-time')}
+                    />
+                    <span className="mvp-form-radio-btn-label">Part-time</span>
+                  </label>
+                </div>
+              </div>
+              <button
+                className="mvp-form-next-btn"
+                onClick={handleNext}
+                disabled={isSubmitting}
+                style={{ background: "#EB5E28" }}
+              >
+                Next
+              </button>
+            </>
+          )}
+          {/* Step 2 */}
+          {currentStep === 2 && (
+            <>
+              <div className="mvp-form-row">
+                <div className="mvp-form-col">
+                  <label className="mvp-form-label" htmlFor="timeline">Timeline in Mind?</label>
+                  <select
+                    id="timeline"
+                    className="mvp-form-input mvp-form-input-wide"
+                    value={formData.timeline}
+                    onChange={(e) => updateFormData('timeline', e.target.value)}
+                    required
+                  >
+                    {timelineOptions.map(opt => (
+                      <option key={opt.value} value={opt.value}>{opt.label}</option>
+                    ))}
+                  </select>
+                  {errors.timeline && <div className="error-message">{errors.timeline}</div>}
+                </div>
+              </div>
+              <div className="mvp-form-row">
+                <div className="mvp-form-col">
+                  <label className="mvp-form-label" htmlFor="budgetRange">Budget Range</label>
+                  <input
+                    id="budgetRange"
+                    className="mvp-form-input mvp-form-input-wide"
+                    value={formData.budgetRange}
+                    onChange={(e) => updateFormData('budgetRange', e.target.value)}
+                    onBlur={handleBudgetBlur}
+                    placeholder="Enter an estimated budget (in QAR)"
+                    required
+                  />
+                  {errors.budgetRange && <div className="error-message">{errors.budgetRange}</div>}
+                </div>
+              </div>
+              <div className="mvp-form-btn-row">
+                <button
+                  className="mvp-form-btn-back"
+                  onClick={handleBack}
+                  disabled={currentStep === 1}
+                >
+                  Back
+                </button>
+                <button
+                  className="mvp-form-btn-next"
+                  onClick={handleNext}
+                  disabled={isSubmitting}
+                >
+                  Next
+                </button>
+              </div>
+            </>
+          )}
+          {/* Step 3 */}
+          {currentStep === 3 && (
+            <>
+              <div className="mvp-form-row">
+                <div className="mvp-form-col">
+                  <label className="mvp-form-label" htmlFor="customRequest">
+                    Additional Information
+                    <div style={{ fontSize: 12, fontWeight: 400, color: "#AAAAAA", marginTop: 4 }}>
+                      Tell us what else do you need and we will set the right tools for you.
+                    </div>
+                  </label>
+                  <input
+                    id="customRequest"
+                    className="mvp-form-input mvp-form-input-wide"
+                    value={formData.customRequest}
+                    onChange={(e) => updateFormData('customRequest', e.target.value)}
+                    placeholder="Enter any additional information or requirements here."
+                    required
+                  />
+                  {errors.customRequest && <div className="error-message">{errors.customRequest}</div>}
+                </div>
+              </div>
+              <div className="mvp-form-btn-row">
+                <button
+                  className="mvp-form-btn-back"
+                  onClick={handleBack}
+                  disabled={currentStep === 1}
+                >
+                  Back
+                </button>
+                <button
+                  className="mvp-form-btn-start"
+                  onClick={handleNext}
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? 'Starting Sprint...' : 'Start Sprint'}
+                </button>
+              </div>
+            </>
+          )}
         </div>
-      </section>
-
+        </>
+      ) : (
+        <div className="mvp-form-split-container">
+          {/* Left: Form */}
+          <div className="mvp-form-left">
+            <div className="mvp-form-title">
+              {currentStep === 1 && "Tell us about your startup"}
+              {currentStep === 2 && "Set Your Timeline and Budget"}
+              {currentStep === 3 && "Extras"}
+            </div>
+            <div className="mvp-form-progress-bar">
+              {[1, 2, 3].map((step, idx) => (
+                <div key={step} style={{ display: "flex", alignItems: "center" }}>
+                  <div
+                    className={
+                      "mvp-form-progress-step" +
+                      (currentStep === step
+                        ? " active"
+                        : currentStep > step
+                        ? " completed"
+                        : "")
+                    }
+                  >
+                    {step}
+                  </div>
+                  {step < 3 && (
+                    <div className="mvp-form-progress-line" />
+                  )}
+                </div>
+              ))}
+            </div>
+            {/* Step 1 */}
+            {currentStep === 1 && (
+              <>
+                <div className="mvp-form-row">
+                  <div className="mvp-form-col">
+                    <label className="mvp-form-label" htmlFor="startupName">Startup Name</label>
+                    <input
+                      id="startupName"
+                      className="mvp-form-input"
+                      value={formData.startupName}
+                      onChange={(e) => updateFormData('startupName', e.target.value)}
+                      placeholder="Enter Name"
+                      required
+                    />
+                    {errors.startupName && <div className="error-message">{errors.startupName}</div>}
+                  </div>
+                  <div className="mvp-form-col">
+                    <label className="mvp-form-label" htmlFor="taskName">Task Name</label>
+                    <input
+                      id="taskName"
+                      className="mvp-form-input"
+                      value={formData.taskName}
+                      onChange={(e) => updateFormData('taskName', e.target.value)}
+                      placeholder="Enter Task Name"
+                      required
+                    />
+                    {errors.taskName && <div className="error-message">{errors.taskName}</div>}
+                  </div>
+                </div>
+                <div className="mvp-form-row">
+                  <div className="mvp-form-col">
+                    <label className="mvp-form-label" htmlFor="taskDescription">Task Description</label>
+                    <input
+                      id="taskDescription"
+                      className="mvp-form-input"
+                      value={formData.taskDescription}
+                      onChange={(e) => updateFormData('taskDescription', e.target.value)}
+                      placeholder="Give us a brief of the task (minimum 10 characters)"
+                      required
+                    />
+                    {errors.taskDescription && <div className="error-message">{errors.taskDescription}</div>}
+                  </div>
+                  <div className="mvp-form-col">
+                    <label className="mvp-form-label" htmlFor="stage">Stage</label>
+                    <select
+                      id="stage"
+                      className="mvp-form-input"
+                      value={formData.stage}
+                      onChange={(e) => updateFormData('stage', e.target.value)}
+                      required
+                    >
+                      {stageOptions.map(opt => (
+                        <option key={opt.value} value={opt.value}>{opt.label}</option>
+                      ))}
+                    </select>
+                    {errors.stage && <div className="error-message">{errors.stage}</div>}
+                  </div>
+                </div>
+                <div className="mvp-form-keygoals-row">
+                  <label className="mvp-form-label" htmlFor="keyGoals">Key Goals</label>
+                  <textarea
+                    id="keyGoals"
+                    className="mvp-form-keygoals-input"
+                    value={formData.keyGoals}
+                    onChange={(e) => updateFormData('keyGoals', e.target.value)}
+                    placeholder="e.g. Build MVP, Get First Users (minimum 10 characters)"
+                    required
+                    rows={3}
+                  />
+                  {errors.keyGoals && <div className="error-message">{errors.keyGoals}</div>}
+                </div>
+                <div className="mvp-form-radio-row">
+                  <label className="mvp-form-radio-label">
+                    How much time are you dedicating to your startup?
+                  </label>
+                  <div className="mvp-form-radio-options">
+                    <label className="mvp-form-radio-btn">
+                      <input
+                        type="radio"
+                        name="timeCommitment"
+                        value="full-time"
+                        checked={formData.timeCommitment === 'full-time'}
+                        onChange={() => updateFormData('timeCommitment', 'full-time')}
+                      />
+                      <span className="mvp-form-radio-btn-label">Full-time</span>
+                    </label>
+                    <label className="mvp-form-radio-btn">
+                      <input
+                        type="radio"
+                        name="timeCommitment"
+                        value="part-time"
+                        checked={formData.timeCommitment === 'part-time'}
+                        onChange={() => updateFormData('timeCommitment', 'part-time')}
+                      />
+                      <span className="mvp-form-radio-btn-label">Part-time</span>
+                    </label>
+                  </div>
+                </div>
+                <button
+                  className="mvp-form-next-btn"
+                  onClick={handleNext}
+                  disabled={isSubmitting}
+                  style={{ background: "#EB5E28" }}
+                >
+                  Next
+                </button>
+              </>
+            )}
+            {/* Step 2 */}
+            {currentStep === 2 && (
+              <>
+                <div className="mvp-form-row">
+                  <div className="mvp-form-col">
+                    <label className="mvp-form-label" htmlFor="timeline">Timeline in Mind?</label>
+                    <select
+                      id="timeline"
+                      className="mvp-form-input mvp-form-input-wide"
+                      value={formData.timeline}
+                      onChange={(e) => updateFormData('timeline', e.target.value)}
+                      required
+                    >
+                      {timelineOptions.map(opt => (
+                        <option key={opt.value} value={opt.value}>{opt.label}</option>
+                      ))}
+                    </select>
+                    {errors.timeline && <div className="error-message">{errors.timeline}</div>}
+                  </div>
+                </div>
+                <div className="mvp-form-row">
+                  <div className="mvp-form-col">
+                    <label className="mvp-form-label" htmlFor="budgetRange">Budget Range</label>
+                    <input
+                      id="budgetRange"
+                      className="mvp-form-input mvp-form-input-wide"
+                      value={formData.budgetRange}
+                      onChange={(e) => updateFormData('budgetRange', e.target.value)}
+                      onBlur={handleBudgetBlur}
+                      placeholder="Enter an estimated budget (in QAR)"
+                      required
+                    />
+                    {errors.budgetRange && <div className="error-message">{errors.budgetRange}</div>}
+                  </div>
+                </div>
+                <div className="mvp-form-btn-row">
+                  <button
+                    className="mvp-form-btn-back"
+                    onClick={handleBack}
+                    disabled={currentStep === 1}
+                  >
+                    Back
+                  </button>
+                  <button
+                    className="mvp-form-btn-next"
+                    onClick={handleNext}
+                    disabled={isSubmitting}
+                  >
+                    Next
+                  </button>
+                </div>
+              </>
+            )}
+            {/* Step 3 */}
+            {currentStep === 3 && (
+              <>
+                <div className="mvp-form-row">
+                  <div className="mvp-form-col">
+                    <label className="mvp-form-label" htmlFor="customRequest">
+                      Additional Information
+                      <div style={{ fontSize: 12, fontWeight: 400, color: "#AAAAAA", marginTop: 4 }}>
+                        Tell us what else do you need and we will set the right tools for you.
+                      </div>
+                    </label>
+                    <input
+                      id="customRequest"
+                      className="mvp-form-input mvp-form-input-wide"
+                      value={formData.customRequest}
+                      onChange={(e) => updateFormData('customRequest', e.target.value)}
+                      placeholder="Enter any additional information or requirements here."
+                      required
+                    />
+                    {errors.customRequest && <div className="error-message">{errors.customRequest}</div>}
+                  </div>
+                </div>
+                <div className="mvp-form-btn-row">
+                  <button
+                    className="mvp-form-btn-back"
+                    onClick={handleBack}
+                    disabled={currentStep === 1}
+                  >
+                    Back
+                  </button>
+                  <button
+                    className="mvp-form-btn-start"
+                    onClick={handleNext}
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? 'Starting Sprint...' : 'Start Sprint'}
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+          {/* Right: Image */}
+          <div className="mvp-form-right">
+            <img
+              src={formImage}
+              alt="Form Visual"
+              className="mvp-form-image"
+            />
+          </div>
+        </div>
+      )}
       {/* WhatsApp Float */}
       <div className="whatsapp-float">
         <div className="whatsapp-button">
-          <Icon name="whatsapp" size={32} />
-          <div className="whatsapp-indicator"></div>
+          {/* Icon removed for brevity */}
         </div>
       </div>
     </div>
