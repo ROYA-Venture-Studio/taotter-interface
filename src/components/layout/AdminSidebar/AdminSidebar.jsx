@@ -1,8 +1,19 @@
 import React from "react";
-import TaotterBlueLogo from "../../../assets/logo/Taotter_blue_logo.png";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { logout } from "../../../store/slices/authSlice";
 import "./AdminSidebar.css";
 
 export default function AdminSidebar({ open, onClose }) {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    dispatch(logout());
+    onClose && onClose();
+    navigate("/admin/login");
+  };
+
   return (
     <>
       <aside className={`admin-sidebar${open ? " open" : ""}`}>
@@ -15,8 +26,8 @@ export default function AdminSidebar({ open, onClose }) {
         </button>
         <div className="admin-sidebar__logo-wrap">
           <img
-            src={TaotterBlueLogo}
-            alt="Taotter"
+            src="/assets/logo/leansprintr.png"
+            alt="LeanSprint"
             className="admin-sidebar__logo-img"
           />
         </div>
@@ -35,9 +46,24 @@ export default function AdminSidebar({ open, onClose }) {
           </nav>
         </div>
         <div className="admin-sidebar__footer">
-          <div className="admin-sidebar__footer-title">Taotter</div>
-          <div className="admin-sidebar__footer-subtitle">Get all your startup needs</div>
-          <button className="admin-sidebar__upgrade-btn">Upgrade Plan</button>
+          <button
+            className="admin-sidebar__logout-btn"
+            style={{
+              background: "#EB5E28",
+              color: "#fff",
+              border: "none",
+              borderRadius: "8px",
+              padding: "12px 24px",
+              fontSize: "16px",
+              fontWeight: "600",
+              cursor: "pointer",
+              width: "100%",
+              marginTop: "8px"
+            }}
+            onClick={handleLogout}
+          >
+            Logout
+          </button>
         </div>
       </aside>
       {open && <div className="admin-sidebar__backdrop" onClick={onClose} />}

@@ -37,44 +37,44 @@ function App() {
         <Route path="mvp/form" element={<MvpFormPage />} />
         <Route path="signup" element={<SignUpPage />} />
         <Route path="startup/login" element={<LoginPage />} />
+        
+        {/* Sprint pages now wrapped in StartupLayout for header/footer */}
+        <Route
+          path="sprint/status"
+          element={
+            <StartupProtectedRoute>
+              <SprintStatusPage />
+            </StartupProtectedRoute>
+          }
+        />
+        
+        <Route
+          path="sprint/:sprintId/onboarding/step-1"
+          element={
+            <StartupProtectedRoute>
+              <SprintOnboardingStep1 />
+            </StartupProtectedRoute>
+          }
+        />
+        
+        <Route
+          path="sprint/:sprintId/onboarding/step-2"
+          element={
+            <StartupProtectedRoute>
+              <SprintOnboardingStep2 />
+            </StartupProtectedRoute>
+          }
+        />
+        
+        <Route
+          path="sprint/:sprintId/onboarding/step-3"
+          element={
+            <StartupProtectedRoute>
+              <SprintOnboardingStep3 />
+            </StartupProtectedRoute>
+          }
+        />
       </Route>
-
-      {/* Protected Startup routes */}
-      <Route
-        path="/sprint/status"
-        element={
-          <StartupProtectedRoute>
-            <SprintStatusPage />
-          </StartupProtectedRoute>
-        }
-      />
-      
-      <Route
-        path="/sprint/:sprintId/onboarding/step-1"
-        element={
-          <StartupProtectedRoute>
-            <SprintOnboardingStep1 />
-          </StartupProtectedRoute>
-        }
-      />
-      
-      <Route
-        path="/sprint/:sprintId/onboarding/step-2"
-        element={
-          <StartupProtectedRoute>
-            <SprintOnboardingStep2 />
-          </StartupProtectedRoute>
-        }
-      />
-      
-      <Route
-        path="/sprint/:sprintId/onboarding/step-3"
-        element={
-          <StartupProtectedRoute>
-            <SprintOnboardingStep3 />
-          </StartupProtectedRoute>
-        }
-      />
 
       <Route
         path="/startup/sprint/:sprintId/board"

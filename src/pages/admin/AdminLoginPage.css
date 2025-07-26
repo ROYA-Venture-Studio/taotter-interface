@@ -89,8 +89,8 @@
 }
 
 .form-input:focus {
-  border-color: #1378d1;
-  box-shadow: 0 0 0 3px rgba(19, 120, 209, 0.1);
+  border-color: #EB5E28;
+  box-shadow: 0 0 0 3px rgba(235, 94, 40, 0.1);
 }
 
 .form-input::placeholder {
@@ -116,7 +116,7 @@
 .checkbox-input {
   width: 16px;
   height: 16px;
-  accent-color: #1378d1;
+  accent-color: #EB5E28;
   cursor: pointer;
 }
 
@@ -127,7 +127,7 @@
 .forgot-password-link {
   background: none;
   border: none;
-  color: #1378d1;
+  color: #EB5E28;
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
@@ -137,12 +137,12 @@
 }
 
 .forgot-password-link:hover {
-  color: #0d5aa7;
+  color: #c94d1e;
   text-decoration: underline;
 }
 
 .admin-login-btn {
-  background: #1378d1;
+  background: #EB5E28;
   color: #fff;
   border: none;
   border-radius: 8px;
@@ -159,7 +159,7 @@
 }
 
 .admin-login-btn:hover:not(:disabled) {
-  background: #0d5aa7;
+  background: #c94d1e;
 }
 
 .admin-login-btn:disabled {
@@ -232,18 +232,18 @@
 
 /* Focus states for accessibility */
 .checkbox-input:focus {
-  outline: 2px solid #1378d1;
+  outline: 2px solid #EB5E28;
   outline-offset: 2px;
 }
 
 .forgot-password-link:focus {
-  outline: 2px solid #1378d1;
+  outline: 2px solid #EB5E28;
   outline-offset: 2px;
   border-radius: 4px;
 }
 
 .admin-login-btn:focus {
-  outline: 2px solid #1378d1;
+  outline: 2px solid #EB5E28;
   outline-offset: 2px;
 }
 

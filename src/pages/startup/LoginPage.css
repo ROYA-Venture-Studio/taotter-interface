@@ -1,0 +1,373 @@
+/* LoginPage - Following SignUpPage Design Pattern */
+
+/* Base page styles */
+.login-page {
+  min-height: 100vh;
+  background: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 0;
+  width: 100vw;
+  box-sizing: border-box;
+}
+
+/* Desktop Layout */
+.login-split-container {
+  display: flex;
+  flex-direction: row;
+  width: 100vw;
+  min-height: 100vh;
+  background: #fff;
+  border-radius: 0;
+  box-shadow: none;
+  overflow: hidden;
+}
+
+.login-left {
+  flex: 1 1 0;
+  min-width: 400px;
+  padding: 112px 8vw 40px 8vw;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  background: #fff;
+  box-sizing: border-box;
+}
+
+.login-right {
+  flex: 0 0 594px;
+  min-width: 300px;
+  background: #F9FAFB;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  height: auto;
+}
+
+.login-image {
+  width: 100%;
+  max-width: 594px;
+  height: 100%;
+  min-height: 100vh;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 0;
+  display: block;
+}
+
+/* Form styles - Matching SignUpPage */
+.login-form-title {
+  font-size: 36px;
+  font-weight: 700;
+  text-align: left;
+  color: #252525;
+  margin-bottom: 12px;
+  font-family: 'Aspekta', sans-serif;
+  width: 100%;
+}
+
+.login-form-subtitle {
+  font-size: 14px;
+  font-weight: 400;
+  color: #667085;
+  margin-bottom: 32px;
+  font-family: 'Aspekta', sans-serif;
+  width: 100%;
+}
+
+.login-form {
+  width: 100%;
+  max-width: 654px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Form field styles to match SignUpPage */
+.login-form-field {
+  width: 100%;
+  margin-bottom: 0;
+}
+
+.login-form-field label {
+  font-size: 15px;
+  font-weight: 500;
+  color: #252525;
+  margin-bottom: 8px;
+  font-family: 'Aspekta', sans-serif;
+  display: block;
+}
+
+.login-form-field input,
+.login-form-field .password-field-container {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.login-form-field input {
+  height: 44px;
+  border: 1px solid #D0D5DD;
+  border-radius: 8px;
+  padding: 0 16px;
+  font-size: 16px;
+  font-family: 'Aspekta', sans-serif;
+  color: #252525;
+  background: #fff;
+  outline: none;
+  transition: border 0.2s;
+  box-sizing: border-box;
+}
+
+.login-form-field input:focus {
+  border: 1.5px solid #EB5E28;
+}
+
+/* Password field with toggle */
+.password-field-container {
+  position: relative;
+  width: 100%;
+}
+
+.password-toggle {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  color: #667085;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease;
+  z-index: 2;
+}
+
+.password-toggle:hover {
+  color: #EB5E28;
+}
+
+/* Buttons - Left aligned login button */
+.login-submit-btn {
+  width: 100%;
+  max-width: 114px;
+  height: 44px;
+  background: #EB5E28;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: 'Aspekta', sans-serif;
+  transition: background 0.15s;
+  align-self: flex-start;
+}
+
+.login-submit-btn:hover {
+  background: #c94d1e;
+}
+
+.login-submit-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Options row - Matching SignUpPage */
+.login-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  gap: 6px;
+  width: 100%;
+}
+
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  position: relative;
+}
+
+.checkbox-container input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.checkbox-custom {
+  position: relative;
+  width: 20px;
+  height: 20px;
+  border: 1.5px solid #D0D5DD;
+  border-radius: 6px;
+  background: #fff;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  cursor: pointer;
+  display: inline-block;
+}
+
+.checkbox-container input[type="checkbox"]:checked + .checkbox-custom {
+  background: #EB5E28;
+  border-color: #EB5E28;
+}
+
+.checkbox-container input[type="checkbox"]:checked + .checkbox-custom::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 6px;
+  width: 5px;
+  height: 10px;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.checkbox-label {
+  color: #252525;
+  font-family: 'Aspekta', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.forgot-password-link {
+  background: none;
+  border: none;
+  color: #EB5E28;
+  font-family: 'Aspekta', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+  text-decoration: none;
+}
+
+.forgot-password-link:hover {
+  opacity: 0.8;
+  text-decoration: underline;
+}
+
+/* Error messages */
+.error-message {
+  color: #e74c3c;
+  font-size: 14px;
+  font-weight: 400;
+  margin-top: 8px;
+  font-family: 'Aspekta', sans-serif;
+}
+
+.submit-error {
+  color: #e74c3c;
+  font-size: 14px;
+  font-weight: 400;
+  margin-bottom: 12px;
+  padding: 8px 12px;
+  background: rgba(231, 76, 60, 0.1);
+  border-radius: 6px;
+  border: 1px solid rgba(231, 76, 60, 0.2);
+  font-family: 'Aspekta', sans-serif;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .login-split-container {
+    flex-direction: column;
+    width: 100vw;
+    min-height: 100vh;
+  }
+  .login-left, .login-right {
+    width: 100vw;
+    min-width: 0;
+    border-radius: 0;
+    padding: 32px 4vw;
+  }
+  .login-image {
+    width: 100vw;
+    height: 320px;
+    border-radius: 0;
+    object-fit: cover;
+    min-height: 320px;
+  }
+}
+
+@media (max-width: 900px) {
+  .login-left, .login-right {
+    padding: 24px 4vw;
+  }
+  .login-form-title {
+    font-size: 22px;
+  }
+  .login-submit-btn {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+/* === MOBILE CARD LAYOUT === */
+@media (max-width: 768px) {
+  .login-page {
+    padding: 19.5px !important;
+    background: #fff;
+    display: block;
+  }
+  
+  .login-mobile-header {
+    width: 100%;
+    height: 220px;
+    background: #EB5E28;
+    border-radius: 18px 18px 0 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-end;
+    padding: 32px 24px 24px 24px;
+    margin: 0;
+    box-sizing: border-box;
+  }
+
+  .login-mobile-header-title {
+    color: #fff;
+    font-size: 38px;
+    font-weight: 700;
+    line-height: 1.1;
+    margin: 0;
+    padding: 0;
+    letter-spacing: -1px;
+    font-family: 'Aspekta', sans-serif;
+  }
+
+  .login-mobile-container {
+    background: #fff;
+    border-radius: 0 0 18px 18px;
+    padding: 24px;
+    margin: 0 auto;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    max-width: 100%;
+    position: relative;
+  }
+
+  .login-mobile-title {
+    color: #333333;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 0 0 24px 0;
+    text-align: center;
+    font-family: 'Aspekta', sans-serif;
+  }
+
+  .login-form {
+    gap: 20px;
+  }
+
+  .login-form-field {
+    margin-bottom: 0;
+  }
+}

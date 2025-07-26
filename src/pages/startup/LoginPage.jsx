@@ -1,14 +1,29 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Button, Input, Icon } from '../../components/ui'
-import TaotterLogo from '../../assets/logo/Taotter_logo.svg'
+import { Icon } from '../../components/ui'
+import authImage from '../../assets/images/login.png'
+import './LoginPage.css'
 import { useStartupLoginMutation } from '../../store/api/authApi'
 import { useAppDispatch } from '../../store/hooks'
 import { loginSuccess } from '../../store/slices/authSlice'
-import DashboardLayout from '../../layouts/DashboardLayout'
-import './AuthPage.css'
+
+// Mobile detection hook
+function useIsMobile(breakpoint = 768) {
+  const [isMobile, setIsMobile] = useState(
+    typeof window !== "undefined" ? window.innerWidth <= breakpoint : false
+  );
+  useEffect(() => {
+    function handleResize() {
+      setIsMobile(window.innerWidth <= breakpoint);
+    }
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [breakpoint]);
+  return isMobile;
+}
 
 const LoginPage = () => {
+  const isMobile = useIsMobile();
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
   const [startupLogin] = useStartupLoginMutation()
@@ -99,109 +114,193 @@ const LoginPage = () => {
     }
   }
 
-  const handleGoogleSignIn = () => {
-    // TODO: Implement Google OAuth
-    console.log('Google sign in clicked')
-  }
-
   const handleForgotPassword = () => {
     // TODO: Navigate to forgot password page or show modal
     console.log('Forgot password clicked')
   }
 
-  const handleGoHome = () => {
-    navigate('/')
-  }
-
   return (
-    <DashboardLayout>
-      <div className="signup-page" style={{ marginTop: 8 }}>
-        {/* Main Content */}
-        <main className="signup-main">
-          <div className="signup-container">
-            <div className="signup-card">
-              <div className="signup-form-area">
-                {/* Title Section */}
-                <div className="signup-title-section">
-                  <h1 className="signup-title">Log in</h1>
-                  <p className="signup-subtitle">
-                    Enter your email and password to log in!
-                  </p>
-                </div>
-                {/* Form */}
-                <form onSubmit={handleSubmit} className="signup-form">
-                  <div className="signup-inputs">
-                    <Input
-                      label="Email"
-                      type="email"
-                      value={formData.email}
-                      onChange={(e) => updateFormData('email', e.target.value)}
-                      placeholder="Enter your email"
-                      error={errors.email}
-                      required
-                    />
-                    <div className="password-input-container">
-                      <Input
-                        label="Password*"
-                        type={showPassword ? 'text' : 'password'}
-                        value={formData.password}
-                        onChange={(e) => updateFormData('password', e.target.value)}
-                        placeholder="Enter your password"
-                        error={errors.password}
-                        required
-                      />
-                      <button
-                        type="button"
-                        className="password-toggle"
-                        onClick={() => setShowPassword(!showPassword)}
-                        aria-label={showPassword ? 'Hide password' : 'Show password'}
-                      >
-                        <Icon name={showPassword ? 'eye-disabled' : 'Eye'} size={20} />
-                      </button>
-                    </div>
-                  </div>
-                  {/* Form Options */}
-                  {/* <div className="signup-options">
-                    <label className="checkbox-container">
-                      <input
-                        type="checkbox"
-                        checked={formData.keepLoggedIn}
-                        onChange={(e) => updateFormData('keepLoggedIn', e.target.checked)}
-                        className="checkbox-input"
-                      /> */}
-                      {/* <span className="checkbox-custom"></span>
-                      <span className="checkbox-label">Keep me logged in</span> */}
-                    {/* </label> */}
-                    {/* <button
-                      type="button"
-                      className="forgot-password-link"
-                      onClick={handleForgotPassword}
-                    >
-                      Forgot password?
-                    </button> */}
-                  {/* </div> */}
-                  {/* Submit Error */}
-                  {errors.submit && (
-                    <div className="submit-error">{errors.submit}</div>
-                  )}
-                  {/* Submit Button */}
-                  <div style={{ display: "flex", justifyContent: "center", marginTop: 0 }}>
-                    <Button
-                      type="submit"
-                      variant="primary"
-                      className="signup-submit-btn"
-                      disabled={isSubmitting}
-                    >
-                      {isSubmitting ? 'Logging in...' : 'Log in'}
-                    </Button>
-                  </div>
-                </form>
-              </div>
+    <div className="login-page">
+      {isMobile ? (
+        <>
+          <div className="login-mobile-header">
+            <div className="login-mobile-header-title">
+              Log In
             </div>
           </div>
-        </main>
-      </div>
-    </DashboardLayout>
+          <div className="login-mobile-container">
+            <div className="login-mobile-title">
+              Welcome Back
+            </div>
+
+            {/* Form */}
+            <form onSubmit={handleSubmit} className="login-form">
+              <div className="login-form-field">
+                <label htmlFor="email">Email</label>
+                <input
+                  id="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) => updateFormData('email', e.target.value)}
+                  placeholder="Enter your email"
+                  required
+                />
+                {errors.email && <div className="error-message">{errors.email}</div>}
+              </div>
+
+              <div className="login-form-field">
+                <label htmlFor="password">Password</label>
+                <div className="password-field-container">
+                  <input
+                    id="password"
+                    type={showPassword ? 'text' : 'password'}
+                    value={formData.password}
+                    onChange={(e) => updateFormData('password', e.target.value)}
+                    placeholder="Enter your password"
+                    required
+                  />
+                  <button
+                    type="button"
+                    className="password-toggle"
+                    onClick={() => setShowPassword(!showPassword)}
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  >
+                    <Icon name={showPassword ? 'eye-disabled' : 'Eye'} size={20} />
+                  </button>
+                </div>
+                {errors.password && <div className="error-message">{errors.password}</div>}
+              </div>
+
+              <div className="login-options">
+                <label className="checkbox-container">
+                  <input
+                    type="checkbox"
+                    checked={formData.keepLoggedIn}
+                    onChange={(e) => updateFormData('keepLoggedIn', e.target.checked)}
+                    style={{ position: 'absolute', opacity: 0, width: 0, height: 0 }}
+                  />
+                  <span className="checkbox-custom"></span>
+                  <span className="checkbox-label">Keep me logged in</span>
+                </label>
+                
+                <button
+                  type="button"
+                  className="forgot-password-link"
+                  onClick={handleForgotPassword}
+                >
+                  Forgot password?
+                </button>
+              </div>
+
+              {errors.submit && (
+                <div className="submit-error">{errors.submit}</div>
+              )}
+
+              <button
+                type="submit"
+                className="login-submit-btn"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? 'Logging in...' : 'Log in'}
+              </button>
+            </form>
+          </div>
+        </>
+      ) : (
+        <div className="login-split-container">
+          {/* Left: Form */}
+          <div className="login-left">
+            <div className="login-form-title">
+              Log in
+            </div>
+            <div className="login-form-subtitle">
+              Enter your email and password to log in!
+            </div>
+
+            {/* Form */}
+            <form onSubmit={handleSubmit} className="login-form">
+              <div className="login-form-field">
+                <label htmlFor="email">Email</label>
+                <input
+                  id="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) => updateFormData('email', e.target.value)}
+                  placeholder="Enter your email"
+                  required
+                />
+                {errors.email && <div className="error-message">{errors.email}</div>}
+              </div>
+
+              <div className="login-form-field">
+                <label htmlFor="password">Password</label>
+                <div className="password-field-container">
+                  <input
+                    id="password"
+                    type={showPassword ? 'text' : 'password'}
+                    value={formData.password}
+                    onChange={(e) => updateFormData('password', e.target.value)}
+                    placeholder="Enter your password"
+                    required
+                  />
+                  <button
+                    type="button"
+                    className="password-toggle"
+                    onClick={() => setShowPassword(!showPassword)}
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  >
+                    <Icon name={showPassword ? 'eye-disabled' : 'Eye'} size={20} />
+                  </button>
+                </div>
+                {errors.password && <div className="error-message">{errors.password}</div>}
+              </div>
+
+              <div className="login-options">
+                <label className="checkbox-container">
+                  <input
+                    type="checkbox"
+                    checked={formData.keepLoggedIn}
+                    onChange={(e) => updateFormData('keepLoggedIn', e.target.checked)}
+                    style={{ position: 'absolute', opacity: 0, width: 0, height: 0 }}
+                  />
+                  <span className="checkbox-custom"></span>
+                  <span className="checkbox-label">Keep me logged in</span>
+                </label>
+                
+                <button
+                  type="button"
+                  className="forgot-password-link"
+                  onClick={handleForgotPassword}
+                >
+                  Forgot password?
+                </button>
+              </div>
+
+              {errors.submit && (
+                <div className="submit-error">{errors.submit}</div>
+              )}
+
+              <button
+                type="submit"
+                className="login-submit-btn"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? 'Logging in...' : 'Log in'}
+              </button>
+            </form>
+          </div>
+
+          {/* Right: Image */}
+          <div className="login-right">
+            <img
+              src={authImage}
+              alt="Login Visual"
+              className="login-image"
+            />
+          </div>
+        </div>
+      )}
+    </div>
   )
 }
 

@@ -2,9 +2,27 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useGetCurrentUserQuery } from '../../store/api/authApi'
 import { useGetSprintsQuery, useGetMySprintsQuery } from '../../store/api/sprintsApi'
+import hangImage from '../../assets/images/hang.png'
+import longImage from '../../assets/images/long.png'
 import './SprintStatusPage.css'
 
+// Mobile detection hook
+function useIsMobile(breakpoint = 768) {
+  const [isMobile, setIsMobile] = useState(
+    typeof window !== "undefined" ? window.innerWidth <= breakpoint : false
+  );
+  useEffect(() => {
+    function handleResize() {
+      setIsMobile(window.innerWidth <= breakpoint);
+    }
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [breakpoint]);
+  return isMobile;
+}
+
 const SprintStatusPage = () => {
+  const isMobile = useIsMobile();
   const navigate = useNavigate()
   const { data: userData, isLoading: userLoading } = useGetCurrentUserQuery()
   const [showSprints, setShowSprints] = useState(false)
@@ -19,7 +37,6 @@ const SprintStatusPage = () => {
   // Always fetch user's current sprints to check for active ones
   const { data: mySprintsData, isLoading: mySprintsLoading } = useGetMySprintsQuery({})
 
-  // REMOVED: Smart routing that was causing redirect loops
   // Only set showSprints based on onboarding step
   useEffect(() => {
     if (userData && userData.data && userData.data.user && userData.data.user.onboarding) {
@@ -60,32 +77,71 @@ const SprintStatusPage = () => {
   if (userLoading || mySprintsLoading) {
     return (
       <div className="sprint-status-page">
-        <div className="sprint-status-card">
-          <div className="sprint-status-header">
-            <h1>Start Your Sprint</h1>
+        {isMobile ? (
+          <>
+            <div className="sprint-status-mobile-header">
+              <div className="sprint-status-mobile-header-title">
+                Start Your Sprint
+              </div>
+            </div>
+            <div className="sprint-status-mobile-container">
+              <div className="sprint-status-mobile-title">
+                Loading...
+              </div>
+              <p>Checking your sprint status...</p>
+            </div>
+          </>
+        ) : (
+          <div className="sprint-status-split-container">
+            <div className="sprint-status-left">
+              <div className="sprint-status-form-title">
+                Start Your Sprint
+              </div>
+              <div className="sprint-status-form-subtitle">
+                Checking your sprint status...
+              </div>
+            </div>
+            <div className="sprint-status-right">
+              <img
+                src={longImage}
+                alt="Sprint Loading"
+                className="sprint-status-image"
+              />
+            </div>
           </div>
-          <div className="sprint-status-content">
-            <h2>Loading...</h2>
-            <p>Checking your sprint status...</p>
-          </div>
-        </div>
+        )}
       </div>
     )
   }
 
   const onboardingStep = userData?.data?.user?.onboarding?.currentStep
 
+  // "Hang tight" screen with special full background image for desktop
   if (onboardingStep === 'pending_review') {
     return (
       <div className="sprint-status-page">
-        <div className="sprint-status-card">
-          <div className="sprint-status-header">
-            <h1>Start Your Sprint</h1>
+        {isMobile ? (
+          <>
+            <div className="sprint-status-mobile-header">
+              <div className="sprint-status-mobile-header-title">
+                Start Your Sprint
+              </div>
+            </div>
+            <div className="sprint-status-mobile-container">
+              <div className="sprint-status-mobile-title">
+                Hang tight your request is being processed
+              </div>
+            </div>
+          </>
+        ) : (
+          <div className="hang-tight-fullscreen">
+            <div className="hang-tight-content">
+              <div className="hang-tight-text">
+                <p>We're reviewing your application</p>
+              </div>
+            </div>
           </div>
-          <div className="sprint-status-content">
-            <h2>Hang tight your request is being processed.</h2>
-          </div>
-        </div>
+        )}
       </div>
     )
   }
@@ -94,56 +150,131 @@ const SprintStatusPage = () => {
     if (sprintsLoading || !sprintData) {
       return (
         <div className="sprint-status-page">
-          <div className="sprint-status-card">
-            <div className="sprint-status-header">
-              <h1>Start Your Sprint</h1>
+          {isMobile ? (
+            <>
+              <div className="sprint-status-mobile-header">
+                <div className="sprint-status-mobile-header-title">
+                  Start Your Sprint
+                </div>
+              </div>
+              <div className="sprint-status-mobile-container">
+                <div className="sprint-status-mobile-title">
+                  Loading sprints...
+                </div>
+              </div>
+            </>
+          ) : (
+            <div className="sprint-status-split-container">
+              <div className="sprint-status-left">
+                <div className="sprint-status-form-title">
+                  Start Your Sprint
+                </div>
+                <div className="sprint-status-form-subtitle">
+                  Loading sprints...
+                </div>
+              </div>
+              <div className="sprint-status-right">
+                <img
+                  src={longImage}
+                  alt="Sprint Loading"
+                  className="sprint-status-image"
+                />
+              </div>
             </div>
-            <div className="sprint-status-content">
-              <h2>Loading sprints...</h2>
-            </div>
-          </div>
+          )}
         </div>
       )
     }
 
-    // Sprint is approved - show sprint selection
+    // Sprint is approved - show sprint selection with long.png image
     return (
       <div className="sprint-status-page">
-        <div className="sprint-status-card sprint-approved">
-          <div className="sprint-status-header">
-            <h1>Start Your Sprint</h1>
-          </div>
-          <div className="sprint-status-content">
-            <h2>Select Your Sprint</h2>
-            <div className="sprint-options">
-              {sprintData?.sprints.map((sprint) => (
-                <div key={sprint.id} className="sprint-option">
-                  <div className="sprint-info">
-                    <div className="sprint-project-name">Project: {sprintData.projectName}</div>
-                    <div className="sprint-number">⚙ Sprint {sprint.number}</div>
-                    <div className="sprint-title">{sprint.title}</div>
-                    <div className="sprint-timeframe">Estimated Time: {sprint.estimatedWeeks} weeks</div>
-                    <div className="sprint-objective">Sprint Objective: {sprint.objective}</div>
-                    <div className="sprint-deliverables">
-                      <strong>Deliverables:</strong>
-                      <br />
-                      {sprint.deliverables}
+        {isMobile ? (
+          <>
+            <div className="sprint-status-mobile-header">
+              <div className="sprint-status-mobile-header-title">
+                Start Your Sprint
+              </div>
+            </div>
+            <div className="sprint-status-mobile-container">
+              <div className="sprint-status-mobile-title">
+                Select Your Sprint
+              </div>
+              <div className="sprint-options">
+                {sprintData?.sprints.map((sprint) => (
+                  <div key={sprint.id} className="sprint-option">
+                    <div className="sprint-info">
+                      <div className="sprint-project-name">Project: {sprintData.projectName}</div>
+                      <div className="sprint-number">⚙ Sprint {sprint.number}</div>
+                      <div className="sprint-title">{sprint.title}</div>
+                      <div className="sprint-timeframe">Estimated Time: {sprint.estimatedWeeks} weeks</div>
+                      <div className="sprint-objective">Sprint Objective: {sprint.objective}</div>
+                      <div className="sprint-deliverables">
+                        <strong>Deliverables:</strong>
+                        <br />
+                        {sprint.deliverables}
+                      </div>
+                      <div className="sprint-hours">⚠ Estimated Total Hours for Sprint {sprint.number}: {sprint.estimatedTotalHours} working hours</div>
                     </div>
-                    <div className="sprint-hours">⚠ Estimated Total Hours for Sprint {sprint.number}: {sprint.estimatedTotalHours} working hours</div>
+                    <div className="sprint-action">
+                      <button
+                        className="sprint-get-started-btn"
+                        onClick={() => handleGetStarted(sprint)}
+                      >
+                        Let's Get Started ----&gt;
+                      </button>
+                    </div>
                   </div>
-                  <div className="sprint-action">
-                    <button
-                      className="sprint-get-started-btn"
-                      onClick={() => handleGetStarted(sprint)}
-                    >
-                      Let's Get Started ----&gt;
-                    </button>
+                ))}
+              </div>
+            </div>
+          </>
+        ) : (
+          <div className="sprint-status-split-container">
+            <div className="sprint-status-left">
+              <div className="sprint-status-form-title">
+                Select Your Sprint
+              </div>
+              <div className="sprint-status-form-subtitle">
+                Choose from the available sprint options
+              </div>
+              <div className="sprint-options">
+                {sprintData?.sprints.map((sprint) => (
+                  <div key={sprint.id} className="sprint-option">
+                    <div className="sprint-info">
+                      <div className="sprint-project-name">Project: {sprintData.projectName}</div>
+                      <div className="sprint-number">⚙ Sprint {sprint.number}</div>
+                      <div className="sprint-title">{sprint.title}</div>
+                      <div className="sprint-timeframe">Estimated Time: {sprint.estimatedWeeks} weeks</div>
+                      <div className="sprint-objective">Sprint Objective: {sprint.objective}</div>
+                      <div className="sprint-deliverables">
+                        <strong>Deliverables:</strong>
+                        <br />
+                        {sprint.deliverables}
+                      </div>
+                      <div className="sprint-hours">⚠ Estimated Total Hours for Sprint {sprint.number}: {sprint.estimatedTotalHours} working hours</div>
+                    </div>
+                    <div className="sprint-action">
+                      <button
+                        className="sprint-get-started-btn"
+                        onClick={() => handleGetStarted(sprint)}
+                      >
+                        Let's Get Started ----&gt;
+                      </button>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
+            </div>
+            <div className="sprint-status-right">
+              <img
+                src={longImage}
+                alt="Sprint Selection"
+                className="sprint-status-image"
+              />
             </div>
           </div>
-        </div>
+        )}
       </div>
     )
   }
@@ -153,29 +284,68 @@ const SprintStatusPage = () => {
     const activeSprint = mySprintsData.data.sprints[0]
     return (
       <div className="sprint-status-page">
-        <div className="sprint-status-card">
-          <div className="sprint-status-header">
-            <h1>Sprint In Progress</h1>
-          </div>
-          <div className="sprint-status-content">
-            <h2>You have an active sprint!</h2>
-            <p>Continue with your current sprint or go to your dashboard.</p>
-            <div style={{ marginTop: '20px', display: 'flex', gap: '10px', justifyContent: 'center' }}>
-              <button 
-                className="sprint-get-started-btn"
-                onClick={() => navigate('/startup/dashboard')}
-              >
-                Go to Dashboard
-              </button>
-              <button 
-                className="sprint-get-started-btn"
-                onClick={() => navigate(`/startup/sprint/${activeSprint.id}/board`)}
-              >
-                View Sprint Board
-              </button>
+        {isMobile ? (
+          <>
+            <div className="sprint-status-mobile-header">
+              <div className="sprint-status-mobile-header-title">
+                Sprint In Progress
+              </div>
+            </div>
+            <div className="sprint-status-mobile-container">
+              <div className="sprint-status-mobile-title">
+                You have an active sprint!
+              </div>
+              <p>Continue with your current sprint or go to your dashboard.</p>
+              <div className="sprint-navigation-buttons">
+                <button 
+                  className="sprint-get-started-btn"
+                  onClick={() => navigate('/startup/dashboard')}
+                >
+                  Go to Dashboard
+                </button>
+                <button 
+                  className="sprint-get-started-btn"
+                  onClick={() => navigate(`/startup/sprint/${activeSprint.id}/board`)}
+                >
+                  View Sprint Board
+                </button>
+              </div>
+            </div>
+          </>
+        ) : (
+          <div className="sprint-status-split-container">
+            <div className="sprint-status-left">
+              <div className="sprint-status-form-title">
+                Sprint In Progress
+              </div>
+              <div className="sprint-status-form-subtitle">
+                You have an active sprint!
+              </div>
+              <p>Continue with your current sprint or go to your dashboard.</p>
+              <div className="sprint-navigation-buttons">
+                <button 
+                  className="sprint-get-started-btn"
+                  onClick={() => navigate('/startup/dashboard')}
+                >
+                  Go to Dashboard
+                </button>
+                <button 
+                  className="sprint-get-started-btn"
+                  onClick={() => navigate(`/startup/sprint/${activeSprint.id}/board`)}
+                >
+                  View Sprint Board
+                </button>
+              </div>
+            </div>
+            <div className="sprint-status-right">
+              <img
+                src={longImage}
+                alt="Sprint In Progress"
+                className="sprint-status-image"
+              />
             </div>
           </div>
-        </div>
+        )}
       </div>
     )
   }
@@ -183,14 +353,38 @@ const SprintStatusPage = () => {
   // Default fallback
   return (
     <div className="sprint-status-page">
-      <div className="sprint-status-card">
-        <div className="sprint-status-header">
-          <h1>Start Your Sprint</h1>
+      {isMobile ? (
+        <>
+          <div className="sprint-status-mobile-header">
+            <div className="sprint-status-mobile-header-title">
+              Start Your Sprint
+            </div>
+          </div>
+          <div className="sprint-status-mobile-container">
+            <div className="sprint-status-mobile-title">
+              Loading...
+            </div>
+          </div>
+        </>
+      ) : (
+        <div className="sprint-status-split-container">
+          <div className="sprint-status-left">
+            <div className="sprint-status-form-title">
+              Start Your Sprint
+            </div>
+            <div className="sprint-status-form-subtitle">
+              Loading...
+            </div>
+          </div>
+          <div className="sprint-status-right">
+            <img
+              src={longImage}
+              alt="Sprint Status"
+              className="sprint-status-image"
+            />
+          </div>
         </div>
-        <div className="sprint-status-content">
-          <h2>Loading...</h2>
-        </div>
-      </div>
+      )}
     </div>
   )
 }

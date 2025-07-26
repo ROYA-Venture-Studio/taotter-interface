@@ -93,7 +93,7 @@
   --color-blue-950: #102A56;
 
   /* Semantic Colors */
-  --color-primary: var(--color-blue-500);
+  --color-primary: #EB5E28;
   --color-secondary: var(--color-gray-500);
   --color-success: var(--color-success-500);
   --color-warning: var(--color-warning-500);
@@ -117,7 +117,7 @@
   --color-border-dark: var(--color-gray-400);
 
   /* Typography */
-  --font-family-primary: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-family-primary: 'Aspekta', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-weight-light: 300;
   --font-weight-normal: 400;
   --font-weight-medium: 500;
