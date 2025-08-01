@@ -35,10 +35,10 @@ export const sprintsApi = api.injectEndpoints({
     }),
     // Startup: Upload documents
     uploadDocuments: builder.mutation({
-      query: ({ id, ...body }) => ({
+      query: ({ id, body }) => ({
         url: `/sprints/${id}/upload-documents`,
         method: "POST",
-        body,
+        body, // body should be the FormData object itself
       }),
       invalidatesTags: ["Sprints", "MySprintQuery"],
     }),
@@ -86,6 +86,15 @@ export const sprintsApi = api.injectEndpoints({
       }),
       invalidatesTags: ["AdminSprints"],
     }),
+    // Admin: Update selected package payment status (sprint-level)
+    updateSelectedPackagePaymentStatus: builder.mutation({
+      query: ({ sprintId, paymentStatus }) => ({
+        url: `/sprints/admin/${sprintId}/payment-status`,
+        method: "PUT",
+        body: { paymentStatus },
+      }),
+      invalidatesTags: ["AdminSprints"],
+    }),
   }),
 });
 
@@ -102,4 +111,5 @@ export const {
   useGetAllSprintsQuery,
   useCreateSprintMutation,
   useUpdateSprintStatusMutation,
+  useUpdateSelectedPackagePaymentStatusMutation,
 } = sprintsApi;

@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import Breadcrumb from "../../components/ui/Breadcrumb/Breadcrumb";
 import "./TablePage.css";
 import { useGetStartupSprintsQuery } from "../../store/api/adminApi";
+import { useUpdateSelectedPackagePaymentStatusMutation } from "../../store/api/sprintsApi";
 
 function StatusPill({ status }) {
   const color =
@@ -78,6 +79,8 @@ export default function StartupSprintsPage() {
     limit: 20,
   });
 
+  const [updateSelectedPackagePaymentStatus] = useUpdateSelectedPackagePaymentStatusMutation();
+
   const startup = data?.data?.startup;
   const sprints = data?.data?.sprints || [];
 
@@ -142,6 +145,7 @@ export default function StartupSprintsPage() {
                 <th>Status</th>
                 <th>Progress</th>
                 <th>Package</th>
+                <th>Payment Status</th>
                 <th>Created Date</th>
               </tr>
             </thead>
@@ -175,14 +179,50 @@ export default function StartupSprintsPage() {
                     <ProgressBar progress={sprint.progress} />
                   </td>
                   <td>
-                    {sprint.hasSelectedPackage ? (
+                    {sprint.selectedPackage ? (
                       <span style={{ color: "#1378d1", fontSize: 12 }}>
-                        ✓ Selected
+                        {sprint.selectedPackage.name} ({sprint.selectedPackage.price} {sprint.selectedPackage.currency})
                       </span>
                     ) : (
                       <span style={{ color: "#667085", fontSize: 12 }}>
                         Not selected
                       </span>
+                    )}
+                  </td>
+                  <td>
+                    {sprint.selectedPackage ? (
+                      <>
+                        {sprint.selectedPackagePaymentStatus === "paid" ? (
+                          <span style={{ color: "#10b981", fontWeight: 600 }}>Paid</span>
+                        ) : (
+                          <>
+                            <span style={{ color: "#f59e0b", fontWeight: 600 }}>Unpaid</span>
+                            <button
+                              style={{
+                                marginLeft: 10,
+                                background: "#10b981",
+                                color: "#fff",
+                                border: "none",
+                                borderRadius: 4,
+                                padding: "4px 10px",
+                                cursor: "pointer",
+                                fontSize: "0.95rem"
+                              }}
+                              onClick={async (e) => {
+                                e.stopPropagation();
+                                await updateSelectedPackagePaymentStatus({
+                                  sprintId: sprint._id,
+                                  paymentStatus: "paid"
+                                });
+                              }}
+                            >
+                              Mark as Paid
+                            </button>
+                          </>
+                        )}
+                      </>
+                    ) : (
+                      <span style={{ color: "#667085" }}>N/A</span>
                     )}
                   </td>
                   <td>{formatDate(sprint.createdAt)}</td>

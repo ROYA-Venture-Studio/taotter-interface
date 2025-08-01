@@ -38,12 +38,12 @@
 .board-page-title {
   font-size: 28px;
   font-weight: 700;
-  color: #EB5E28;
+  color: #222; /* Black */
   font-family: Montserrat, Arial, sans-serif;
-  background: linear-gradient(90deg, #FFB686 0%, #EB5E28 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  background: none;
+  -webkit-background-clip: initial;
+  -webkit-text-fill-color: initial;
+  background-clip: initial;
 }
 
 .board-page-breadcrumb {
@@ -82,7 +82,7 @@
 .board-toolbar-tab {
   border: none;
   background: transparent;
-  color: #EB5E28;
+  color: #222; /* Black */
   font-size: 15px;
   font-weight: 500;
   font-family: 'Outfit', Montserrat, Arial, sans-serif;
@@ -94,7 +94,7 @@
 
 .board-toolbar-tab.active {
   background: #fff;
-  color: #EB5E28;
+  color: #222; /* Black */
   font-weight: 600;
 }
 

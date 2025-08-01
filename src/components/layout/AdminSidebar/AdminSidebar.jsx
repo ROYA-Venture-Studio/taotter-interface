@@ -34,8 +34,8 @@ export default function AdminSidebar({ open, onClose }) {
         <div className="admin-sidebar__section">
           <div className="admin-sidebar__subtitle">MENU</div>
           <nav>
-            <a href="/admin/board" className="admin-sidebar__link">Board</a>
-            <a href="/admin/table" className="admin-sidebar__link">Requests</a>
+            <a href="/admin/sprints" className="admin-sidebar__link">Sprints</a>
+            <a href="/admin/requests" className="admin-sidebar__link">Requests</a>
             <a href="/admin/startups" className="admin-sidebar__link">Startups</a>
           </nav>
         </div>

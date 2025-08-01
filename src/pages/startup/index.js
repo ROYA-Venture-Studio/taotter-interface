@@ -11,4 +11,4 @@ export { default as StartupDashboardPage } from './StartupDashboardPage'
 export { default as SprintStatusPage } from './SprintStatusPage'
 export { default as SprintOnboardingStep1 } from './SprintOnboardingStep1'
 export { default as SprintOnboardingStep2 } from './SprintOnboardingStep2'
-export { default as SprintOnboardingStep3 } from './SprintOnboardingStep3'
+// SprintOnboardingStep3 removed from onboarding flow

@@ -1,5 +1,7 @@
 import { api } from "./api";
 
+// Prefetch logic removed, revert to original
+
 export const authApi = api.injectEndpoints({
   endpoints: (builder) => ({
     // Startup Authentication
@@ -71,6 +73,13 @@ export const authApi = api.injectEndpoints({
     }),
     
     // General Auth
+    setOnboardingStep: builder.mutation({
+      query: ({ step }) => ({
+        url: '/startup/auth/onboarding-step',
+        method: 'PUT',
+        body: { step },
+      }),
+    }),
     refreshToken: builder.mutation({
       query: (refreshToken) => ({
         url: '/auth/refresh',
@@ -107,6 +116,7 @@ export const {
   useRefreshTokenMutation,
   useLogoutMutation,
   useGetCurrentUserQuery,
+  useSetOnboardingStepMutation,
 } = authApi;
 
 // Export aliases for store.js compatibility

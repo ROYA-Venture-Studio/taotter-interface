@@ -24,20 +24,20 @@ export default function AdminLayout({ children }) {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Calculate margin-left for content area
-  const getContentMargin = () => {
-    if (window.innerWidth >= 768 && sidebarOpen) {
-      return 290;
-    }
-    return 0;
-  };
+  // Responsive margin for content area based on sidebar state
+  const getContentMargin = () => (sidebarOpen ? 290 : 0);
 
-  // Use state to trigger re-render on resize for margin
+  // Update margin on sidebar toggle or window resize
   const [contentMargin, setContentMargin] = useState(getContentMargin());
   React.useEffect(() => {
     const handleResize = () => setContentMargin(getContentMargin());
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
+  }, [sidebarOpen]);
+
+  React.useEffect(() => {
+    setContentMargin(getContentMargin());
+    // eslint-disable-next-line
   }, [sidebarOpen]);
 
   return (

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useGetAdminQuestionnaireByIdQuery } from "../../store/api/questionnairesApi";
+import { useGetAdminQuestionnaireWithSprintQuery } from "../../store/api/questionnairesApi";
 import ResponseModal from "../../components/ui/ResponseModal/ResponseModal";
 import "./RequestDetailPage.css";
 import { useStartChatMutation } from "../../store/api/chatApi";
@@ -10,7 +10,7 @@ export default function RequestDetailPage() {
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
   const [startChat] = useStartChatMutation();
-  const { data, isLoading, error } = useGetAdminQuestionnaireByIdQuery(id);
+  const { data, isLoading, error } = useGetAdminQuestionnaireWithSprintQuery(id);
 
   // Loading and error states
   if (isLoading) {
@@ -25,6 +25,7 @@ export default function RequestDetailPage() {
   }
 
   const q = data.data.questionnaire;
+  const sprint = data.data.sprint;
 
   // Data mapping
   const dealId = q._id ? q._id.toString().slice(-8).toUpperCase() : "";
@@ -52,11 +53,22 @@ export default function RequestDetailPage() {
     timeline: q.requirements?.timeline || "",
     budget: q.requirements?.budgetRange || "",
   };
-  // Attachments, contact, demoLink left empty for now
-  const attachments = [];
-  const contact = "";
-  const demoLink = "";
 
+  // Extract sprint attachments, contact, and demoLink if available
+  let attachments = [];
+  let contact = "";
+  let demoLink = "";
+  if (sprint && sprint.sprintDocuments) {
+    attachments = Array.isArray(sprint.sprintDocuments.uploadedFiles)
+      ? sprint.sprintDocuments.uploadedFiles.map((doc) => ({
+          name: doc.originalName || doc.fileName,
+          file: doc.fileUrl,
+          type: doc.fileType,
+        }))
+      : [];
+    contact = sprint.sprintDocuments.contactLists || "";
+    demoLink = sprint.sprintDocuments.appDemo || "";
+  }
   return (
     <div className="request-detail-page">
       <div className="request-detail-breadcrumb">
