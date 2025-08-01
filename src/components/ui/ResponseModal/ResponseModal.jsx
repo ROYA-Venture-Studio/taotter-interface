@@ -49,9 +49,9 @@ function emptySprint() {
       scale: false,
     },
     packageOptions: [
-      { tier: "starter", hourlyRate: "", amount: "", qty: "", discount: "" },
-      { tier: "growth", hourlyRate: "", amount: "", qty: "", discount: "" },
-      { tier: "scale", hourlyRate: "", amount: "", qty: "", discount: "" },
+      { tier: "starter", hourlyRate: "", amount: "", qty: "", discount: "", paymentLink: "" },
+      { tier: "growth", hourlyRate: "", amount: "", qty: "", discount: "", paymentLink: "" },
+      { tier: "scale", hourlyRate: "", amount: "", qty: "", discount: "", paymentLink: "" },
     ],
   };
 }
@@ -182,6 +182,7 @@ export default function ResponseModal({ onClose }) {
             hourlyRate: parseFloat(p.hourlyRate) || 0,
             discount: p.discount ? parseFloat(p.discount) : 0,
             tier: p.tier,
+            paymentLink: p.paymentLink || "", // <-- Ensure paymentLink is included
           };
         }),
     }));
@@ -227,6 +228,7 @@ export default function ResponseModal({ onClose }) {
         <form className="response-modal-form" onSubmit={handleSubmit}>
           {sprints.map((s, idx) => (
             <div key={idx} className="response-modal-sprint-section">
+              {/* RESTORED FIELDS */}
               <div className="response-modal-form-section">
                 <label>
                   Project Name
@@ -317,6 +319,8 @@ export default function ResponseModal({ onClose }) {
                   ></textarea>
                 </label>
               </div>
+              {/* END RESTORED FIELDS */}
+
               <div className="response-modal-section">
                 <h3 className="response-modal-section-title response-modal-title" style={{ color: "#101828", fontSize: 24, fontWeight: 600 }}>
                   Taotter Credits
@@ -365,6 +369,22 @@ export default function ResponseModal({ onClose }) {
                                 value={s.packageOptions[tierIdx].amount}
                                 onChange={(e) =>
                                   handlePackageChange(idx, tierIdx, "amount", e.target.value)
+                                }
+                              />
+                            </label>
+                          </div>
+                        </div>
+                        <div className="response-modal-form-row">
+                          <div className="response-modal-form-section" style={{ width: "100%" }}>
+                            <label>
+                              Payment Link (Stripe or other)
+                              <input
+                                type="url"
+                                placeholder="https://your-stripe-link.com"
+                                className="response-modal-input"
+                                value={s.packageOptions[tierIdx].paymentLink || ""}
+                                onChange={(e) =>
+                                  handlePackageChange(idx, tierIdx, "paymentLink", e.target.value)
                                 }
                               />
                             </label>

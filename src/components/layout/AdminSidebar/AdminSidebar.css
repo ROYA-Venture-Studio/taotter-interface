@@ -31,6 +31,7 @@
   opacity: 1;
 }
 
+/* Removed desktop override so sidebar can be toggled on all screen sizes */
 @media (min-width: 768px) {
   .admin-sidebar {
     position: fixed;
@@ -38,9 +39,8 @@
     top: 0;
     height: 100vh;
     min-width: 290px;
-    transform: translateX(0);
-    opacity: 1;
-    transition: none;
+    /* Do not force transform/opacity here, let .open control it */
+    transition: transform 0.25s cubic-bezier(.4,0,.2,1), opacity 0.25s cubic-bezier(.4,0,.2,1);
   }
 }
 
@@ -155,15 +155,8 @@
   z-index: 1199;
 }
 
+/* Remove desktop override so sidebar can be fully hidden or shown on all screen sizes */
 @media (min-width: 768px) {
-  .admin-sidebar {
-    transform: translateX(0);
-    position: fixed;
-    height: 100vh;
-    min-width: 290px;
-    left: 0;
-    top: 0;
-  }
   .admin-sidebar__backdrop {
     display: none;
   }

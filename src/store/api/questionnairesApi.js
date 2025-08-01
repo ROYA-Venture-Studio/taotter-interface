@@ -3,11 +3,6 @@ import { api } from "./api";
 export const questionnairesApi = api.injectEndpoints({
   endpoints: (builder) => ({
     // For Startups
-    getMyQuestionnaire: builder.query({
-      query: () => '/questionnaires/my-questionnaire',
-      providesTags: ['Questionnaire'],
-    }),
-    
     createQuestionnaire: builder.mutation({
       query: (questionnaireData) => ({
         url: '/questionnaires',
@@ -167,12 +162,26 @@ export const questionnairesApi = api.injectEndpoints({
       }),
       invalidatesTags: ['Questionnaire'],
     }),
+
+    // Schedule meeting for questionnaire
+    scheduleMeeting: builder.mutation({
+      query: ({ id }) => ({
+        url: `/questionnaires/${id}/schedule-meeting`,
+        method: 'POST',
+      }),
+      invalidatesTags: ['Questionnaire'],
+    }),
+
+    // Admin: Get questionnaire with sprint
+    getAdminQuestionnaireWithSprint: builder.query({
+      query: (id) => `/questionnaires/admin/${id}/with-sprint`,
+      providesTags: (result, error, id) => [{ type: "AdminQuestionnaire", id }],
+    }),
   }),
   overrideExisting: false,
 });
 
 export const {
-  useGetMyQuestionnaireQuery,
   useCreateQuestionnaireMutation,
   useUpdateQuestionnaireMutation,
   useSubmitQuestionnaireMutation,
@@ -192,6 +201,8 @@ export const {
   useGetAllAdminQuestionnairesQuery,
   useGetAdminQuestionnaireByIdQuery,
   useCreateSprintsForQuestionnaireMutation,
+  useScheduleMeetingMutation,
+  useGetAdminQuestionnaireWithSprintQuery,
 } = questionnairesApi;
 
 // Export aliases for store.js compatibility

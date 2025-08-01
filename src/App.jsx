@@ -7,7 +7,6 @@ import {
   SprintStatusPage, 
   SprintOnboardingStep1, 
   SprintOnboardingStep2, 
-  SprintOnboardingStep3,
   StartupChatPage
 } from './pages'
 import StartupBoardPage from './pages/startup/StartupBoardPage'
@@ -24,6 +23,9 @@ import BoardPage from './pages/admin/BoardPage'
 import AdminSprintListPage from './pages/admin/AdminSprintListPage'
 import StartupsPage from './pages/admin/StartupsPage'
 import StartupSprintsPage from './pages/admin/StartupSprintsPage'
+import StartupOnboardingGuard from './components/layout/StartupOnboardingGuard'
+import RequestsPage from './pages/admin/RequestsPage'
+import PaymentPendingPage from './pages/startup/PaymentPendingPage'
 
 function App() {
   return (
@@ -65,24 +67,28 @@ function App() {
             </StartupProtectedRoute>
           }
         />
-        
+
+        {/* Payment Pending Page */}
         <Route
-          path="sprint/:sprintId/onboarding/step-3"
+          path="startup/payment-pending"
           element={
             <StartupProtectedRoute>
-              <SprintOnboardingStep3 />
+              <PaymentPendingPage />
             </StartupProtectedRoute>
           }
         />
+
       </Route>
 
       <Route
         path="/startup/sprint/:sprintId/board"
         element={
           <StartupProtectedRoute>
-            <DashboardLayout>
-              <StartupBoardPage />
-            </DashboardLayout>
+            <StartupOnboardingGuard>
+              <DashboardLayout>
+                <StartupBoardPage />
+              </DashboardLayout>
+            </StartupOnboardingGuard>
           </StartupProtectedRoute>
         }
       />
@@ -92,9 +98,11 @@ function App() {
         path="/startup/dashboard"
         element={
           <StartupProtectedRoute>
-            <DashboardLayout>
-              <StartupDashboardPage />
-            </DashboardLayout>
+            <StartupOnboardingGuard>
+              <DashboardLayout>
+                <StartupDashboardPage />
+              </DashboardLayout>
+            </StartupOnboardingGuard>
           </StartupProtectedRoute>
         }
       />
@@ -103,9 +111,11 @@ function App() {
         path="/startup/chat/:id"
         element={
           <StartupProtectedRoute>
-            <DashboardLayout>
-              <StartupChatPage />
-            </DashboardLayout>
+            <StartupOnboardingGuard>
+              <DashboardLayout>
+                <StartupChatPage />
+              </DashboardLayout>
+            </StartupOnboardingGuard>
           </StartupProtectedRoute>
         }
       />
@@ -115,13 +125,13 @@ function App() {
       
       {/* Protected Admin routes */}
       <Route path="/admin/dashboard" element={<AdminProtectedRoute><AdminLayout><AdminDashboardPage /></AdminLayout></AdminProtectedRoute>} />
-      <Route path="/admin/table" element={<AdminProtectedRoute><AdminLayout><TablePage /></AdminLayout></AdminProtectedRoute>} />
+      <Route path="/admin/requests" element={<AdminProtectedRoute><AdminLayout><RequestsPage /></AdminLayout></AdminProtectedRoute>} />
       <Route path="/admin/request/:id" element={<AdminProtectedRoute><AdminLayout><RequestDetailPage /></AdminLayout></AdminProtectedRoute>} />
       <Route path="/admin/startups" element={<AdminProtectedRoute><AdminLayout><StartupsPage /></AdminLayout></AdminProtectedRoute>} />
       <Route path="/admin/startups/:startupId/sprints" element={<AdminProtectedRoute><AdminLayout><StartupSprintsPage /></AdminLayout></AdminProtectedRoute>} />
       <Route path="/admin/chat" element={<AdminProtectedRoute><AdminChatPage /></AdminProtectedRoute>} />
       <Route path="/admin/chat/:id" element={<AdminProtectedRoute><AdminChatPage /></AdminProtectedRoute>} />
-      <Route path="/admin/board" element={<AdminProtectedRoute><AdminSprintListPage /></AdminProtectedRoute>} />
+      <Route path="/admin/sprints" element={<AdminProtectedRoute><AdminSprintListPage /></AdminProtectedRoute>} />
       <Route path="/admin/board/:sprintId" element={<AdminProtectedRoute><BoardPage /></AdminProtectedRoute>} />
     </Routes>
   )

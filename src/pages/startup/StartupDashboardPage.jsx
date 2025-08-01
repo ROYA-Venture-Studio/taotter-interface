@@ -30,16 +30,25 @@ function SprintCard({ sprint, onNoBoardClick }) {
   const [showFinishModal, setShowFinishModal] = useState(false)
   const [finishSprint, { isLoading: isFinishing }] = useFinishSprintMutation()
   const navigate = useNavigate()
-  let percent = 0
+  let percent = 0;
+  let allTasksDone = false;
+  let totalTasks = 0;
+  let doneTasks = 0;
 
   if (data && data.data && data.data.board) {
-    const { columns, tasksByColumn } = data.data.board
-    // Find the completed column (isCompleted: true)
-    const completedColumn = columns.find(col => col.isCompleted)
+    const { columns, tasksByColumn } = data.data.board;
+    // Gather all tasks
+    const allTasks = Object.values(tasksByColumn || {}).flat();
+    totalTasks = allTasks.length;
+    doneTasks = allTasks.filter(task => task.status === 'done').length;
+    allTasksDone = totalTasks > 0 && doneTasks === totalTasks;
+
+    // For progress bar, keep old logic for now
+    const completedColumn = columns.find(col => col.isCompleted);
     if (completedColumn && tasksByColumn) {
-      const completedTasks = tasksByColumn[completedColumn._id] || []
-      const totalTasks = Object.values(tasksByColumn).reduce((sum, arr) => sum + arr.length, 0)
-      percent = totalTasks > 0 ? Math.round((completedTasks.length / totalTasks) * 100) : 0
+      const completedTasks = tasksByColumn[completedColumn._id] || [];
+      const totalTasksBar = Object.values(tasksByColumn).reduce((sum, arr) => sum + arr.length, 0);
+      percent = totalTasksBar > 0 ? Math.round((completedTasks.length / totalTasksBar) * 100) : 0;
     }
   }
 
@@ -110,7 +119,18 @@ function SprintCard({ sprint, onNoBoardClick }) {
             e.stopPropagation()
             setShowFinishModal(true)
           }}
-          disabled={isFinishing}
+          disabled={
+            isFinishing ||
+            !allTasksDone ||
+            (sprint.progress && sprint.progress.percentage !== 100)
+          }
+          title={
+            !allTasksDone
+              ? "All tasks must be marked as done to finish the sprint."
+              : (sprint.progress && sprint.progress.percentage !== 100)
+                ? "Sprint progress must be 100% to finish the sprint."
+                : undefined
+          }
         >
           {isFinishing ? 'Finishing...' : 'Finish Sprint'}
         </Button>

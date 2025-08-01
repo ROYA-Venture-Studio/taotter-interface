@@ -2,83 +2,70 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 64px;
-  padding: 0 24px;
+  height: 76px;
+  width: 100%;
+  min-width: 0;
+  padding: 16px 24px;
   background: #fff;
   border-bottom: 1px solid #e4e7ec;
   z-index: 1100;
   position: relative;
+  box-sizing: border-box;
+}
+
+.admin-header-left {
+  display: flex;
+  align-items: center;
 }
 
 .admin-header__menu-btn {
-  background: none;
-  border: none;
-  font-size: 1.8rem;
-  color: #1378d1;
-  cursor: pointer;
-  margin-right: 16px;
-  padding: 4px 8px;
-  border-radius: 8px;
-  transition: background 0.13s;
-  display: flex;
-  align-items: center;
-}
-
-@media (min-width: 768px) {
-  .admin-header__menu-btn {
-    display: none;
-  }
-}
-
-.menu-btn {
-  background: none;
-  border: none;
-  padding: 8px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  transition: background 0.15s;
-}
-.menu-btn:hover {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
   background: #f3f4f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  margin-right: 0;
+  padding: 0;
+  transition: background 0.13s;
 }
+
+.admin-header__menu-btn:hover {
+  background: #e5e7eb;
+}
+
+.admin-header-spacer {
+  flex: 1;
+}
+
 .admin-header-right {
   display: flex;
   align-items: center;
   gap: 18px;
 }
-.notif-btn {
-  background: none;
-  border: none;
-  padding: 8px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  transition: background 0.15s;
-  position: relative;
-}
-.notif-btn:hover {
-  background: #f3f4f6;
-}
-.user-menu {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-family: 'Montserrat', sans-serif;
-}
-.user-name {
-  font-size: 15px;
+
+.admin-header__admin-name {
+  font-size: 18px;
+  font-weight: 600;
   color: #344054;
-  font-weight: 500;
+  letter-spacing: 0.2px;
+  text-align: right;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
+
 @media (max-width: 767px) {
   .admin-header {
-    padding: 0 12px;
+    padding: 8px 8px;
     height: 56px;
+    max-width: 100vw;
   }
-  .user-name {
-    display: none;
+  .admin-header__admin-name {
+    font-size: 15px;
   }
 }

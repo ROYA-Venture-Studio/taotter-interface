@@ -25,6 +25,7 @@ const SprintOnboardingStep2 = () => {
   const navigate = useNavigate()
   const { sprintId } = useParams()
   const [selectedTier, setSelectedTier] = useState(null)
+  const [hasPaid, setHasPaid] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   
   const { data: sprintData, isLoading, error } = useGetSprintByIdQuery(sprintId)
@@ -65,6 +66,7 @@ const SprintOnboardingStep2 = () => {
             discount: pkg.discount ? `-${pkg.discount}%` : '0%',
             total: `QAR ${(pkg.price || 0).toFixed(2)}`
           },
+          paymentLink: pkg.paymentLink || "",
           packageData: pkg
         }
       })
@@ -75,6 +77,14 @@ const SprintOnboardingStep2 = () => {
 
   const handleTierSelection = (tierId) => {
     setSelectedTier(tierId)
+    setHasPaid(false)
+  }
+
+  const handlePay = (tier) => {
+    if (tier.paymentLink) {
+      window.open(tier.paymentLink, "_blank", "noopener,noreferrer")
+      setHasPaid(true)
+    }
   }
 
   const handleNext = async () => {
@@ -88,7 +98,8 @@ const SprintOnboardingStep2 = () => {
         packageId: selectedTier
       }).unwrap()
       
-      navigate(`/sprint/${sprintId}/onboarding/step-3`)
+      // Go to payment pending page instead of step 3
+      navigate("/startup/payment-pending")
       
     } catch (error) {
       console.error('Error selecting package:', error)
@@ -265,13 +276,26 @@ const SprintOnboardingStep2 = () => {
                   </div>
                   
                   <div className="tier-action">
-                    <Button
-                      variant="primary"
-                      onClick={() => handleTierSelection(tier.id)}
-                      className={`tier-select-btn ${selectedTier === tier.id ? 'selected' : ''}`}
-                    >
-                      {selectedTier === tier.id ? 'Selected' : 'Select'}
-                    </Button>
+                    {tier.paymentLink ? (
+                      <Button
+                        variant="primary"
+                        onClick={() => {
+                          handleTierSelection(tier.id)
+                          handlePay(tier)
+                        }}
+                        className={`tier-select-btn ${selectedTier === tier.id ? 'selected' : ''}`}
+                      >
+                        Pay
+                      </Button>
+                    ) : (
+                      <Button
+                        variant="primary"
+                        onClick={() => handleTierSelection(tier.id)}
+                        className={`tier-select-btn ${selectedTier === tier.id ? 'selected' : ''}`}
+                      >
+                        {selectedTier === tier.id ? 'Selected' : 'Select'}
+                      </Button>
+                    )}
                     <div className="tier-total">{tier.pricing.total}</div>
                   </div>
                 </div>
@@ -290,10 +314,10 @@ const SprintOnboardingStep2 = () => {
               <Button
                 variant="primary"
                 onClick={handleNext}
-                disabled={!selectedTier || isSubmitting}
+                disabled={!selectedTier || (creditTiers.find(t => t.id === selectedTier)?.paymentLink && !hasPaid) || isSubmitting}
                 className="nav-button next-button"
               >
-                {isSubmitting ? 'Selecting...' : 'Select Package'}
+                {isSubmitting ? 'Selecting...' : 'Next'}
               </Button>
             </div>
           </div>
@@ -339,13 +363,26 @@ const SprintOnboardingStep2 = () => {
                   </div>
                   
                   <div className="tier-action">
-                    <Button
-                      variant="primary"
-                      onClick={() => handleTierSelection(tier.id)}
-                      className={`tier-select-btn ${selectedTier === tier.id ? 'selected' : ''}`}
-                    >
-                      {selectedTier === tier.id ? 'Selected' : 'Select'}
-                    </Button>
+                    {tier.paymentLink ? (
+                      <Button
+                        variant="primary"
+                        onClick={() => {
+                          handleTierSelection(tier.id)
+                          handlePay(tier)
+                        }}
+                        className={`tier-select-btn ${selectedTier === tier.id ? 'selected' : ''}`}
+                      >
+                        Pay
+                      </Button>
+                    ) : (
+                      <Button
+                        variant="primary"
+                        onClick={() => handleTierSelection(tier.id)}
+                        className={`tier-select-btn ${selectedTier === tier.id ? 'selected' : ''}`}
+                      >
+                        {selectedTier === tier.id ? 'Selected' : 'Select'}
+                      </Button>
+                    )}
                     <div className="tier-total">{tier.pricing.total}</div>
                   </div>
                 </div>
@@ -364,10 +401,10 @@ const SprintOnboardingStep2 = () => {
               <Button
                 variant="primary"
                 onClick={handleNext}
-                disabled={!selectedTier || isSubmitting}
+                disabled={!selectedTier || (creditTiers.find(t => t.id === selectedTier)?.paymentLink && !hasPaid) || isSubmitting}
                 className="nav-button next-button"
               >
-                {isSubmitting ? 'Selecting...' : 'Select Package'}
+                {isSubmitting ? 'Selecting...' : 'Next'}
               </Button>
             </div>
           </div>

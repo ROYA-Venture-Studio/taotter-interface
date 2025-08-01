@@ -195,14 +195,16 @@ const SprintOnboardingStep1 = () => {
                     className="file-input"
                   />
                   <label htmlFor="brandGuidelines" className="file-upload-button">
-                    <span>Upload Doc</span>
-                    <div className="upload-icon">
-                      <svg width="17" height="17" viewBox="0 0 17 17" fill="none">
-                        <path d="M0.499573 12.585V15.085C0.499573 15.9134 1.17115 16.585 1.99957 16.585H15.0004C15.8289 16.585 16.5004 15.9134 16.5004 15.085V12.585" stroke="#323544" strokeWidth="1.5" strokeLinecap="round" />
-                        <path d="M5.50156 0.584961L5.50156 12.585" stroke="#323544" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                        <path d="M0.874604 5.2098L5.49945 0.587891L10.1246 5.2098" stroke="#323544" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
-                    </div>
+                    <span style={{ display: "flex", alignItems: "center", gap: 8, width: "100%" }}>
+                      <span style={{ flex: 1 }}>Upload Doc</span>
+                      <span className="upload-icon" style={{ display: "flex", alignItems: "center" }}>
+                        <svg width="17" height="17" viewBox="0 0 17 17" fill="none">
+                          <path d="M0.499573 12.585V15.085C0.499573 15.9134 1.17115 16.585 1.99957 16.585H15.0004C15.8289 16.585 16.5004 15.9134 16.5004 15.085V12.585" stroke="#323544" strokeWidth="1.5" strokeLinecap="round" />
+                          <path d="M5.50156 0.584961L5.50156 12.585" stroke="#323544" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                          <path d="M0.874604 5.2098L5.49945 0.587891L10.1246 5.2098" stroke="#323544" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                      </span>
+                    </span>
                   </label>
                   {formData.brandGuidelines && (
                     <div className="file-selected">
@@ -226,6 +228,7 @@ const SprintOnboardingStep1 = () => {
                   placeholder="Enter details about your existing contact lists, partner networks, or lead sources..."
                   rows={4}
                   error={errors.contactLists}
+                  variant="outlined"
                 />
               </div>
 
@@ -240,6 +243,7 @@ const SprintOnboardingStep1 = () => {
                   onChange={(e) => updateFormData('appDemo', e.target.value)}
                   placeholder="Demo link or access details"
                   error={errors.appDemo}
+                  variant="outlined"
                 />
               </div>
             </form>
@@ -293,14 +297,16 @@ const SprintOnboardingStep1 = () => {
                     className="file-input"
                   />
                   <label htmlFor="brandGuidelines" className="file-upload-button">
-                    <span>Upload Doc</span>
-                    <div className="upload-icon">
-                      <svg width="17" height="17" viewBox="0 0 17 17" fill="none">
-                        <path d="M0.499573 12.585V15.085C0.499573 15.9134 1.17115 16.585 1.99957 16.585H15.0004C15.8289 16.585 16.5004 15.9134 16.5004 15.085V12.585" stroke="#323544" strokeWidth="1.5" strokeLinecap="round" />
-                        <path d="M5.50156 0.584961L5.50156 12.585" stroke="#323544" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                        <path d="M0.874604 5.2098L5.49945 0.587891L10.1246 5.2098" stroke="#323544" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
-                    </div>
+                    <span style={{ display: "flex", alignItems: "center", gap: 8, width: "100%" }}>
+                      <span style={{ flex: 1 }}>Upload Doc</span>
+                      <span className="upload-icon" style={{ display: "flex", alignItems: "center" }}>
+                        <svg width="17" height="17" viewBox="0 0 17 17" fill="none">
+                          <path d="M0.499573 12.585V15.085C0.499573 15.9134 1.17115 16.585 1.99957 16.585H15.0004C15.8289 16.585 16.5004 15.9134 16.5004 15.085V12.585" stroke="#323544" strokeWidth="1.5" strokeLinecap="round" />
+                          <path d="M5.50156 0.584961L5.50156 12.585" stroke="#323544" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                          <path d="M0.874604 5.2098L5.49945 0.587891L10.1246 5.2098" stroke="#323544" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                      </span>
+                    </span>
                   </label>
                   {formData.brandGuidelines && (
                     <div className="file-selected">
@@ -324,6 +330,7 @@ const SprintOnboardingStep1 = () => {
                   placeholder="Enter details about your existing contact lists, partner networks, or lead sources..."
                   rows={4}
                   error={errors.contactLists}
+                  variant="outlined"
                 />
               </div>
 
@@ -338,6 +345,7 @@ const SprintOnboardingStep1 = () => {
                   onChange={(e) => updateFormData('appDemo', e.target.value)}
                   placeholder="Demo link or access details"
                   error={errors.appDemo}
+                  variant="outlined"
                 />
               </div>
             </form>

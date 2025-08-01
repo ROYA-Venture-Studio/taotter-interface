@@ -2,8 +2,24 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AdminLayout from "../../layouts/AdminLayout";
 import Breadcrumb from "../../components/ui/Breadcrumb/Breadcrumb";
-import { useGetAllSprintsQuery } from "../../store/api/sprintsApi";
+import { useGetAllSprintsQuery, useUpdateSelectedPackagePaymentStatusMutation } from "../../store/api/sprintsApi";
 import "./AdminSprintListPage.css";
+
+// Map backend status to user-friendly display
+const getDisplayStatus = (status) => {
+  switch (status) {
+    case "draft": return "Draft";
+    case "available": return "Available";
+    case "package_selected": return "Package Selected";
+    case "documents_submitted": return "Documents Submitted";
+    case "meeting_scheduled": return "Meeting Scheduled";
+    case "in_progress": return "In Progress";
+    case "on_hold": return "On Hold";
+    case "completed": return "Completed";
+    case "cancelled": return "Cancelled";
+    default: return status.replace(/_/g, " ").replace(/\b\w/g, l => l.toUpperCase());
+  }
+};
 
 export default function AdminSprintListPage() {
   const navigate = useNavigate();
@@ -13,6 +29,7 @@ export default function AdminSprintListPage() {
   const { data: sprintsData, isLoading, error } = useGetAllSprintsQuery();
 
   const sprints = sprintsData?.data?.sprints || [];
+  const [updateSelectedPackagePaymentStatus] = useUpdateSelectedPackagePaymentStatusMutation();
 
   // Filter sprints based on search and status
   const filteredSprints = sprints.filter(sprint => {
@@ -61,12 +78,12 @@ export default function AdminSprintListPage() {
     <AdminLayout>
       <div className="sprint-list-page">
         <div className="sprint-list-header">
-          <div className="sprint-list-title">Sprint Boards</div>
+          <div className="sprint-list-title">Sprints</div>
           <div className="sprint-list-breadcrumb">
             <Breadcrumb
               items={[
                 { label: "Home", href: "/admin/dashboard" },
-                { label: "Sprint Boards", href: "/admin/board", isActive: true }
+                { label: "Sprints", href: "/admin/board", isActive: true }
               ]}
             />
           </div>
@@ -111,7 +128,7 @@ export default function AdminSprintListPage() {
                     className="sprint-status"
                     style={{ backgroundColor: getStatusColor(sprint.status) }}
                   >
-                    {sprint.status}
+                    {getDisplayStatus(sprint.status)}
                   </div>
                 </div>
                 
@@ -136,6 +153,40 @@ export default function AdminSprintListPage() {
                   </div>
                 </div>
 
+                {/* Show selected package/tier and payment status */}
+                {sprint.selectedPackage && (
+                  <div style={{ marginTop: 12 }}>
+                    <span style={{ color: "#101828", fontWeight: 600 }}>Selected Tier:</span>
+                    <div style={{ marginTop: 6, marginBottom: 6, color: "#101828", fontWeight: 200 }}>
+                      <span>
+                        <strong>{sprint.selectedPackage.name}</strong>&nbsp;
+
+                      </span>
+                      {sprint.selectedPackagePaymentStatus === "unpaid" && (
+                        <button
+                          style={{
+                            marginLeft: 12,
+                            background: "#10b981",
+                            color: "#fff",
+                            border: "none",
+                            borderRadius: 4,
+                            padding: "4px 10px",
+                            cursor: "pointer",
+                            fontSize: "0.95rem"
+                          }}
+                          onClick={async () => {
+                            await updateSelectedPackagePaymentStatus({
+                              sprintId: sprint.id,
+                              paymentStatus: "paid"
+                            });
+                          }}
+                        >
+                          Mark as Paid
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                )}
                 <div className="sprint-card-actions">
                   <button
                     onClick={() => handleViewBoard(sprint.id)}

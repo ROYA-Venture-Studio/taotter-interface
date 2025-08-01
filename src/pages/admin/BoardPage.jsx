@@ -166,7 +166,7 @@ export default function BoardPage() {
               onClick={() => setShowCreateModal(true)}
               style={{
                 marginLeft: "auto",
-                background: "#3b82f6",
+                background: "#EB5E28",
                 color: "#fff",
                 border: "none",
                 borderRadius: "6px",
