@@ -1,0 +1,16 @@
+.chat-container {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  background: #f7f7fa;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 0;
+}
+
+.chat-loading {
+  text-align: center;
+  color: #888;
+  margin-top: 32px;
+}

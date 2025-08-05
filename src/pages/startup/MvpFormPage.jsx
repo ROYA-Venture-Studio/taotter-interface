@@ -143,9 +143,7 @@ const MvpFormPage = () => {
   const validateStep3 = () => {
     const newErrors = {}
 
-    if (!formData.customRequest.trim()) {
-      newErrors.customRequest = 'Additional Information is required'
-    }
+    // Additional Information is now optional, so no validation
 
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
@@ -427,14 +425,13 @@ const MvpFormPage = () => {
                       Tell us what else do you need and we will set the right tools for you.
                     </div>
                   </label>
-                  <input
-                    id="customRequest"
-                    className="mvp-form-input mvp-form-input-wide"
-                    value={formData.customRequest}
-                    onChange={(e) => updateFormData('customRequest', e.target.value)}
-                    placeholder="Enter any additional information or requirements here."
-                    required
-                  />
+                    <input
+                      id="customRequest"
+                      className="mvp-form-input mvp-form-input-wide"
+                      value={formData.customRequest}
+                      onChange={(e) => updateFormData('customRequest', e.target.value)}
+                      placeholder="Enter any additional information or requirements here."
+                    />
                   {errors.customRequest && <div className="error-message">{errors.customRequest}</div>}
                 </div>
               </div>

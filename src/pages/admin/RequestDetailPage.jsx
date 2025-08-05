@@ -74,7 +74,7 @@ export default function RequestDetailPage() {
       <div className="request-detail-breadcrumb">
         <span className="request-detail-breadcrumb-title">Requests</span>
         <div className="request-detail-breadcrumb-path">
-          <span className="request-detail-breadcrumb-home" onClick={() => navigate("/admin/dashboard")}>Home</span>
+          <span className="request-detail-breadcrumb-home" onClick={() => navigate("/admin/sprints")}>Home</span>
           <span className="request-detail-breadcrumb-arrow">{">"}</span>
           <span className="request-detail-breadcrumb-current">Requests</span>
         </div>
@@ -164,8 +164,14 @@ export default function RequestDetailPage() {
         <div className="request-detail-attachments">
           {attachments.map((att, i) => (
             <div className="request-detail-attachment" key={i}>
-              <span className="request-detail-attachment-name">{att.name}</span>
-              <span className="request-detail-attachment-file">{att.file}</span>
+              <a
+                className="request-detail-attachment-link"
+                href={att.file}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {att.name}
+              </a>
               <span className="request-detail-attachment-type">{att.type}</span>
             </div>
           ))}

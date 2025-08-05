@@ -73,7 +73,7 @@
 }
 
 .accent-line {
-  background: #2b91c8;
+  background: #EB5E28;
   width: 42px;
   height: 3px;
 }
@@ -224,7 +224,7 @@
 
 .lets-start-btn {
   opacity: 1;
-  background: linear-gradient(90deg, #087fc0 0%, #1bb3c9 100%) !important;
+  background: linear-gradient(90deg, #EB5E28 0%, #EB5E28 100%) !important;
   border-radius: 24px !important;
   border: none !important;
   padding: 16px 15px !important;
@@ -234,7 +234,7 @@
   font-style: normal;
   font-weight: 700 !important;
   line-height: 20px !important;
-  cursor: not-allowed;
+  cursor: pointer;
 }
 
 /* Disclaimer */

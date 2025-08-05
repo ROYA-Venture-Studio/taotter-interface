@@ -27,10 +27,14 @@ import StartupOnboardingGuard from './components/layout/StartupOnboardingGuard'
 import RequestsPage from './pages/admin/RequestsPage'
 import PaymentPendingPage from './pages/startup/PaymentPendingPage'
 
+import ScrollToTop from './components/ScrollToTop';
+
 function App() {
   return (
-    <Routes>
-      <Route path="/" element={<StartupLayout />}>
+    <>
+      <ScrollToTop />
+      <Routes>
+        <Route path="/" element={<StartupLayout />}>
         <Route index element={<HomePage />} />
         <Route path="about" element={<AboutPage />} />
         <Route path="services" element={<ServicesPage />} />
@@ -134,6 +138,7 @@ function App() {
       <Route path="/admin/sprints" element={<AdminProtectedRoute><AdminSprintListPage /></AdminProtectedRoute>} />
       <Route path="/admin/board/:sprintId" element={<AdminProtectedRoute><BoardPage /></AdminProtectedRoute>} />
     </Routes>
+    </>
   )
 }
 

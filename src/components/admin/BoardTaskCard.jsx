@@ -65,9 +65,42 @@ export default function BoardTaskCard({
         </div>
       </div>
       <div className="board-task-card__pill-row">
-        <span className={`board-task-card__pill board-task-card__pill--${task.category.toLowerCase()}`}>
-          {task.category}
-        </span>
+        {(() => {
+          const typeKey = (task.taskType || "General").toLowerCase().replace(/[^a-z0-9]/gi, "");
+          const typeColors = {
+            feature: "#2563eb",
+            bug: "#ef4444",
+            improvement: "#10b981",
+            research: "#a855f7",
+            general: "#6b7280",
+            documentation: "#f59e0b",
+            design: "#f472b6",
+            test: "#22d3ee"
+          };
+          const bgColor = typeColors[typeKey] || "#6b7280";
+          const textColor = "#fff";
+          const label =
+            task.taskType
+              ? task.taskType.replace(/_/g, " ").replace(/\b\w/g, l => l.toUpperCase())
+              : "General";
+          return (
+            <span
+              className="board-task-card__pill"
+              style={{
+                background: bgColor,
+                color: textColor,
+                borderRadius: "8px",
+                padding: "4px 12px",
+                fontWeight: 600,
+                fontSize: "13px",
+                letterSpacing: "0.2px",
+                display: "inline-block"
+              }}
+            >
+              {label}
+            </span>
+          );
+        })()}
       </div>
       {showMoveModal && columns && onMoveTask && (
         <MoveTaskModal

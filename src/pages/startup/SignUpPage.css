@@ -43,6 +43,7 @@
   align-items: stretch;
   justify-content: center;
   height: auto;
+  transition: all 0.3s;
 }
 
 .signup-image {
@@ -54,17 +55,21 @@
   object-position: center;
   border-radius: 0;
   display: block;
+  transition: all 0.3s;
 }
 
 /* Form styles */
 .signup-form-title {
   font-size: 36px;
   font-weight: 700;
-  text-align: left;
+  text-align: center;
   color: #252525;
   margin-bottom: 12px;
   font-family: 'Aspekta', sans-serif;
   width: 100%;
+  max-width: 540px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .signup-form-subtitle {
@@ -74,11 +79,17 @@
   margin-bottom: 32px;
   font-family: 'Aspekta', sans-serif;
   width: 100%;
+  max-width: 540px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
 }
 
 .signup-form {
   width: 100%;
-  max-width: 654px;
+  max-width: 540px;
+  min-width: 320px;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -122,6 +133,9 @@
 }
 
 .signup-form-field input {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
   height: 44px;
   border: 1px solid #D0D5DD;
   border-radius: 8px;
@@ -168,6 +182,8 @@
 /* Buttons */
 .signup-google-btn {
   width: 100%;
+  max-width: 540px;
+  margin: 0 auto 20px auto;
   height: 44px;
   background: #F2F4F7;
   border: 1px solid #D0D5DD;
@@ -182,7 +198,6 @@
   gap: 12px;
   cursor: pointer;
   transition: background 0.15s;
-  margin-bottom: 20px;
 }
 
 .signup-google-btn:hover {
@@ -218,8 +233,9 @@
   display: flex;
   align-items: center;
   gap: 16px;
-  margin: 20px 0;
+  margin: 20px auto;
   width: 100%;
+  max-width: 540px;
 }
 
 .divider-line {
@@ -405,7 +421,16 @@
     width: 100vw;
     min-height: 100vh;
   }
-  .signup-left, .signup-right {
+  .signup-right {
+    order: -1;
+    width: 100vw;
+    min-width: 0;
+    padding: 0;
+    background: transparent;
+    display: block;
+    height: auto;
+  }
+  .signup-left {
     width: 100vw;
     min-width: 0;
     border-radius: 0;
@@ -414,9 +439,48 @@
   .signup-image {
     width: 100vw;
     height: 320px;
-    border-radius: 0;
-    object-fit: cover;
-    min-height: 320px;
+    min-height: 220px;
+    max-height: 320px;
+    object-fit: contain;
+    object-position: top center;
+    border-radius: 0 0 18px 18px;
+    margin: 0 auto;
+    display: block;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+  .signup-google-btn,
+  .signup-submit-btn {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+/* Large desktop screens: constrain form width */
+@media (min-width: 1400px) {
+  .signup-left {
+    max-width: 700px;
+    margin: 0 auto;
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .signup-form {
+    max-width: 540px;
+    min-width: 320px;
+    margin: 0 auto;
+  }
+}
+
+/* Ultra-wide screens: constrain container like MVPFormPage */
+@media (min-width: 1600px) {
+  .signup-split-container {
+    max-width: 1500px;
+    margin: 0 auto;
+  }
+  .signup-left {
+    max-width: 900px;
+  }
+  .signup-right {
+    max-width: 600px;
   }
 }
 
@@ -434,6 +498,24 @@
   .signup-submit-btn {
     width: 100%;
     max-width: 100%;
+  }
+  .signup-right {
+    width: 100vw;
+    min-width: 0;
+    padding: 0;
+    background: transparent;
+    display: block;
+    height: auto;
+  }
+  .signup-image {
+    height: 180px;
+    min-height: 120px;
+    max-height: 180px;
+    object-fit: contain;
+    object-position: top center;
+    border-radius: 0 0 18px 18px;
+    margin: 0 auto;
+    display: block;
   }
 }
 

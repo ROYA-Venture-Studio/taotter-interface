@@ -10,7 +10,7 @@ import useSocket from "../../hooks/useSocket";
 import "./AdminChatPage.css";
 
 export default function AdminChatPage() {
-  const { id: chatId } = useParams();
+  let { id: chatId } = useParams();
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [input, setInput] = useState("");
@@ -23,21 +23,26 @@ export default function AdminChatPage() {
   // Fetch chat list to get contact info
   const { data: chatListData } = useGetChatListQuery();
 
+  // Find current chat and contact info
+  const validChats = chatListData?.data?.chats || [];
+  const isValidChatId = validChats.some(chat => chat._id === chatId);
+  const currentChat = validChats.find(chat => chat._id === chatId);
+
   // Fetch messages for the selected chat
-  const { data, isLoading, error, refetch } = useGetMessagesQuery(chatId, { skip: !chatId });
+  const { data, isLoading, error, refetch } = useGetMessagesQuery(
+    { chatId, page: 1, pageSize: 50 },
+    { skip: !chatId }
+  );
 
   // Send message mutation
   const [sendMessage] = useSendMessageMutation();
-
-  // Find current chat and contact info
-  const currentChat = chatListData?.data?.chats?.find(chat => chat._id === chatId);
   const contact = currentChat?.startupId ? {
-    id: currentChat.startupId._id,
+    id: currentChat._id,
     name: `${currentChat.startupId.profile?.founderFirstName || ""} ${currentChat.startupId.profile?.founderLastName || ""}`.trim() || currentChat.startupId.email,
     avatar: "/assets/icons/User.svg",
     status: "online", // TODO: Replace with real status
     role: currentChat.startupId.profile?.companyName || ""
-  } : { id: chatId, name: "Unknown Contact", avatar: "/assets/icons/User.svg", status: "offline", role: "" };
+  } : null;
 
   // Real-time socket integration
   const socket = useSocket({
@@ -69,37 +74,59 @@ export default function AdminChatPage() {
   // Load messages from API and transform them
   useEffect(() => {
     if (data && data.data && data.data.messages) {
-      console.log('Current User:', currentUser); // Debug log
       const transformedMessages = data.data.messages.map(msg => {
-        console.log('Message:', msg.senderType, 'User Role:', currentUser?.role); // Debug log
         const isMyMessage = msg.senderType === 'admin' && (currentUser?.role === 'admin' || currentUser?.role === 'super_admin');
+        let messageType = "text";
+        let imageUrl = null;
+        let voiceUrl = null;
+        const fileUrl = msg.fileUrl || msg.file || null;
+        if (msg.messageType === "image" && fileUrl) {
+          imageUrl = fileUrl;
+          messageType = "image";
+        } else if (msg.messageType === "voice" && fileUrl) {
+          voiceUrl = fileUrl;
+          messageType = "voice";
+        } else if (msg.messageType === "file" && fileUrl) {
+          messageType = "file";
+        } else {
+          messageType = "text";
+        }
         return {
           id: msg._id,
-          sender: msg.senderType === 'admin' ? 'Admin' : contact.name,
-          avatar: msg.senderType === 'admin' ? "/assets/icons/User.svg" : contact.avatar,
+          sender: msg.senderType === 'admin' ? 'Admin' : (contact?.name || "Unknown"),
+          avatar: msg.senderType === 'admin' ? "/assets/icons/User.svg" : (contact?.avatar || "/assets/icons/User.svg"),
           content: msg.content || "",
           time: new Date(msg.createdAt).toLocaleTimeString(),
           mine: isMyMessage,
-          image: msg.imageUrl || null
+          imageUrl,
+          messageType,
+          fileUrl: fileUrl,
+          fileName: msg.fileName || null,
+          mimeType: msg.mimeType || null,
+          voiceUrl,
+          voiceDuration: msg.voiceDuration || null,
+          createdAt: msg.createdAt
         };
       });
       setMessages(transformedMessages);
     }
-  }, [data, contact.name, contact.avatar, currentUser]);
+  }, [data, contact?.name, contact?.avatar, currentUser]);
 
   // Handle sending a message
   const handleSend = useCallback(
-    async (msg, file) => {
-      if (!msg && !file) return;
+    async (msg, file, voiceDuration) => {
+      if (!chatId) {
+        alert("Cannot send message: Invalid chat selected");
+        return;
+      }
       try {
-        // Send via REST for persistence
-        await sendMessage({ chatId, content: msg, file }).unwrap();
+        await sendMessage({ chatId, content: msg, file, voiceDuration }).unwrap();
         setInput("");
       } catch (err) {
         alert("Failed to send message");
       }
     },
-    [chatId, sendMessage, socket, refetch]
+    [chatId, sendMessage]
   );
 
   // Typing indicator
@@ -129,12 +156,12 @@ export default function AdminChatPage() {
             onSearchChange={setSearch}
           />
           <div className="admin-chat-message-area">
-            {chatId ? (
+            {chatId && contact ? (
               <AdminChatArea
                 contact={contact}
                 messages={messages}
                 value={input}
-                onChange={setInput}
+                onChange={e => setInput(e.target.value)}
                 onSend={handleSend}
                 onAttach={file => handleSend("", file)}
                 onMic={() => {}}

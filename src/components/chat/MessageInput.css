@@ -1,0 +1,128 @@
+.message-input-container {
+  display: block;
+  padding: 0;
+  background: transparent;
+  border: none;
+  position: relative;
+  width: 100%;
+}
+
+.message-input-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.message-input-text {
+  flex: 1;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  font-size: 15px;
+  outline: none;
+  color: #000 !important;
+  background: #fff;
+}
+
+.message-input-attach-btn,
+.message-input-mic-btn,
+.message-input-send-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 6px;
+  transition: background 0.2s;
+  color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.message-input-mic-btn img,
+.message-input-send-btn img {
+  filter: invert(0%);
+  width: 24px;
+  height: 24px;
+}
+
+.message-input-attach-btn:hover,
+.message-input-mic-btn:hover,
+.message-input-send-btn:hover {
+  background: #f0f0f0;
+}
+
+.message-input-files {
+  display: flex;
+  gap: 8px;
+  margin-left: 12px;
+}
+
+.message-input-file-preview {
+  background: #f7f7fa;
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.message-input-progress {
+  position: absolute;
+  left: 50%;
+  top: -24px;
+  transform: translateX(-50%);
+  background: #e6f7ff;
+  color: #2563eb;
+  padding: 2px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+}
+
+.message-input-stop-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #EB5E28;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  margin-left: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.message-input-stop-btn:hover {
+  background: #d14e1f;
+}
+.message-input-stop-btn div {
+  width: 16px;
+  height: 16px;
+  background: #EB5E28;
+  border-radius: 4px;
+  border: 2px solid #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.message-input-stop-btn div div {
+  width: 10px;
+  height: 10px;
+  background: #fff;
+  border-radius: 2px;
+}
+
+.message-input-recording-preview {
+  margin-top: 8px;
+  padding: 6px 12px;
+  background: #fff4ef;
+  border-radius: 6px;
+  color: #EB5E28;
+  font-weight: bold;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}

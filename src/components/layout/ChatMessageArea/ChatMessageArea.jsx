@@ -4,9 +4,9 @@ import { useSelector } from 'react-redux';
 import { useGetChatListQuery, useGetMessagesQuery, useSendMessageMutation } from '../../../store/api/chatApi';
 import useSocket from '../../../hooks/useSocket';
 import styles from './ChatMessageArea.module.css';
-import ChatHeader from '../../ui/ChatHeader/ChatHeader';
-import ChatMessage from '../../ui/ChatMessage/ChatMessage';
-import MessageInput from '../../ui/MessageInput/MessageInput';
+import MessageBubble from "../../chat/MessageBubble";
+import MessageInput from "../../chat/MessageInput";
+import VoiceRecorder from "../../chat/VoiceRecorder";
 
 export default function ChatMessageArea({ searchQuery }) {
   const { id: chatId } = useParams();
@@ -26,7 +26,10 @@ export default function ChatMessageArea({ searchQuery }) {
   // Fetch chat list to get admin contact info
   const { data: chatListData } = useGetChatListQuery();
   // Fetch messages for the selected chat
-  const { data, isLoading, error, refetch } = useGetMessagesQuery(chatId, { skip: !chatId });
+  const { data, isLoading, error, refetch } = useGetMessagesQuery(
+    chatId ? { chatId, page: 1, pageSize: 50 } : undefined,
+    { skip: !chatId }
+  );
   // Send message mutation
   const [sendMessage] = useSendMessageMutation();
 
@@ -222,11 +225,33 @@ export default function ChatMessageArea({ searchQuery }) {
 
   return (
     <div className={styles.messageArea}>
-      <div className={styles.messageContainer}>
-        <ChatHeader user={{ name: contact.name, isOnline: contact.isOnline }} />
-        <div className={styles.messagesWrapper} ref={messagesWrapperRef}>
-          <div className={styles.messagesList}>
-            {messages.map((message, idx) => {
+      <section className="admin-chat-area">
+        <div className="admin-chat-area__header">
+          <div className="admin-chat-area__user">
+            <div className="admin-chat-area__avatar-wrap">
+              <img src={contact.avatar} alt={contact.name} className="admin-chat-area__avatar" />
+              <span
+                className={`admin-chat-area__status admin-chat-area__status--${contact.isOnline ? "online" : "offline"}`}
+                title={contact.isOnline ? "online" : "offline"}
+              />
+            </div>
+            <span className="admin-chat-area__name">{contact.name}</span>
+          </div>
+          <div className="admin-chat-area__actions">
+            <button className="admin-chat-area__icon-btn" aria-label="Menu">
+              <svg width="4" height="16" fill="none" viewBox="0 0 4 16">
+                <path d="M2.18262 12.2588C3.06529 12.3482 3.75391 13.0937 3.75391 14C3.75391 14.9063 3.06529 15.6518 2.18262 15.7412L2.00391 15.75H1.99414C1.02764 15.75 0.244141 14.9665 0.244141 14C0.244141 13.0335 1.02764 12.25 1.99414 12.25H2.00391L2.18262 12.2588ZM2.18262 6.25879C3.06529 6.34819 3.75391 7.09375 3.75391 8C3.75391 8.90625 3.06529 9.65181 2.18262 9.74121L2.00391 9.75H1.99414C1.02764 9.75 0.244141 8.9665 0.244141 8C0.244141 7.0335 1.02764 6.25 1.99414 6.25H2.00391L2.18262 6.25879ZM2.18262 0.258789C3.06529 0.348189 3.75391 1.09375 3.75391 2C3.75391 2.90625 3.06529 3.65181 2.18262 3.74121L2.00391 3.75H1.99414C1.02764 3.75 0.244141 2.9665 0.244141 2C0.244141 1.0335 1.02764 0.25 1.99414 0.25H2.00391L2.18262 0.258789Z" fill="#344054" />
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div className="admin-chat-area__messages">
+          {isLoading ? (
+            <div className="admin-chat-area__loading">Loading messages...</div>
+          ) : error ? (
+            <div className="admin-chat-area__error">Failed to load messages</div>
+          ) : (
+            messages.map((message, idx) => {
               const isMatch =
                 searchQuery &&
                 message.content &&
@@ -237,26 +262,45 @@ export default function ChatMessageArea({ searchQuery }) {
                   ref={el => (messageRefs.current[idx] = el)}
                   style={isMatch ? { background: "#fffbe6" } : undefined}
                 >
-                  <ChatMessage message={message} />
+                  <MessageBubble message={message} isOwn={message.isOwnMessage} />
                 </div>
               );
-            })}
-            <div ref={messagesEndRef} />
+            })
+          )}
+          {isTyping && <div className="admin-chat-area__typing">Typing...</div>}
+          <div ref={messagesEndRef} />
+        </div>
+        <div
+          className="admin-chat-area__input-row"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            width: "100%",
+            gap: "12px",
+            background: "#fff",
+            padding: "12px 16px",
+            borderTop: "1px solid #eee"
+          }}
+        >
+          <div style={{ flex: 1 }}>
+            <MessageInput
+              chatId={contact.id}
+              forceSendEnabled={true}
+              content={input}
+              onChange={setInput}
+              onSend={handleSend}
+              showMic={false}
+              style={{ width: "100%" }}
+            />
           </div>
-          <div className={styles.scrollbar}>
-            <svg width="18" height="748" viewBox="0 0 18 748" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M0 15C0 13.3431 1.34315 12 3 12C4.65685 12 6 13.3431 6 15V63C6 64.6569 4.65685 66 3 66C1.34315 66 0 64.6569 0 63V15Z" fill="#E4E7EC" />
-            </svg>
+          <div>
+            <VoiceRecorder
+              onRecordComplete={(blob, duration) => handleSend("", blob, duration)}
+              disabled={false}
+            />
           </div>
         </div>
-      </div>
-      <MessageInput
-        value={input}
-        onChange={setInput}
-        onSend={handleSend}
-        onTyping={handleTyping}
-        isTyping={isTyping}
-      />
+      </section>
     </div>
   );
 }
