@@ -37,7 +37,7 @@ const MvpPage = () => {
               <div className="badge-container">
                 <div className="accent-line"></div>
                 <div className="badge-text">
-                  <span>Meet Taotter</span>
+                  <span style={{ color: "#252525" }}>Meet Leansprintr</span>
                 </div>
               </div>
 
@@ -45,7 +45,7 @@ const MvpPage = () => {
 <div className="main-heading">
   <h1>
     <span className="build-your">Build Your </span>
-    <span className="startup-text">Startup</span>
+    <span className="startup-text" style={{ color: "#EB5E28" }}>Startup</span>
   </h1>
 </div>
 
@@ -105,6 +105,11 @@ const MvpPage = () => {
                 <Button 
                   variant="primary" 
                   className="lets-start-btn"
+                  style={{
+                    background: "linear-gradient(90deg, #EB5E28 0%, #FFB347 100%)",
+                    color: "#fff",
+                    border: "none"
+                  }}
                   onClick={handleGetStarted}
                 >
                   Let's Start

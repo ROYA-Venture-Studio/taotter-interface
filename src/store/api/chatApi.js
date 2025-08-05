@@ -15,26 +15,22 @@ export const chatApi = api.injectEndpoints({
       providesTags: ['Chat'],
     }),
     getMessages: builder.query({
-      query: (chatId) => `/chat/${chatId}/messages`,
-      providesTags: (result, error, chatId) => [{ type: 'Message', id: chatId }],
+      query: ({ chatId, page = 1, pageSize = 50 }) =>
+        `/chat/${chatId}/messages?page=${page}&pageSize=${pageSize}`,
+      providesTags: (result, error, { chatId }) => [{ type: 'Message', id: chatId }],
     }),
     sendMessage: builder.mutation({
-      query: ({ chatId, content, file }) => {
-        if (file) {
-          const formData = new FormData()
-          formData.append('file', file)
-          if (content) formData.append('content', content)
-          return {
-            url: `/chat/${chatId}/message`,
-            method: 'POST',
-            body: formData,
-          }
-        }
+      query: ({ chatId, content, file, voice, voiceDuration }) => {
+        const formData = new FormData();
+        if (file) formData.append('file', file);
+        if (voice) formData.append('file', voice);
+        if (content) formData.append('content', content);
+        if (voiceDuration) formData.append('voiceDuration', voiceDuration);
         return {
           url: `/chat/${chatId}/message`,
           method: 'POST',
-          body: { content },
-        }
+          body: formData,
+        };
       },
       invalidatesTags: (result, error, { chatId }) => [{ type: 'Message', id: chatId }],
     }),

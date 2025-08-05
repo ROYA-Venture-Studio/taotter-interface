@@ -46,25 +46,27 @@ export default function BoardPage() {
   const columns = useMemo(() => {
     if (!data?.data?.board) return [];
     const board = data.data.board;
+
+    // Always show all columns, but filter tasks within each column by status if filter is active
     return board.columns.map(col => ({
       key: col._id,
       label: col.name,
       _id: col._id,
-      tasks: (board.tasksByColumn[col._id] || [])
-        .filter(t => filter === "all" ? true : STATUS_MAP[filter] ? t.status === STATUS_MAP[filter] : true)
-        .map(task => ({
-          id: task._id,
-          title: task.title,
-          description: task.description,
-          avatar: task.assignee?.profile?.avatar || "/assets/icons/User.svg",
-          date: task.dueDate ? new Date(task.dueDate).toLocaleDateString() : "",
-          comments: task.comments?.length || 0,
-          links: task.links?.length || 0,
-          category: task.category || "General",
-          status: task.status,
-          position: task.position,
-          columnId: task.columnId,
-        }))
+      tasks: (board.tasksByColumn[col._id] || []).filter(task =>
+        filter === "all" ? true : STATUS_MAP[filter] ? task.status === STATUS_MAP[filter] : true
+      ).map(task => ({
+        id: task._id,
+        title: task.title,
+        description: task.description,
+        avatar: task.assignee?.profile?.avatar || "/assets/icons/User.svg",
+        date: task.dueDate ? new Date(task.dueDate).toLocaleDateString() : "",
+        comments: task.comments?.length || 0,
+        links: task.links?.length || 0,
+        taskType: task.taskType || "General",
+        status: task.status,
+        position: task.position,
+        columnId: task.columnId,
+      }))
     }));
   }, [data, filter]);
 

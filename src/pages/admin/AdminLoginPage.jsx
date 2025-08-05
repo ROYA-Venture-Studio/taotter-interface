@@ -22,7 +22,7 @@ export default function AdminLoginPage() {
   // Redirect if already authenticated as admin
   useEffect(() => {
     if (isAuthenticated && userType === 'admin') {
-      const from = location.state?.from?.pathname || '/admin/board';
+      const from = location.state?.from?.pathname || '/admin/sprints';
       navigate(from, { replace: true });
     }
   }, [isAuthenticated, userType, navigate, location]);

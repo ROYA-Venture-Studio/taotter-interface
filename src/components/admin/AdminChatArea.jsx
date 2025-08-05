@@ -1,4 +1,7 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
+import MessageBubble from "../chat/MessageBubble";
+import MessageInput from "../chat/MessageInput";
+import VoiceRecorder from "../chat/VoiceRecorder";
 import "./AdminChatArea.css";
 
 export default function AdminChatArea({
@@ -9,13 +12,38 @@ export default function AdminChatArea({
   onChange,
   onAttach,
   onMic,
-  onEmoji
+  onEmoji,
+  isTyping,
+  isLoading,
+  error
 }) {
   const messagesEndRef = useRef(null);
+  const [voiceBlob, setVoiceBlob] = useState(null);
+  const [voiceDuration, setVoiceDuration] = useState(null);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  const handleRecordComplete = (blob, duration) => {
+    setVoiceBlob(blob);
+    setVoiceDuration(duration);
+  };
+
+  const handleSend = async (msg, file, duration) => {
+    if (!contact.id) {
+      alert("Cannot send message: Invalid chat selected");
+      return;
+    }
+    if (voiceBlob) {
+      await onSend("", voiceBlob, voiceDuration);
+      setVoiceBlob(null);
+      setVoiceDuration(null);
+    } else if ((msg && msg.trim()) || file) {
+      await onSend(msg, file, duration);
+      if (onChange) onChange({ target: { value: "" } });
+    }
+  };
 
   return (
     <section className="admin-chat-area">
@@ -39,68 +67,52 @@ export default function AdminChatArea({
         </div>
       </div>
       <div className="admin-chat-area__messages">
-        {messages.map((msg, i) => (
-          <div
-            key={msg.id}
-            className={`admin-chat-area__message${msg.mine ? " admin-chat-area__message--mine" : ""}`}
-          >
-            {!msg.mine && (
-              <div className="admin-chat-area__avatar-msg">
-                <img src={contact.avatar} alt={contact.name} className="admin-chat-area__avatar-msg-img" />
-              </div>
-            )}
-            <div className="admin-chat-area__bubble-wrap">
-              {msg.image && (
-                <div className="admin-chat-area__image">
-                  <img src={msg.image} alt="attachment" />
-                </div>
-              )}
-              <div className="admin-chat-area__bubble">
-                {msg.content.split("\n").map((line, idx) => (
-                  <span key={idx}>{line}</span>
-                ))}
-              </div>
-              <span className="admin-chat-area__meta">
-                {msg.mine ? msg.time : `${contact.name}, ${msg.time}`}
-              </span>
-            </div>
-          </div>
-        ))}
+        {isLoading ? (
+          <div className="admin-chat-area__loading">Loading messages...</div>
+        ) : error ? (
+          <div className="admin-chat-area__error">Failed to load messages</div>
+        ) : (
+          messages.map((msg, i) => (
+            <MessageBubble
+              key={msg.id || i}
+              message={msg}
+              isOwn={msg.mine}
+            />
+          ))
+        )}
+        {isTyping && <div className="admin-chat-area__typing">Typing...</div>}
         <div ref={messagesEndRef} />
       </div>
-      <form
+      <div
         className="admin-chat-area__input-row"
-        onSubmit={e => {
-          e.preventDefault();
-          if (onSend && value?.trim()) onSend(value);
+        style={{
+          display: "flex",
+          alignItems: "center",
+          width: "100%",
+          gap: "12px",
+          background: "#fff",
+          padding: "12px 16px",
+          borderTop: "1px solid #eee"
         }}
       >
-        <button type="button" className="admin-chat-area__icon-btn" aria-label="Emoji" onClick={onEmoji}>
-          <svg width="20" height="20" fill="none" viewBox="0 0 20 20">
-            <circle cx="10" cy="10" r="9.25" stroke="#323544" strokeWidth="1.5" />
-            <circle cx="6.5" cy="8.5" r="1" fill="#323544" />
-            <circle cx="13.5" cy="8.5" r="1" fill="#323544" />
-            <path d="M7 13c.667.667 2.333.667 3 0" stroke="#323544" strokeWidth="1.5" strokeLinecap="round" />
-          </svg>
-        </button>
-        <input
-          className="admin-chat-area__input"
-          type="text"
-          placeholder="Type a message"
-          value={value}
-          onChange={e => onChange?.(e.target.value)}
-        />
-        <button type="button" className="admin-chat-area__icon-btn" aria-label="Attach" onClick={onAttach}>
-          <svg width="16" height="20" fill="none" viewBox="0 0 16 20">
-            <path d="M4.29785 0C6.52033 1.94296e-07 8.33511 1.74558 8.44629 3.94043L8.4502 4.11133C8.45099 4.12545 8.45312 4.13998 8.45312 4.1543V14.1445C8.4529 15.4984 7.35491 16.5966 6.00098 16.5967C4.73172 16.5966 3.68737 15.6316 3.56152 14.3955L3.54883 14.1445V4.1543C3.54883 3.74013 3.88468 3.40437 4.29883 3.4043C4.71304 3.4043 5.04883 3.74008 5.04883 4.1543V14.1445L5.05371 14.2422C5.10276 14.7219 5.50838 15.0966 6.00098 15.0967C6.52648 15.0966 6.9529 14.67 6.95312 14.1445V12.4609C6.95297 12.4548 6.95215 12.4486 6.95215 12.4424V4.1543L6.93848 3.88281C6.80264 2.54451 5.67199 1.5 4.29785 1.5C2.83241 1.5003 1.64453 2.68879 1.64453 4.1543V14.1436C1.64453 16.549 3.59464 18.4997 6 18.5C8.40565 18.5 10.3564 16.5492 10.3564 14.1436V7.55762C10.3565 7.14356 10.6924 6.80777 11.1064 6.80762C11.5205 6.80777 11.8564 7.14356 11.8564 7.55762V14.1436C11.8564 17.3776 9.23408 20 6 20C2.76621 19.9997 0.144531 17.3774 0.144531 14.1436V4.1543C0.144531 1.86036 2.00398 0.000301954 4.29785 0Z" fill="#667085" />
-          </svg>
-        </button>
-        <button type="submit" className="admin-chat-area__send-btn" aria-label="Send">
-          <svg width="18" height="16" fill="none" viewBox="0 0 18 16" style={{ transform: "rotate(90deg)" }}>
-            <path d="M15.9754 6.04141C17.5484 6.92105 17.4962 9.25705 15.8182 10.0395L3.98422 15.5561C2.11292 16.4284 0.153069 14.5305 0.964691 12.6322L2.82016 8.29434L2.84653 8.22305C2.89177 8.07781 2.89178 7.92199 2.84653 7.77676L2.82016 7.70449L0.964692 3.36758C0.153229 1.46942 2.11302 -0.42837 3.98422 0.443751L15.8182 5.96035L15.9754 6.04141ZM15.1844 8.6791C15.7253 8.42653 15.7594 7.68934 15.286 7.37637L15.1844 7.31973L3.35043 1.80313C2.72686 1.51267 2.07352 2.14519 2.3436 2.77774L4.19907 7.11465L4.24887 7.24746L8.11704 7.24746C8.53125 7.24746 8.86704 7.58325 8.86704 7.99746C8.86687 8.41153 8.53115 8.74746 8.11704 8.74746L4.25082 8.74746L4.19907 8.88516L2.3436 13.2221C2.07336 13.8547 2.72679 14.4873 3.35043 14.1967L15.1844 8.6791Z" fill="#fff" />
-          </svg>
-        </button>
-      </form>
+        <div style={{ flex: 1 }}>
+          <MessageInput
+            chatId={contact.id}
+            forceSendEnabled={true}
+            content={value}
+            onChange={onChange}
+            onSend={handleSend}
+            showMic={false}
+            style={{ width: "100%" }}
+          />
+        </div>
+        <div>
+          <VoiceRecorder
+            onRecordComplete={handleRecordComplete}
+            disabled={false}
+          />
+        </div>
+      </div>
     </section>
   );
 }

@@ -94,8 +94,8 @@ export default function StartupSprintsPage() {
   };
 
   const handleSprintClick = (sprint) => {
-    if (sprint.boardId) {
-      navigate(`/admin/board/${sprint.boardId}`);
+    if (sprint._id) {
+      navigate(`/admin/board/${sprint._id}`);
     }
   };
 

@@ -33,16 +33,16 @@ const StartupOnboardingGuard = ({ children }) => {
 
   useEffect(() => {
     if (!user || !user.onboarding) return;
-    
+
     // Check for unpaid sprints with selected packages
     const unpaidSprint = sprintsData?.data?.sprints?.find(
       (s) =>
         s.selectedPackage &&
-      s.status === "package_selected" &&
-      (s.selectedPackagePaymentStatus !== "paid" && s.selectedPackagePaymentStatus !== "PAID")
+        s.status === "package_selected" &&
+        (String(s.selectedPackagePaymentStatus).toLowerCase() !== "paid")
     );
-    
-    console.log(user.onboarding.currentStep)
+
+    // If payment is pending, redirect to payment page
     if (unpaidSprint) {
       if (window.location.pathname !== "/startup/payment-pending") {
         navigate("/startup/payment-pending", { replace: true });
@@ -50,30 +50,26 @@ const StartupOnboardingGuard = ({ children }) => {
       return;
     }
 
-    // If all sprints are paid, allow access to dashboard/active sprint
-    if (window.location.pathname === "/startup/payment-pending") {
+    // If onboarding is incomplete, redirect only if user is on a restricted page
+    const onboardingStep = user.onboarding.currentStep;
+    const allowedRoutes = [
+      "/startup/dashboard",
+      "/startup/sprint",
+      "/startup/chat",
+      "/startup/board"
+    ];
+    const isAllowedRoute = allowedRoutes.some(route => window.location.pathname.startsWith(route));
+
+    if (
+      ["sprint_selection", "document_upload", "meeting_scheduling"].includes(onboardingStep) &&
+      !isAllowedRoute
+    ) {
       navigate("/startup/dashboard", { replace: true });
       return;
     }
-    // Fallback to onboarding logic for other steps
-    switch (user.onboarding.currentStep) {
-      case "sprint_selection":
-        navigate("/startup/dashboard", { replace: true });
-        break;
-      case "document_upload":
-        // If you still have a document upload step, redirect accordingly
-        // navigate("/sprint/:sprintId/onboarding/step-1", { replace: true });
-        break;
-      case "meeting_scheduling":
-        // Add meeting scheduling route if needed
-        break;
-      case "active_sprint":
-        navigate("/startup/dashboard", { replace: true });
-        break;
-      default:
-        // No-op or fallback
-        break;
-    }
+
+    // If onboarding is complete and payment is done, allow navigation
+    // No redirect needed
   }, [user, navigate, sprintsData]);
 
   // Show loading spinner while fetching sprints or user not loaded
