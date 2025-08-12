@@ -28,8 +28,10 @@ import RequestsPage from './pages/admin/RequestsPage'
 import PaymentPendingPage from './pages/startup/PaymentPendingPage'
 
 import ScrollToTop from './components/ScrollToTop';
+import useTokenRefresh from './hooks/useTokenRefresh';
 
 function App() {
+  useTokenRefresh();
   return (
     <>
       <ScrollToTop />

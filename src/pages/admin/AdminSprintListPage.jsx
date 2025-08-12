@@ -26,19 +26,13 @@ export default function AdminSprintListPage() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
 
-  const { data: sprintsData, isLoading, error } = useGetAllSprintsQuery();
+  // Backend filtering and search
+  const { data: sprintsData, isLoading, error } = useGetAllSprintsQuery(
+    { status: statusFilter, search }
+  );
 
   const sprints = sprintsData?.data?.sprints || [];
   const [updateSelectedPackagePaymentStatus] = useUpdateSelectedPackagePaymentStatusMutation();
-
-  // Filter sprints based on search and status
-  const filteredSprints = sprints.filter(sprint => {
-    const matchesSearch = sprint.name?.toLowerCase().includes(search.toLowerCase()) ||
-      sprint.startup?.name?.toLowerCase().includes(search.toLowerCase()) ||
-      sprint.questionnaire?.basicInfo?.startupName?.toLowerCase().includes(search.toLowerCase());
-    const matchesStatus = statusFilter === "all" || sprint.status === statusFilter;
-    return matchesSearch && matchesStatus;
-  });
 
   const handleViewBoard = (sprintId) => {
     navigate(`/admin/board/${sprintId}`);
@@ -100,27 +94,28 @@ export default function AdminSprintListPage() {
             />
           </div>
           <div className="filter-container">
-            <select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              className="status-filter"
-            >
-              <option value="all">All Status</option>
-              <option value="active">Active</option>
-              <option value="pending">Pending</option>
-              <option value="completed">Completed</option>
-              <option value="cancelled">Cancelled</option>
-            </select>
+<select
+  value={statusFilter}
+  onChange={(e) => setStatusFilter(e.target.value)}
+  className="status-filter"
+>
+  <option value="all">All Status</option>
+  <option value="available">Available</option>
+  <option value="package_selected">Package Selected</option>
+  <option value="in_progress">In Progress</option>
+  <option value="completed">Completed</option>
+  <option value="inactive">Inactive</option>
+</select>
           </div>
         </div>
 
         <div className="sprints-grid">
-          {filteredSprints.length === 0 ? (
+          {sprints.length === 0 ? (
             <div className="no-sprints">
               {search || statusFilter !== "all" ? "No sprints match your filters" : "No sprints found"}
             </div>
           ) : (
-            filteredSprints.map((sprint) => (
+            sprints.map((sprint) => (
               <div key={sprint.id} className="sprint-card">
                 <div className="sprint-card-header">
                   <h3 className="sprint-name">{sprint.name || `Sprint ${sprint.id.slice(-6)}`}</h3>

@@ -162,19 +162,28 @@ export default function RequestDetailPage() {
       <div className="request-detail-section request-detail-section-attachments">
         <h2 className="request-detail-section-title">Attachments</h2>
         <div className="request-detail-attachments">
-          {attachments.map((att, i) => (
-            <div className="request-detail-attachment" key={i}>
-              <a
-                className="request-detail-attachment-link"
-                href={att.file}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {att.name}
-              </a>
-              <span className="request-detail-attachment-type">{att.type}</span>
-            </div>
-          ))}
+          {attachments.map((att, i) => {
+            function getFileIcon(filename) {
+              const ext = filename.split('.').pop().toLowerCase();
+              if (['doc', 'docx', 'ppt', 'pptx', 'txt', 'csv', 'xls', 'xlsx'].includes(ext)) return "/assets/icons/file - text.svg";
+              if (['jpg', 'jpeg', 'png', 'gif', 'bmp', 'svg', 'webp'].includes(ext)) return "/assets/icons/file-image.svg";
+              if (ext === 'pdf') return "/assets/icons/file-pdf.svg";
+              return "/assets/icons/file - text.svg";
+            }
+            return (
+              <div className="request-detail-attachment" key={i} style={{ display: "flex", alignItems: "baseline" }}>
+                <img src={getFileIcon(att.name)} alt="icon" style={{ width: 20, marginRight: 8 }} />
+                <a
+                  className="request-detail-attachment-link"
+                  href={att.file}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {att.name}
+                </a>
+              </div>
+            );
+          })}
         </div>
         <div className="request-detail-info-group">
           <span className="request-detail-info-label">Existing teacher contact</span>

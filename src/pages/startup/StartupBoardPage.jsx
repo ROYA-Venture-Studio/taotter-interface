@@ -3,8 +3,9 @@ import Breadcrumb from "../../components/ui/Breadcrumb/Breadcrumb";
 import BoardKanban from "../../components/admin/BoardKanban";
 import { useParams } from "react-router-dom";
 import { useGetStartupBoardBySprintQuery } from "../../store/api/boardsApi";
-import { useCreateStartupTaskMutation, useMoveStartupTaskMutation } from "../../store/api/tasksApi";
-import CreateTaskModal from "../../components/admin/CreateTaskModal";
+import { useCreateStartupTaskMutation, useMoveStartupTaskMutation, useEditStartupTaskMutation, useDeleteStartupTaskMutation } from "../../store/api/tasksApi";
+import TaskModal from "../../components/admin/TaskModal";
+import TaskDetailsModal from "../../components/admin/TaskDetailsModal";
 import "./StartupBoardPage.css";
 
 const FILTERS = [
@@ -24,14 +25,19 @@ export default function StartupBoardPage() {
   const { sprintId } = useParams();
   const [filter, setFilter] = useState("all");
   const [selectedTask, setSelectedTask] = useState(null);
+  const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [editTask, setEditTask] = useState(null);
+  const [isEditMode, setIsEditMode] = useState(false);
 
   // Fetch board by sprintId
   const { data, isLoading, error, refetch } = useGetStartupBoardBySprintQuery(sprintId);
 
-  // Create and move task mutations
+  // Create, edit, and move task mutations
   const [createStartupTask, { isLoading: isCreating }] = useCreateStartupTaskMutation();
+  const [editStartupTask] = useEditStartupTaskMutation();
   const [moveStartupTask] = useMoveStartupTaskMutation();
+  const [deleteStartupTask] = useDeleteStartupTaskMutation();
 
   // Transform backend data to columns/tasks for BoardKanban
   const columns = useMemo(() => {
@@ -54,14 +60,13 @@ export default function StartupBoardPage() {
           key: col._id,
           label: col.name,
           tasks: tasks.map(task => ({
+            ...task,
             id: task._id,
-            title: task.title,
-            description: task.description,
             avatar: task.assignee?.profile?.avatar || "/assets/icons/User.svg",
             date: task.dueDate ? new Date(task.dueDate).toLocaleDateString() : "",
             comments: task.comments?.length || 0,
             links: task.links?.length || 0,
-            category: task.category || "General",
+            taskType: task.taskType || "General",
             status: task.status
           }))
         };
@@ -69,11 +74,22 @@ export default function StartupBoardPage() {
   }, [data, filter]);
 
   function handleCardClick(task) {
-    setSelectedTask(task);
+    // Always ensure the task has an id property for the modal
+    setSelectedTask({ ...task, id: task.id || task._id });
+    setShowDetailsModal(true);
+  }
+
+  function handleEditTask(task) {
+    setEditTask(task);
+    setIsEditMode(true);
+    setShowCreateModal(true);
+    setShowDetailsModal(false);
   }
 
   function closeModal() {
-    setSelectedTask(null);
+    setEditTask(null);
+    setIsEditMode(false);
+    setShowCreateModal(false);
   }
 
   const boardId = data?.data?.board?.id;
@@ -114,6 +130,18 @@ export default function StartupBoardPage() {
       alert("Failed to move task: " + (err?.data?.message || err.message));
     }
   };
+
+  // Named delete handler for TaskDetailsModal (mimic admin)
+  async function handleDeleteTask(taskId) {
+    if (!taskId) return;
+    try {
+      await deleteStartupTask(taskId).unwrap();
+      setShowDetailsModal(false);
+      refetch();
+    } catch (err) {
+      alert("Failed to delete task: " + (err?.data?.message || err.message));
+    }
+  }
 
   return (
     <div className="board-page">
@@ -167,31 +195,78 @@ export default function StartupBoardPage() {
           ) : error ? (
             <div>Error loading board</div>
           ) : (
-            <BoardKanban
-              columns={columns}
-              onMoveTask={handleMoveTask}
-              onCardClick={handleCardClick}
-            />
+            <>
+              <BoardKanban
+                columns={columns}
+                onMoveTask={handleMoveTask}
+                onEditTask={handleEditTask}
+                onDeleteTask={handleDeleteTask}
+              />
+              {selectedTask && (
+                <TaskDetailsModal
+                  open={showDetailsModal}
+                  onClose={() => setShowDetailsModal(false)}
+                  task={selectedTask}
+                  columns={boardColumns}
+                  onEditTask={handleEditTask}
+                  onDeleteTask={handleDeleteTask}
+                  onMoveTask={null}
+                  currentColumnId={selectedTask?.columnId}
+                  admins={[]}
+                />
+              )}
+            </>
           )}
         </div>
-        {selectedTask && (
-          <div className="kanban-modal-overlay" onClick={closeModal}>
-            <div className="kanban-modal" onClick={e => e.stopPropagation()}>
-              <h2>{selectedTask.title}</h2>
-              <p>{selectedTask.description}</p>
-              <div>Category: {selectedTask.category}</div>
-              <div>Due: {selectedTask.date}</div>
-              <div>Comments: {selectedTask.comments}</div>
-              <div>Links: {selectedTask.links}</div>
-              <div>Assigned Admin: <img src={selectedTask.avatar} alt="Admin" style={{ width: 32, borderRadius: "50%" }} /></div>
-              <button onClick={closeModal}>Close</button>
-            </div>
-          </div>
-        )}
-        <CreateTaskModal
+        <TaskModal
           open={showCreateModal}
-          onClose={() => setShowCreateModal(false)}
-          onCreate={handleCreateTask}
+          onClose={closeModal}
+          onSubmit={async (taskData) => {
+            let formData;
+            if (taskData instanceof FormData) {
+              formData = taskData;
+              if (boardId) formData.append("boardId", boardId);
+              if (isEditMode && editTask && (formData.get("taskId") == null) && editTask.id) {
+                formData.append("taskId", editTask.id);
+              }
+            } else {
+              formData = new FormData();
+              if (isEditMode && editTask && taskData.id) {
+                formData.append("taskId", taskData.id);
+              }
+              if (boardId) formData.append("boardId", boardId);
+              if (taskData.title) formData.append("title", taskData.title);
+              if (taskData.description) formData.append("description", taskData.description);
+              if (taskData.columnId) formData.append("columnId", taskData.columnId);
+              else if (taskData.column) formData.append("columnId", taskData.column);
+              if (taskData.dueDate) formData.append("dueDate", taskData.dueDate);
+              if (taskData.taskType) formData.append("taskType", taskData.taskType);
+              if (taskData.priority) formData.append("priority", taskData.priority);
+              if (taskData.assigneeId) formData.append("assigneeId", taskData.assigneeId);
+              if (taskData.status) formData.append("status", taskData.status);
+              if (taskData.comments) formData.append("comments", taskData.comments);
+              if (taskData.links) formData.append("links", taskData.links);
+              if (taskData.attachments && Array.isArray(taskData.attachments)) {
+                taskData.attachments.forEach(file => {
+                  if (file instanceof File) {
+                    formData.append("attachments", file);
+                  }
+                });
+              }
+            }
+            try {
+              if (isEditMode && editTask && (formData.get("taskId") || formData.get("id"))) {
+                await editStartupTask({ taskId: formData.get("taskId") || formData.get("id"), formData }).unwrap();
+              } else {
+                await createStartupTask(formData).unwrap();
+              }
+              closeModal();
+              refetch();
+            } catch (err) {
+              alert("Failed to " + (isEditMode ? "update" : "create") + " task: " + (err?.data?.message || err.message));
+            }
+          }}
+          taskToEdit={isEditMode ? editTask : null}
           columns={boardColumns}
           admins={[]} // Empty array since startups can't assign
           hideAssignment={true}

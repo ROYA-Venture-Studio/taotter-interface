@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import BoardTaskCard from "./BoardTaskCard";
 import "./BoardKanban.css";
 
-export default function BoardKanban({ columns, onMoveTask }) {
+export default function BoardKanban({ columns, onMoveTask, onEditTask, onDeleteTask }) {
   const [dragged, setDragged] = useState(null);
 
   function handleDragStart(taskId) {
@@ -39,6 +39,8 @@ export default function BoardKanban({ columns, onMoveTask }) {
                 columns={columns}
                 onMoveTask={onMoveTask}
                 currentColumnId={col.key}
+                onEditTask={onEditTask}
+                onDeleteTask={onDeleteTask}
               />
             ))}
           </div>

@@ -89,6 +89,7 @@ export default function RequestsPage() {
   });
 
   const [updateSelectedPackagePaymentStatus] = useUpdateSelectedPackagePaymentStatusMutation();
+  const [updatingSprintId, setUpdatingSprintId] = useState(null);
 
   const requests = data?.data?.questionnaires || [];
 
@@ -198,19 +199,36 @@ export default function RequestsPage() {
                               fontSize: "0.95rem"
                             }}
                             onClick={e => e.stopPropagation()}
+                            disabled={updatingSprintId === req.sprint.id}
                             onChange={async (e) => {
                               const newStatus = e.target.value;
                               if (newStatus !== req.sprint.selectedPackagePaymentStatus) {
-                                await updateSelectedPackagePaymentStatus({
-                                  sprintId: req.sprint.id,
-                                  paymentStatus: newStatus
-                                });
+                                setUpdatingSprintId(req.sprint.id);
+                                try {
+                                  await updateSelectedPackagePaymentStatus({
+                                    sprintId: req.sprint.id,
+                                    paymentStatus: newStatus
+                                  });
+                                  refetch();
+                                } catch (err) {
+                                  alert("Failed to update payment status");
+                                }
+                                setUpdatingSprintId(null);
                               }
                             }}
                           >
                             <option value="unpaid">Unpaid</option>
                             <option value="paid">Paid</option>
                           </select>
+                          {updatingSprintId === req.sprint.id && (
+                            <span style={{ marginLeft: 8 }}>
+                              <svg width="18" height="18" viewBox="0 0 50 50">
+                                <circle cx="25" cy="25" r="20" fill="none" stroke="#888" strokeWidth="5" strokeDasharray="31.4 31.4" strokeLinecap="round">
+                                  <animateTransform attributeName="transform" type="rotate" repeatCount="indefinite" dur="0.8s" from="0 25 25" to="360 25 25"/>
+                                </circle>
+                              </svg>
+                            </span>
+                          )}
                         </div>
                       ) : (
                         <span style={{ color: "#6b7280" }}>N/A</span>
