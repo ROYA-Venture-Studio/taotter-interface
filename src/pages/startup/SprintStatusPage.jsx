@@ -66,14 +66,17 @@ const SprintStatusPage = () => {
   useEffect(() => {
     if (sprintsData && sprintsData.data && sprintsData.data.sprints) {
       setSprintData({
-        projectName: userData?.data?.user?.profile?.companyName || 'Your Project',
         sprints: sprintsData.data.sprints.map((s, idx) => ({
           id: s.id,
           number: idx + 1,
           title: s.name,
           estimatedWeeks: s.estimatedDuration || 0,
           objective: s.packageOptions?.[0]?.description || 'No objective available',
-          deliverables: s.description || 'No deliverables specified',
+          deliverables: s.deliverables && Array.isArray(s.deliverables) && s.deliverables.length > 0
+            ? s.deliverables
+            : (typeof s.deliverables === 'string' && s.deliverables.trim() !== ''
+                ? [s.deliverables]
+                : ['No deliverables specified']),
           estimatedTotalHours: (s.estimatedDuration || 0) * 30, // weeks * 5 days * 6 hours
           // REMOVE packageOptions from here for selection screen
         }))
@@ -335,7 +338,6 @@ const SprintStatusPage = () => {
                 {sprintData?.sprints.map((sprint) => (
                   <div key={sprint.id} className="sprint-option">
                     <div className="sprint-info">
-                      <div className="sprint-project-name">Project: {sprintData.projectName}</div>
                       <div className="sprint-number">⚙ Sprint {sprint.number}</div>
                       <div className="sprint-title">{sprint.title}</div>
                       <div className="sprint-timeframe">Estimated Time: {sprint.estimatedWeeks} weeks</div>
@@ -343,7 +345,15 @@ const SprintStatusPage = () => {
                       <div className="sprint-deliverables">
                         <strong>Deliverables:</strong>
                         <br />
-                        {sprint.deliverables}
+                        {Array.isArray(sprint.deliverables) ? (
+                          <ul>
+                            {sprint.deliverables.map((d, i) => (
+                              <li key={i}>{d}</li>
+                            ))}
+                          </ul>
+                        ) : (
+                          <span>{sprint.deliverables}</span>
+                        )}
                       </div>
                       <div className="sprint-hours">⚠ Estimated Total Hours for Sprint {sprint.number}: {sprint.estimatedTotalHours} working hours</div>
                       {/* NO CREDIT TIERS OR PAYMENT STATUS HERE */}
@@ -382,7 +392,15 @@ const SprintStatusPage = () => {
                       <div className="sprint-deliverables">
                         <strong>Deliverables:</strong>
                         <br />
-                        {sprint.deliverables}
+                        {Array.isArray(sprint.deliverables) ? (
+                          <ul>
+                            {sprint.deliverables.map((d, i) => (
+                              <li key={i}>{d}</li>
+                            ))}
+                          </ul>
+                        ) : (
+                          <span>{sprint.deliverables}</span>
+                        )}
                       </div>
                       <div className="sprint-hours">⚠ Estimated Total Hours for Sprint {sprint.number}: {sprint.estimatedTotalHours} working hours</div>
                       {/* NO CREDIT TIERS OR PAYMENT STATUS HERE */}

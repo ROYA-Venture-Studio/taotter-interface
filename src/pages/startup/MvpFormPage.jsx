@@ -191,7 +191,7 @@ const MvpFormPage = () => {
       const questionnaireData = {
         basicInfo: {
           startupName: formData.startupName,
-          taskType: 'mvp-development', // Default or derive as needed
+          taskType: formData.taskName,
           taskDescription: formData.taskDescription,
           startupStage: formData.stage || 'idea',
           keyGoals: formData.keyGoals,

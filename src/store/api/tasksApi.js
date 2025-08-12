@@ -41,6 +41,40 @@ export const tasksApi = api.injectEndpoints({
       }),
       invalidatesTags: ["Board", "Boards"],
     }),
+    // Edit a task (admin)
+    editTask: builder.mutation({
+      query: ({ taskId, formData }) => ({
+        url: `/tasks/${taskId}`,
+        method: "PUT",
+        body: formData,
+      }),
+      invalidatesTags: ["Board", "Boards"],
+    }),
+    // Delete a task (admin)
+    deleteTask: builder.mutation({
+      query: (taskId) => ({
+        url: `/tasks/${taskId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Board", "Boards"],
+    }),
+    // Edit a task (startup)
+    editStartupTask: builder.mutation({
+      query: ({ taskId, formData }) => ({
+        url: `/tasks/startup/${taskId}`,
+        method: "PUT",
+        body: formData,
+      }),
+      invalidatesTags: ["Board", "Boards"],
+    }),
+    // Delete a task (startup)
+    deleteStartupTask: builder.mutation({
+      query: (taskId) => ({
+        url: `/tasks/startup/${taskId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Board", "Boards"],
+    }),
     // ...other endpoints
   }),
 });
@@ -50,4 +84,8 @@ export const {
   useMoveTaskMutation,
   useCreateStartupTaskMutation,
   useMoveStartupTaskMutation,
+  useEditTaskMutation,
+  useDeleteTaskMutation,
+  useEditStartupTaskMutation,
+  useDeleteStartupTaskMutation,
 } = tasksApi;

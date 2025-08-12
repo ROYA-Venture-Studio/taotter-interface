@@ -1,8 +1,9 @@
 import React from "react";
 import "./BoardTaskCard.css";
+import { TASK_TYPE_COLORS } from "../../utils/taskTypeColors";
 
 import { useState } from "react";
-import MoveTaskModal from "./MoveTaskModal";
+import TaskDetailsModal from "./TaskDetailsModal";
 
 export default function BoardTaskCard({
   task,
@@ -11,9 +12,29 @@ export default function BoardTaskCard({
   onDragEnd,
   columns,
   onMoveTask,
-  currentColumnId
+  currentColumnId,
+  onEditTask,
+  onDeleteTask
 }) {
-  const [showMoveModal, setShowMoveModal] = useState(false);
+  const [showDetailsModal, setShowDetailsModal] = useState(false);
+
+  // Dummy handlers for now; should be replaced with actual logic in parent
+  const handleMoveTask = (taskId, columnId) => {
+    if (onMoveTask) onMoveTask(taskId, columnId);
+  };
+  const handleEditTask = (task) => {
+    setShowDetailsModal(false);
+    if (typeof onEditTask === "function") {
+      onEditTask(task);
+    }
+  };
+  // Use the onDeleteTask prop from parent (BoardKanban/BoardPage)
+  const handleDeleteTask = (taskId) => {
+    if (typeof onDeleteTask === "function") {
+      onDeleteTask(taskId);
+    }
+    setShowDetailsModal(false);
+  };
 
   return (
     <div
@@ -29,7 +50,7 @@ export default function BoardTaskCard({
           className="board-task-card__menu-btn"
           onClick={e => {
             e.stopPropagation();
-            setShowMoveModal(true);
+            setShowDetailsModal(true);
           }}
           aria-label="Task options"
         >
@@ -66,18 +87,8 @@ export default function BoardTaskCard({
       </div>
       <div className="board-task-card__pill-row">
         {(() => {
-          const typeKey = (task.taskType || "General").toLowerCase().replace(/[^a-z0-9]/gi, "");
-          const typeColors = {
-            feature: "#2563eb",
-            bug: "#ef4444",
-            improvement: "#10b981",
-            research: "#a855f7",
-            general: "#6b7280",
-            documentation: "#f59e0b",
-            design: "#f472b6",
-            test: "#22d3ee"
-          };
-          const bgColor = typeColors[typeKey] || "#6b7280";
+          const typeKey = (task.taskType || "general").toLowerCase().replace(/[^a-z0-9]/gi, "");
+          const bgColor = TASK_TYPE_COLORS[typeKey] || TASK_TYPE_COLORS.general;
           const textColor = "#fff";
           const label =
             task.taskType
@@ -102,13 +113,15 @@ export default function BoardTaskCard({
           );
         })()}
       </div>
-      {showMoveModal && columns && onMoveTask && (
-        <MoveTaskModal
-          open={showMoveModal}
-          onClose={() => setShowMoveModal(false)}
+      {showDetailsModal && columns && (
+        <TaskDetailsModal
+          open={showDetailsModal}
+          onClose={() => setShowDetailsModal(false)}
           task={task}
           columns={columns}
-          onMoveTask={onMoveTask}
+          onMoveTask={handleMoveTask}
+          onEditTask={onEditTask}
+          onDeleteTask={onDeleteTask}
           currentColumnId={currentColumnId}
         />
       )}

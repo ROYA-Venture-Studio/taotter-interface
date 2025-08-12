@@ -3,9 +3,10 @@ import AdminLayout from "../../layouts/AdminLayout";
 import Breadcrumb from "../../components/ui/Breadcrumb/Breadcrumb";
 import BoardKanban from "../../components/admin/BoardKanban";
 import { useGetBoardBySprintQuery } from "../../store/api/boardsApi";
-import { useParams } from "react-router-dom";
-import CreateTaskModal from "../../components/admin/CreateTaskModal";
-import { useCreateTaskMutation, useMoveTaskMutation } from "../../store/api/tasksApi";
+import PaymentRequiredModal from "../../components/ui/PaymentRequiredModal";
+import { useParams, useNavigate } from "react-router-dom";
+import TaskModal from "../../components/admin/TaskModal";
+import { useCreateTaskMutation, useMoveTaskMutation, useDeleteTaskMutation, useEditTaskMutation } from "../../store/api/tasksApi";
 import { useGetAdminUsersQuery } from "../../store/api/adminApi";
 import "./BoardPage.css";
 
@@ -25,12 +26,27 @@ const STATUS_MAP = {
 };
 
 export default function BoardPage() {
+  // --- Optimistic UI: local columns state ---
+  const [localColumns, setLocalColumns] = useState([]);
+  const [lastColumnsSnapshot, setLastColumnsSnapshot] = useState([]);
   const { sprintId } = useParams(); // Assume route is /admin/board/:sprintId
   const [filter, setFilter] = useState("all");
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [editTask, setEditTask] = useState(null);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const navigate = useNavigate();
 
   // Fetch board by sprintId (you may need to adjust this to fetch by boardId if needed)
   const { data, isLoading, error, refetch } = useGetBoardBySprintQuery(sprintId);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+
+  useEffect(() => {
+    if (error && error.status === 403 && error.data?.code === "PAYMENT_REQUIRED") {
+      setShowPaymentModal(true);
+    } else {
+      setShowPaymentModal(false);
+    }
+  }, [error]);
 
   // Fetch all admins for assignment
   const { data: adminsData, isLoading: adminsLoading } = useGetAdminUsersQuery();
@@ -55,89 +71,176 @@ export default function BoardPage() {
       tasks: (board.tasksByColumn[col._id] || []).filter(task =>
         filter === "all" ? true : STATUS_MAP[filter] ? task.status === STATUS_MAP[filter] : true
       ).map(task => ({
+        ...task,
         id: task._id,
-        title: task.title,
-        description: task.description,
-        avatar: task.assignee?.profile?.avatar || "/assets/icons/User.svg",
+        avatar: task.assigneeId?.profile?.avatar || "/assets/icons/User.svg",
         date: task.dueDate ? new Date(task.dueDate).toLocaleDateString() : "",
         comments: task.comments?.length || 0,
         links: task.links?.length || 0,
         taskType: task.taskType || "General",
-        status: task.status,
-        position: task.position,
-        columnId: task.columnId,
+        attachments: task.attachments || [],
       }))
     }));
   }, [data, filter]);
+
+  // Sync localColumns with columns from backend on load/refetch/filter change
+  useEffect(() => {
+    setLocalColumns(columns);
+  }, [columns]);
 
   const boardId = data?.data?.board?.id;
   const boardColumns = data?.data?.board?.columns || [];
 
   const handleCreateTask = async (taskData) => {
-    if (!boardId) return;
-    // Find a valid admin userId for watcher (fallback to first admin if none selected)
-    let watcherUserId = taskData.assigneeId;
-    if (!watcherUserId && admins.length > 0) watcherUserId = admins[0]._id;
-    // Only send watchers if we have a valid userId
-    let watchers = undefined;
-    if (watcherUserId) {
-      watchers = [
-        {
-          userId: watcherUserId,
-          userModel: "Admin"
-        }
-      ];
-    }
-    try {
-      // Always send a valid status
-      let status = "todo";
-      if (taskData.columnId) {
-        const col = boardColumns.find(c => c._id === taskData.columnId);
-        if (col && col.name) {
-          // Map column name to status if possible
-          const name = col.name.toLowerCase().replace(/\s/g, "");
-          if (name.includes("progress")) status = "in_progress";
-          else if (name.includes("review")) status = "review";
-          else if (name.includes("done") || name.includes("complete")) status = "done";
-          else status = "todo";
-        }
+    if (isEditMode && editTask && taskData.taskId) {
+      // Edit mode: call editTaskMutation
+      try {
+        // Only send fields that are editable
+        const payload = {
+          taskId: taskData.taskId,
+          title: taskData.title,
+          description: taskData.description,
+          columnId: taskData.columnId,
+          dueDate: taskData.dueDate,
+          taskType: taskData.taskType,
+          priority: taskData.priority,
+          assigneeId: taskData.assigneeId,
+        };
+        await editTaskMutation(payload).unwrap();
+        setShowCreateModal(false);
+        setEditTask(null);
+        setIsEditMode(false);
+        refetch();
+      } catch (err) {
+        alert("Failed to update task: " + (err?.data?.message || err.message));
       }
-      const payload = {
-        boardId,
-        title: taskData.title,
-        description: taskData.description,
-        columnId: taskData.columnId,
-        dueDate: taskData.dueDate,
-        taskType: taskData.taskType,
-        priority: taskData.priority,
-        assigneeId: taskData.assigneeId,
-        createdByModel: "Admin",
-        status,
-      };
-      if (watchers) payload.watchers = watchers;
-      await createTask(payload).unwrap();
-      setShowCreateModal(false);
-      refetch();
-    } catch (err) {
-      alert("Failed to create task: " + (err?.data?.message || err.message));
+    } else {
+      // Create mode
+      if (!boardId) return;
+      // Find a valid admin userId for watcher (fallback to first admin if none selected)
+      let watcherUserId = taskData.assigneeId;
+      if (!watcherUserId && admins.length > 0) watcherUserId = admins[0]._id;
+      // Only send watchers if we have a valid userId
+      let watchers = undefined;
+      if (watcherUserId) {
+        watchers = [
+          {
+            userId: watcherUserId,
+            userModel: "Admin"
+          }
+        ];
+      }
+      try {
+        // Always send a valid status
+        let status = "todo";
+        if (taskData.columnId) {
+          const col = boardColumns.find(c => c._id === taskData.columnId);
+          if (col && col.name) {
+            // Map column name to status if possible
+            const name = col.name.toLowerCase().replace(/\s/g, "");
+            if (name.includes("progress")) status = "in_progress";
+            else if (name.includes("review")) status = "review";
+            else if (name.includes("done") || name.includes("complete")) status = "done";
+            else status = "todo";
+          }
+        }
+        const payload = {
+          boardId,
+          title: taskData.title,
+          description: taskData.description,
+          columnId: taskData.columnId,
+          dueDate: taskData.dueDate,
+          taskType: taskData.taskType,
+          priority: taskData.priority,
+          assigneeId: taskData.assigneeId,
+          createdByModel: "Admin",
+          status,
+        };
+        if (watchers) payload.watchers = watchers;
+        await createTask(payload).unwrap();
+        setShowCreateModal(false);
+        refetch();
+      } catch (err) {
+        alert("Failed to create task: " + (err?.data?.message || err.message));
+      }
     }
   };
 
-  // Move task handler for drag-and-drop
+  // Edit task handler
+  const handleEditTask = (task) => {
+    console.log("handleEditTask called with:", task);
+    setEditTask(task);
+    setIsEditMode(true);
+    setShowCreateModal(true);
+    setTimeout(() => {
+      console.log("showCreateModal:", true, "editTask:", task, "isEditMode:", true);
+    }, 100);
+  };
+
+  // RTK Query delete mutation
+  const [deleteTask] = useDeleteTaskMutation();
+  // RTK Query edit mutation
+  const [editTaskMutation] = useEditTaskMutation();
+
+  // Delete task handler
+  const handleDeleteTask = async (taskId) => {
+    console.log("handleDeleteTask called with:", taskId);
+    if (!taskId) return;
+    try {
+      await deleteTask(taskId).unwrap();
+      console.log("Task deleted:", taskId);
+      refetch();
+    } catch (err) {
+      alert("Failed to delete task: " + (err?.data?.message || err.message));
+    }
+  };
+
+  // Move task handler for drag-and-drop (optimistic UI)
   const handleMoveTask = async (taskId, targetColumnId) => {
     // Find the target column and the new position (end of column)
-    const col = columns.find(c => c.key === targetColumnId);
+    const col = localColumns.find(c => c.key === targetColumnId);
     const position = col ? col.tasks.length : 0;
+
+    // Optimistically update localColumns
+    setLastColumnsSnapshot(localColumns);
+    setLocalColumns(prevCols => {
+      // Remove task from its current column
+      let taskToMove = null;
+      const newCols = prevCols.map(col => {
+        const filtered = col.tasks.filter(t => {
+          if (t.id === taskId) {
+            taskToMove = t;
+            return false;
+          }
+          return true;
+        });
+        return { ...col, tasks: filtered };
+      });
+      // Add task to target column at new position
+      return newCols.map(col => {
+        if (col.key === targetColumnId && taskToMove) {
+          // Optionally update status if needed
+          const updatedTask = { ...taskToMove };
+          col.tasks.splice(position, 0, updatedTask);
+          return { ...col, tasks: [...col.tasks] };
+        }
+        return col;
+      });
+    });
+
     try {
       await moveTask({ taskId, columnId: targetColumnId, position }).unwrap();
       refetch();
     } catch (err) {
+      // Rollback on error
+      setLocalColumns(lastColumnsSnapshot);
       alert("Failed to move task: " + (err?.data?.message || err.message));
     }
   };
 
   return (
     <AdminLayout>
+      <PaymentRequiredModal open={showPaymentModal} onClose={() => navigate("/admin/sprints")} />
       <div className="board-page">
         <div className="board-page-header-row">
           <div className="board-page-title">Board</div>
@@ -188,14 +291,58 @@ export default function BoardPage() {
           ) : error ? (
             <div>Error loading board</div>
           ) : (
-            <BoardKanban columns={columns} onMoveTask={handleMoveTask} />
+            <BoardKanban
+              columns={localColumns}
+              onMoveTask={handleMoveTask}
+              onEditTask={handleEditTask}
+              onDeleteTask={handleDeleteTask}
+            />
           )}
         </div>
       </div>
-      <CreateTaskModal
+      <TaskModal
         open={showCreateModal}
-        onClose={() => setShowCreateModal(false)}
-        onCreate={handleCreateTask}
+        onClose={() => {
+          setShowCreateModal(false);
+          setEditTask(null);
+          setIsEditMode(false);
+        }}
+        onSubmit={async (taskData) => {
+          // Always use FormData for create and edit
+          const formData = taskData instanceof FormData ? taskData : new FormData();
+          if (!(taskData instanceof FormData)) {
+            // If taskData is a plain object, append its fields
+            Object.entries(taskData).forEach(([key, value]) => {
+              formData.append(key, value);
+            });
+          }
+          formData.append('boardId', boardId);
+
+          if (isEditMode && editTask && (formData.get('taskId') || formData.get('id') || editTask.id)) {
+            // Edit mode
+            try {
+              // RTK Query expects { taskId, ...body }
+              const taskId = formData.get('taskId') || formData.get('id') || editTask.id;
+              await editTaskMutation({ taskId, formData }).unwrap();
+              setShowCreateModal(false);
+              setEditTask(null);
+              setIsEditMode(false);
+              refetch();
+            } catch (err) {
+              alert("Failed to update task: " + (err?.data?.message || err.message));
+            }
+          } else {
+            // Create mode
+            try {
+              await createTask(formData).unwrap();
+              setShowCreateModal(false);
+              refetch();
+            } catch (err) {
+              alert("Failed to create task: " + (err?.data?.message || err.message));
+            }
+          }
+        }}
+        taskToEdit={isEditMode ? (console.log("TaskModal opened with:", editTask), editTask) : null}
         columns={boardColumns}
         admins={admins}
       />

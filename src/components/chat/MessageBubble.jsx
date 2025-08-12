@@ -1,6 +1,39 @@
 import React from "react";
 import "./MessageBubble.css";
 
+// Utility to convert URLs in text to clickable links
+function linkifyText(text) {
+  if (!text) return text;
+  const urlRegex = /((https?:\/\/|www\.)[^\s<]+)/gi;
+  const parts = [];
+  let lastIndex = 0;
+  let match;
+  while ((match = urlRegex.exec(text)) !== null) {
+    const { index } = match;
+    if (index > lastIndex) {
+      parts.push(text.slice(lastIndex, index));
+    }
+    let url = match[0];
+    let href = url.startsWith("http") ? url : "https://" + url;
+    parts.push(
+      <a
+        key={index}
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{ color: "#2563eb", textDecoration: "underline", wordBreak: "break-all" }}
+      >
+        {url}
+      </a>
+    );
+    lastIndex = index + url.length;
+  }
+  if (lastIndex < text.length) {
+    parts.push(text.slice(lastIndex));
+  }
+  return parts.length > 0 ? parts : text;
+}
+
 export default function MessageBubble({ message, isOwn }) {
   const {
     messageType,
@@ -16,7 +49,7 @@ export default function MessageBubble({ message, isOwn }) {
   return (
     <div className={`message-bubble${isOwn ? " own" : ""}`}>
       {messageType === "text" && (
-        <div className="message-bubble-text">{content}</div>
+        <div className="message-bubble-text">{linkifyText(content)}</div>
       )}
       {messageType === "image" && imageUrl && (
         <div className="message-bubble-image">

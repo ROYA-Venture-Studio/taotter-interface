@@ -47,24 +47,32 @@ const SprintOnboardingStep2 = () => {
         const tierKey = pkg.tier || 'starter'
         const tierInfo = tierMapping[tierKey] || tierMapping['starter']
         
-        // Calculate hourly rate: total amount / number of hours
-        const calculatedHourlyRate = pkg.engagementHours > 0 ? (pkg.price || 0) / pkg.engagementHours : 0
-        
+        // Calculate hourly rate: use pkg.hourlyRate if present, else price/engagementHours
+        const currency = pkg.currency || "QAR";
+        const hourlyRate = pkg.hourlyRate && pkg.hourlyRate > 0
+          ? pkg.hourlyRate
+          : (pkg.engagementHours > 0 ? (pkg.price || 0) / pkg.engagementHours : 0);
+        const estimatedHours = pkg.engagementHours || 0;
+        const discountPercent = pkg.discount ? Number(pkg.discount) : 0;
+        const subtotal = hourlyRate * estimatedHours;
+        const discountAmount = subtotal * (discountPercent / 100);
+        const total = subtotal - discountAmount;
         return {
           id: pkg._id,
           tierKey: tierKey,
           icon: tierInfo.icon,
           name: pkg.name.split(':')[0].replace(/🚀|🌱|🏗/g, '').trim(),
           description: pkg.name.split(':')[1]?.trim() || tierInfo.baseDescription,
-          hourlyRate: `QAR ${calculatedHourlyRate.toFixed(2)}/hour`,
+          hourlyRate: `${currency} ${hourlyRate.toFixed(2)}/hour`,
           originalRate: null,
           details: pkg.description || 'Sprint package details',
-          idealFor: `Ideal for ${pkg.engagementHours} hours of engagement`,
+          idealFor: `Ideal for ${estimatedHours} hours of engagement`,
           pricing: {
-            amount: `QAR ${calculatedHourlyRate.toFixed(2)}`,
-            quantity: pkg.engagementHours || 0,
-            discount: pkg.discount ? `-${pkg.discount}%` : '0%',
-            total: `QAR ${(pkg.price || 0).toFixed(2)}`
+            estimatedHours: estimatedHours,
+            discount: discountPercent ? `-${discountPercent}%` : '0%',
+            subtotal: `${currency} ${subtotal.toFixed(2)}`,
+            discountAmount: discountPercent ? `-${currency} ${discountAmount.toFixed(2)}` : null,
+            total: `${currency} ${total.toFixed(2)}`
           },
           paymentLink: pkg.paymentLink || "",
           packageData: pkg
@@ -267,9 +275,15 @@ const SprintOnboardingStep2 = () => {
                         <div className="tier-details-text">{tier.details}</div>
                         <div className="tier-ideal">{tier.idealFor}</div>
                         <div className="tier-breakdown">
-                          <span className="breakdown-label">Amount:</span> {tier.pricing.amount} <br />
-                          <span className="breakdown-label">Qty:</span> {tier.pricing.quantity} hours<br />
-                          <span className="breakdown-label">Discount:</span> {tier.pricing.discount}
+                          <span className="breakdown-label">Estimated Hours:</span> {tier.pricing.estimatedHours} hours<br />
+                          <span className="breakdown-label">Engagement Hours:</span> {tier.packageData.engagementHours}<br />
+                          <span className="breakdown-label">Discount:</span> {tier.pricing.discount}<br />
+                          <span className="breakdown-label">Subtotal:</span> {tier.pricing.subtotal}<br />
+                          {tier.pricing.discountAmount && (
+                            <>
+                              <span className="breakdown-label">Discount Amount:</span> {tier.pricing.discountAmount}<br />
+                            </>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -354,8 +368,7 @@ const SprintOnboardingStep2 = () => {
                         <div className="tier-details-text">{tier.details}</div>
                         <div className="tier-ideal">{tier.idealFor}</div>
                         <div className="tier-breakdown">
-                          <span className="breakdown-label">Amount:</span> {tier.pricing.amount} <br />
-                          <span className="breakdown-label">Qty:</span> {tier.pricing.quantity} hours<br />
+                          <span className="breakdown-label">Estimated Hours:</span> {tier.pricing.estimatedHours} hours<br />
                           <span className="breakdown-label">Discount:</span> {tier.pricing.discount}
                         </div>
                       </div>

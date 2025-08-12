@@ -38,6 +38,8 @@ export default function StartupChatPage() {
       } else if (messageType === "voice" && msg.fileUrl) {
         voiceUrl = msg.fileUrl;
       }
+      // Ownership logic: isOwn true if senderType is "startup"
+      const isOwn = msg.senderType === "startup";
       const newMsg = {
         id: msg._id,
         user: msg.senderType === "admin"
@@ -51,9 +53,21 @@ export default function StartupChatPage() {
         voiceUrl,
         voiceDuration: msg.voiceDuration,
         createdAt: msg.createdAt,
-        isOwn: msg.senderType === "startup"
+        isOwn
       };
-      setMessages(prev => [...prev, newMsg]);
+      setMessages(prev => {
+        // Deduplicate: don't add if already present by id or (content+createdAt within 5s)
+        const exists = prev.some(
+          m =>
+            (m.id && m.id === newMsg.id) ||
+            (
+              m.content === newMsg.content &&
+              Math.abs(new Date(m.createdAt) - new Date(newMsg.createdAt)) < 5000
+            )
+        );
+        if (exists) return prev;
+        return [...prev, newMsg];
+      });
     }
   });
 
@@ -71,10 +85,10 @@ export default function StartupChatPage() {
       }
     : { id: chatId, name: "Admin", avatar: "/assets/icons/User.svg", isOnline: false };
 
-  // Transform messages from API
+  // Transform messages from API and merge with pending optimistic messages
   useEffect(() => {
     if (data && data.data && data.data.messages) {
-      const transformedMessages = data.data.messages.map(msg => {
+      const backendMessages = data.data.messages.map(msg => {
         let imageUrl = null;
         let fileUrl = null;
         let voiceUrl = null;
@@ -102,7 +116,21 @@ export default function StartupChatPage() {
           isOwn: msg.senderType === "startup"
         };
       });
-      setMessages(transformedMessages);
+
+      setMessages(prev => {
+        // Remove any pending optimistic messages that match a backend message by content and createdAt (within 5 seconds)
+        const filteredOptimistic = prev.filter(
+          m =>
+            m.pending &&
+            !backendMessages.some(
+              b =>
+                b.content === m.content &&
+                Math.abs(new Date(b.createdAt) - new Date(m.createdAt)) < 5000
+            )
+        );
+        // Merge backend messages with any remaining optimistic messages
+        return [...backendMessages, ...filteredOptimistic];
+      });
     }
   }, [data]);
 
@@ -119,15 +147,64 @@ export default function StartupChatPage() {
   // Handle sending a message
   const handleSend = async (msg, file, duration) => {
     if (!chatId) return;
+    // Optimistically add outgoing message with tempId and mark as pending
+    let tempId = "temp-" + Date.now();
+    let optimisticMsg = null;
+    if (msg || file || voiceBlob) {
+      optimisticMsg = {
+        id: tempId,
+        tempId,
+        user: { name: "Me", avatar: "/assets/icons/User.svg", isOnline: true },
+        content: msg || (file ? "[Attachment]" : "") || "",
+        messageType: file ? "file" : (voiceBlob ? "voice" : "text"),
+        fileUrl: file ? URL.createObjectURL(file) : null,
+        imageUrl: null,
+        fileName: file ? file.name : "",
+        voiceUrl: voiceBlob ? URL.createObjectURL(voiceBlob) : null,
+        voiceDuration: voiceBlob ? voiceDuration : duration,
+        createdAt: new Date().toISOString(),
+        isOwn: true,
+        pending: true
+      };
+      setMessages(prev => [...prev, optimisticMsg]);
+    }
     try {
+      let backendMsg;
       if (voiceBlob) {
-        await sendMessage({ chatId, content: "", file: voiceBlob, voiceDuration }).unwrap();
+        backendMsg = await sendMessage({ chatId, content: "", file: voiceBlob, voiceDuration }).unwrap();
         setVoiceBlob(null);
         setVoiceDuration(null);
       } else {
-        await sendMessage({ chatId, content: msg, file, voiceDuration: duration }).unwrap();
+        backendMsg = await sendMessage({ chatId, content: msg, file, voiceDuration: duration }).unwrap();
       }
       setInput("");
+      // Replace optimistic message with backend message in-place
+      if (backendMsg && backendMsg.data && backendMsg.data.message) {
+        const realMsg = backendMsg.data.message;
+        setMessages(prev =>
+          prev.map(m =>
+            m.tempId === tempId
+              ? {
+                  ...m,
+                  ...{
+                    id: realMsg._id,
+                    tempId: undefined,
+                    content: realMsg.content,
+                    messageType: realMsg.messageType || m.messageType,
+                    fileUrl: realMsg.fileUrl || m.fileUrl,
+                    imageUrl: realMsg.imageUrl || m.imageUrl,
+                    fileName: realMsg.fileName || m.fileName,
+                    voiceUrl: realMsg.voiceUrl || m.voiceUrl,
+                    voiceDuration: realMsg.voiceDuration || m.voiceDuration,
+                    createdAt: realMsg.createdAt || m.createdAt,
+                    isOwn: true,
+                    pending: false
+                  }
+                }
+              : m
+          )
+        );
+      }
       refetch();
     } catch (err) {
       alert("Failed to send message");

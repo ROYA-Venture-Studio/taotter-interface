@@ -48,7 +48,11 @@
   background: #fff;
   box-sizing: border-box;
 }
-
+.sprint-deliverables ul {
+  list-style: disc;
+  margin-left: 1.5em;
+  padding-left: 0;
+}
 .sprint-status-right {
   flex: 0 0 594px;
   min-width: 300px;
