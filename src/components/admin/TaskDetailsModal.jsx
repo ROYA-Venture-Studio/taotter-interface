@@ -1,280 +1,159 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
+import styles from './TaskDetailsModal.module.css';
+
+// --- Icon Components ---
+const CloseIcon = () => (
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M1.04321 1.04364C1.43373 0.653391 2.06682 0.65329 2.45728 1.04364L6.99927 5.58563L11.5413 1.04364L11.6165 0.975281C12.0092 0.654799 12.5891 0.677555 12.9553 1.04364C13.3215 1.40981 13.3442 1.98973 13.0237 2.38251L12.9553 2.4577L8.41333 6.99969L12.9553 11.5417L13.0237 11.6169C13.3442 12.0097 13.3215 12.5905 12.9553 12.9567C12.5892 13.3226 12.0091 13.3454 11.6165 13.0251L11.5413 12.9567L6.99829 8.41376L2.45728 12.9557C2.06675 13.3463 1.43374 13.3463 1.04321 12.9557C0.652782 12.5652 0.65272 11.9322 1.04321 11.5417L5.58423 6.99969L1.04321 2.4577C0.652781 2.06717 0.652719 1.43413 1.04321 1.04364Z" fill="#98A2B3" />
+    </svg>
+);
 
 export default function TaskDetailsModal({
-  open,
-  onClose,
-  task,
-  columns,
-  onMoveTask,
-  onEditTask,
-  onDeleteTask,
-  currentColumnId,
-  admins = [],
+    open,
+    onClose,
+    task,
+    columns,
+    onMoveTask,
+    onEditTask,
+    onDeleteTask,
+    currentColumnId,
+    admins = [],
 }) {
-  const [selectedColumn, setSelectedColumn] = useState(currentColumnId || (columns && columns[0]?._id));
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+    const [selectedColumn, setSelectedColumn] = useState(currentColumnId || (columns && columns[0]?._id));
+    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
-  if (!open) return null;
+    if (!open || !task) return null;
 
-  const handleMove = () => {
-    if (selectedColumn && onMoveTask) {
-      onMoveTask(task.id, selectedColumn);
-      onClose();
-    }
-  };
+    const handleMove = () => {
+        if (selectedColumn && onMoveTask) {
+            onMoveTask(task.id, selectedColumn);
+            onClose();
+        }
+    };
 
-  const handleEdit = () => {
-    if (onEditTask) onEditTask(task);
-  };
+    const handleEdit = () => {
+        if (onEditTask) onEditTask(task);
+    };
 
-  const handleDelete = async () => {
-    setShowDeleteConfirm(false);
-    console.log("TaskDetailsModal handleDelete called", { onDeleteTask, id: task.id });
-    if (typeof onDeleteTask === "function") {
-      await onDeleteTask(task.id);
-      onClose();
-    } else {
-      console.warn("onDeleteTask is not a function or not passed to TaskDetailsModal");
-    }
-  };
+    const handleDelete = async () => {
+        setShowDeleteConfirm(false);
+        if (typeof onDeleteTask === "function") {
+            await onDeleteTask(task.id);
+            onClose();
+        } else {
+            console.warn("onDeleteTask is not a function or not passed to TaskDetailsModal");
+        }
+    };
 
-  return (
-    <div style={{
-      position: "fixed",
-      top: 0, left: 0, right: 0, bottom: 0,
-      background: "rgba(0,0,0,0.18)",
-      zIndex: 1000,
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center"
-    }}>
-      <div style={{
-        width: 564,
-        height: 704,
-        background: "#fff",
-        borderRadius: 16,
-        padding: 20,
-        boxSizing: "border-box",
-        position: "relative",
-        display: "flex",
-        flexDirection: "column"
-      }}>
-        {/* Header */}
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <div style={{ fontWeight: 700, fontSize: 22, color: "#344054" }}>Task Details</div>
-          <button onClick={onClose} style={{
-            background: "none",
-            border: "none",
-            fontSize: 24,
-            cursor: "pointer",
-            color: "#667085"
-          }} aria-label="Close">&times;</button>
-        </div>
-        {/* Edit/Delete Buttons */}
-        <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 16, gap: 8 }}>
-          <button
-            style={{
-              width: 134,
-              height: 44,
-              padding: "12px 0",
-              background: "#fff",
-              border: "1px solid #D0D5DD",
-              color: "#344054",
-              fontWeight: 500,
-              fontSize: 14,
-              borderRadius: 8,
-              cursor: "pointer"
-            }}
-            onClick={() => {
-              console.log("Edit button clicked", { onEditTask });
-              handleEdit();
-            }}
-          >Edit</button>
-          <button
-            style={{
-              width: 134,
-              height: 44,
-              padding: "12px 0",
-              background: "#F04438",
-              border: "none",
-              color: "#fff",
-              fontWeight: 500,
-              fontSize: 14,
-              borderRadius: 8,
-              cursor: "pointer"
-            }}
-            onClick={() => setShowDeleteConfirm(true)}
-          >Delete</button>
-        </div>
-        {/* Task Name */}
-        <div style={{ marginTop: 16 }}>
-          <div style={{ fontWeight: 500, fontSize: 14, color: "#344054" }}>Task Name</div>
-          <div style={{ marginTop: 12, color: "#344054", fontSize: 16 }}>{task.title}</div>
-        </div>
-        {/* Description */}
-        <div style={{ marginTop: 14 }}>
-          <div style={{ fontWeight: 500, fontSize: 14, color: "#344054" }}>Description</div>
-          <div style={{ marginTop: 12, color: "#344054", fontSize: 15 }}>{task.description}</div>
-        </div>
-        {/* Date */}
-        <div style={{ marginTop: 14 }}>
-          <div style={{ fontWeight: 500, fontSize: 14, color: "#344054" }}>Date</div>
-          <div style={{ marginTop: 12, color: "#344054", fontSize: 15 }}>{task.date}</div>
-        </div>
-        {/* Assigned Admin */}
-        <div style={{ marginTop: 14 }}>
-          <div style={{ fontWeight: 500, fontSize: 14, color: "#344054" }}>Assigned Admin</div>
-          <div style={{ marginTop: 12, color: "#344054", fontSize: 15 }}>
-            {task.assigneeId && typeof task.assigneeId === "object" && task.assigneeId.profile
-              ? `${task.assigneeId.profile.firstName} ${task.assigneeId.profile.lastName}`
-              : typeof task.assigneeId === "string"
-                ? task.assigneeId
-                : "Unassigned"}
-          </div>
-        </div>
-        {/* Task Type */}
-        <div style={{ marginTop: 14 }}>
-          <div style={{ fontWeight: 500, fontSize: 14, color: "#344054" }}>Task Type</div>
-          <div style={{ marginTop: 12, color: "#344054", fontSize: 15 }}>{task.taskType}</div>
-        </div>
-        {/* Priority */}
-        <div style={{ marginTop: 14 }}>
-          <div style={{ fontWeight: 500, fontSize: 14, color: "#344054" }}>Priority</div>
-          <div style={{ marginTop: 12, color: "#344054", fontSize: 15 }}>{task.priority}</div>
-        </div>
-        {/* Attachments */}
-        {Array.isArray(task.attachments) && task.attachments.length > 0 && (
-          <div style={{ marginTop: 14 }}>
-            <div style={{ fontWeight: 500, fontSize: 14, color: "#344054" }}>Attachments</div>
-            <ul style={{ marginTop: 12, paddingLeft: 18 }}>
-              {task.attachments.map((file) => (
-                <li key={file.id || file._id} style={{ marginBottom: 6 }}>
-                  <a
-                    href={file.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{ color: "#2563eb", textDecoration: "underline" }}
-                  >
-                    {file.originalName || file.filename}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-        {/* Current Column */}
-        <div style={{ marginTop: 14 }}>
-          <div style={{ fontWeight: 500, fontSize: 14, color: "#344054" }}>Current Column</div>
-          <div style={{ marginTop: 12 }}>
-            <select
-              value={selectedColumn}
-              onChange={e => setSelectedColumn(e.target.value)}
-              style={{
-                width: "100%",
-                padding: "10px 12px",
-                borderRadius: 8,
-                border: "1px solid #D0D5DD",
-                fontSize: 15,
-                color: "#344054"
-              }}
-            >
-              {columns.map(col => (
-                <option key={col._id || col.key} value={col._id || col.key}>{col.label || col.name}</option>
-              ))}
-            </select>
-          </div>
-        </div>
-        {/* Footer Buttons */}
-        <div style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginTop: "auto"
-        }}>
-          <button
-            style={{
-              width: 134,
-              height: 44,
-              padding: "12px 0",
-              background: "#fff",
-              border: "1px solid #D0D5DD",
-              color: "#344054",
-              fontWeight: 500,
-              fontSize: 14,
-              borderRadius: 8,
-              cursor: "pointer"
-            }}
-            onClick={onClose}
-          >Cancel</button>
-          <button
-            style={{
-              width: 134,
-              height: 44,
-              padding: "12px 0",
-              background: "#EB5E28",
-              border: "none",
-              color: "#fff",
-              fontWeight: 500,
-              fontSize: 14,
-              borderRadius: 8,
-              cursor: "pointer"
-            }}
-            onClick={handleMove}
-          >Move Task</button>
-        </div>
-        {/* Delete Confirmation Popup */}
-        {showDeleteConfirm && (
-          <div style={{
-            position: "fixed",
-            left: 0, top: 0, right: 0, bottom: 0,
-            background: "rgba(0,0,0,0.25)",
-            zIndex: 1100,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center"
-          }}>
-            <div style={{
-              background: "#fff",
-              borderRadius: 12,
-              padding: 32,
-              minWidth: 320,
-              boxShadow: "0 2px 16px rgba(0,0,0,0.12)"
-            }}>
-              <div style={{ fontWeight: 600, fontSize: 18, color: "#F04438", marginBottom: 16 }}>
-                Are you sure you want to delete this task?
-              </div>
-              <div style={{ display: "flex", justifyContent: "flex-end", gap: 12 }}>
-                <button
-                  style={{
-                    background: "#fff",
-                    border: "1px solid #D0D5DD",
-                    color: "#344054",
-                    fontWeight: 500,
-                    fontSize: 14,
-                    borderRadius: 8,
-                    padding: "8px 24px",
-                    cursor: "pointer"
-                  }}
-                  onClick={() => setShowDeleteConfirm(false)}
-                >Cancel</button>
-                <button
-                  style={{
-                    background: "#F04438",
-                    border: "none",
-                    color: "#fff",
-                    fontWeight: 500,
-                    fontSize: 14,
-                    borderRadius: 8,
-                    padding: "8px 24px",
-                    cursor: "pointer"
-                  }}
-                  onClick={handleDelete}
-                >Delete</button>
-              </div>
+    return (
+        <div className={styles.modalBackdrop} onClick={onClose}>
+            <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+                {/* Header */}
+                <header className={styles.modalHeader}>
+                    <h2 className={styles.headerTitle}>Task Details</h2>
+                    <button onClick={onClose} className={styles.closeButton} aria-label="Close">
+                        <CloseIcon />
+                    </button>
+                </header>
+
+                {/* Edit/Delete Buttons */}
+                <div className={styles.actionsHeader}>
+                    <button className={styles.buttonSecondary} onClick={handleEdit}>Edit</button>
+                    <button className={styles.buttonDelete} onClick={() => setShowDeleteConfirm(true)}>Delete</button>
+                </div>
+
+                <div className={styles.detailsContainer}>
+                    {/* Task Name */}
+                    <div className={styles.detailItem}>
+                        <div className={styles.detailLabel}>Task Name</div>
+                        <div className={styles.detailValue}>{task.title}</div>
+                    </div>
+
+                    {/* Description */}
+                    <div className={styles.detailItem}>
+                        <div className={styles.detailLabel}>Description</div>
+                        <div className={styles.detailValue}>{task.description || 'No description provided.'}</div>
+                    </div>
+
+                    {/* Date */}
+                    <div className={styles.detailItem}>
+                        <div className={styles.detailLabel}>Due Date</div>
+                        <div className={styles.detailValue}>{task.dueDate ? new Date(task.dueDate).toLocaleDateString() : 'No due date.'}</div>
+                    </div>
+
+                    {/* Assigned Admin */}
+                    <div className={styles.detailItem}>
+                        <div className={styles.detailLabel}>Assigned To</div>
+                        <div className={styles.detailValue}>
+                            {task.assigneeId && typeof task.assigneeId === "object" && task.assigneeId.profile
+                                ? `${task.assigneeId.profile.firstName} ${task.assigneeId.profile.lastName}`
+                                : "Unassigned"}
+                        </div>
+                    </div>
+
+                    {/* Task Type */}
+                    <div className={styles.detailItem}>
+                        <div className={styles.detailLabel}>Task Type</div>
+                        <div className={styles.detailValue}>{task.taskType}</div>
+                    </div>
+
+                    {/* Priority */}
+                    <div className={styles.detailItem}>
+                        <div className={styles.detailLabel}>Priority</div>
+                        <div className={styles.detailValue}>{task.priority}</div>
+                    </div>
+
+                    {/* Attachments */}
+                    {Array.isArray(task.attachments) && task.attachments.length > 0 && (
+                        <div className={styles.detailItem}>
+                            <div className={styles.detailLabel}>Attachments</div>
+                            <ul className={styles.attachmentList}>
+                                {task.attachments.map((file) => (
+                                    <li key={file.id || file._id}>
+                                        <a href={file.url} target="_blank" rel="noopener noreferrer" className={styles.attachmentLink}>
+                                            {file.originalName || file.filename}
+                                        </a>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
+
+                    {/* Current Column */}
+                    <div className={styles.detailItem}>
+                        <div className={styles.detailLabel}>Move to Column</div>
+                        <select
+                            value={selectedColumn}
+                            onChange={e => setSelectedColumn(e.target.value)}
+                            className={styles.columnSelect}
+                        >
+                            {columns.map(col => (
+                                <option key={col._id || col.key} value={col._id || col.key}>{col.label || col.name}</option>
+                            ))}
+                        </select>
+                    </div>
+                </div>
+
+                {/* Footer Buttons */}
+                <footer className={styles.modalFooter}>
+                    <button className={styles.buttonSecondary} onClick={onClose}>Cancel</button>
+                    <button className={styles.buttonPrimary} onClick={handleMove}>Move Task</button>
+                </footer>
+
+                {/* Delete Confirmation Popup */}
+                {showDeleteConfirm && (
+                    <div className={styles.confirmBackdrop}>
+                        <div className={styles.confirmBox}>
+                            <h3 className={styles.confirmTitle}>Are you sure you want to delete this task?</h3>
+                            <p className={styles.confirmText}>This action cannot be undone.</p>
+                            <div className={styles.confirmActions}>
+                                <button className={styles.buttonSecondary} onClick={() => setShowDeleteConfirm(false)}>Cancel</button>
+                                <button className={styles.buttonDelete} onClick={handleDelete}>Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
-          </div>
-        )}
-      </div>
-    </div>
-  );
+        </div>
+    );
 }

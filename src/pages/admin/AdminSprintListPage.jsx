@@ -104,6 +104,7 @@ export default function AdminSprintListPage() {
   <option value="package_selected">Package Selected</option>
   <option value="in_progress">In Progress</option>
   <option value="completed">Completed</option>
+  <option value="inactive">Inactive</option>
 </select>
           </div>
         </div>

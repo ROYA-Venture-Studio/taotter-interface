@@ -250,14 +250,14 @@ export default function TaskModal({ open, onClose, onSubmit, taskToEdit, boardId
                 </div>
               )}
               {/* Show newly selected files */}
-              {selectedFiles.length > 0 ? (
-                selectedFiles.map((file, idx) => (
-                  <div key={idx} className={styles.attachmentItem}>
-                    {file.type === "application/pdf" ? <PdfIcon /> : <span>{file.name}</span>}
-                    <span>{file.name}</span>
-                  </div>
-                ))
-              ) : (
+{selectedFiles.length > 0 ? (
+  selectedFiles.map((file, idx) => (
+    <div key={idx} className={styles.attachmentItem}>
+      {file.type === "application/pdf" ? <PdfIcon /> : <span style={{ color: "#000" }}>{file.name}</span>}
+      <span style={{ color: "#000" }}>{file.name}</span>
+    </div>
+  ))
+) : (
                 (!isEditMode || !taskData.attachments || taskData.attachments.length === 0) && (
                   <span>No attachments selected</span>
                 )

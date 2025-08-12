@@ -24,9 +24,10 @@
   background-color: rgba(16, 24, 40, 0.6);
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start; /* MODIFIED: Aligns modal to the top */
   z-index: 1000;
-  padding: 1rem;
+  padding: 120px 1rem 2rem 1rem; /* MODIFIED: Added top padding to avoid header overlap */
+  overflow-y: auto; /* Added to allow the backdrop itself to scroll on very small screens */
 }
 
 .modalContent {
@@ -34,9 +35,9 @@
   border-radius: var(--Utilities-Border-Radius-2XL);
   padding: var(--Utilities-Spacing-6) var(--Utilities-Spacing-7);
   width: 100%;
-  max-width: 600px;
-  max-height: 90vh;
-  overflow-y: auto;
+  max-width: 560px;
+  max-height: 75vh; /* MODIFIED: Made the modal shorter */
+  overflow-y: auto; /* This adds the scrollbar when content overflows */
   position: relative;
   display: flex;
   flex-direction: column;
@@ -115,7 +116,7 @@
 }
 .formGroup input::placeholder,
 .formGroup textarea::placeholder {
-    color: #98A2B3;
+  color: #98A2B3;
 }
 .formGroup input:focus,
 .formGroup textarea:focus,
@@ -195,11 +196,11 @@
 }
 
 .fileIcon {
-    width: 40px;
-    height: 40px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .fileDetails {
@@ -216,25 +217,24 @@
   color: var(--Text-Secondary-Text-Color);
 }
 .removeFileButton {
-    position: absolute;
-    top: -8px;
-    right: -8px;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background-color: var(--Background-Body);
-    border: 1px solid #E4E7EC;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    padding: 0;
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: var(--Background-Body);
+  border: 1px solid #E4E7EC;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  padding: 0;
 }
 .removeFileButton svg {
-    width: 8px;
-    height: 8px;
+  width: 8px;
+  height: 8px;
 }
-
 
 /* --- Modal Footer --- */
 .modalFooter {
@@ -246,22 +246,21 @@
 .submitButton {
   padding: 12px 16px;
   border-radius: var(--Utilities-Border-Radius-LG);
-  border: 1px solid var(--Text-Brand-Color);
-  background: var(--Text-Brand-Color);
+  border: 1px solid #EB5E28;
+  background: #EB5E28;
   box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
   color: #FFF;
   font-family: "Montserrat", sans-serif;
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: background-color 0.2s, border-color 0.2s;
 }
 
 .submitButton:hover {
-    background: #2D43D2;
-    border-color: #2D43D2;
+  background: #D45524;
+  border-color: #D45524;
 }
-
 
 /* --- Responsive Styles --- */
 @media (max-width: 768px) {
