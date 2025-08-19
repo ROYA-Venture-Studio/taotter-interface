@@ -1,302 +1,438 @@
 /* Dashboard Page Styles */
 .dashboard-page {
-  min-height: 100vh;
-  background: linear-gradient(#fff 0%, #FFF3E6 100%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 0 16px 32px 16px;
-  font-family: 'Outfit', sans-serif;
+    min-height: 100vh;
+    background: linear-gradient(#fff 0%, #FFF3E6 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 16px 32px 16px;
+    font-family: 'Outfit', sans-serif;
 }
 
 .dashboard-top-section {
-  width: 100%;
-  max-width: 700px;
-  background: linear-gradient(265deg, #FFB686 0%, #EB5E28 100%);
-  border-radius: 24px;
-  margin-top: 32px;
-  margin-bottom: 32px;
-  min-height: 180px;
-  padding: 0 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+    width: 100%;
+    max-width: 700px;
+    background: linear-gradient(265deg, #FFB686 0%, #EB5E28 100%);
+    border-radius: 24px;
+    margin-top: 32px;
+    margin-bottom: 32px;
+    min-height: 180px;
+    padding: 0 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .dashboard-hero-title {
-  color: #fff;
-  font-size: 2rem;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  margin: 0;
-  text-align: center;
-  font-family: 'Outfit', sans-serif;
+    color: #fff;
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    margin: 0;
+    text-align: center;
+    font-family: 'Outfit', sans-serif;
 }
 
 .dashboard-cards-container {
-  width: 100%;
-  max-width: 700px;
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  margin-bottom: 32px;
+    width: 100%;
+    max-width: 700px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    margin-bottom: 32px;
+}
+
+.dashboard-card-wrapper {
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 2px 12px rgba(235, 94, 40, 0.08);
+    transition: box-shadow 0.2s;
+    overflow: hidden; /* Ensures children conform to border-radius */
+}
+
+.dashboard-card-wrapper:hover {
+     box-shadow: 0 4px 24px rgba(235, 94, 40, 0.18);
 }
 
 .dashboard-card {
-  background: #fff;
-  border-radius: 18px;
-  box-shadow: 0 2px 12px rgba(235, 94, 40, 0.08);
-  padding: 24px 24px 20px 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  cursor: pointer;
-  transition: box-shadow 0.2s, background 0.2s;
+    background: transparent; /* Card itself is transparent */
+    padding: 24px 24px 20px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    cursor: pointer;
+    transition: background 0.2s;
 }
 
-.dashboard-card:hover, .dashboard-card:focus {
-  box-shadow: 0 4px 24px rgba(235, 94, 40, 0.18);
-  background: #FFF3E6;
-  outline: none;
+.dashboard-card:hover,
+.dashboard-card:focus {
+    background: #FFF9F2; /* Light hover effect on the card area */
+    outline: none;
 }
 
 .dashboard-card-header {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
 .dashboard-card-subtitle {
-  color: #EB5E28;
-  font-size: 14px;
-  font-weight: 600;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  margin-bottom: 4px;
-  font-family: 'Outfit', sans-serif;
+    color: #EB5E28;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    font-family: 'Outfit', sans-serif;
 }
 
 .dashboard-card-status-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
 }
 
 .dashboard-card-title {
-  font-size: 20px;
-  font-weight: 600;
-  color: #1d2939;
-  margin: 0;
-  font-family: 'Outfit', sans-serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: #1d2939;
+    margin: 0;
+    font-family: 'Outfit', sans-serif;
 }
 
 .dashboard-status-pill {
-  display: inline-block;
-  padding: 4px 16px;
-  border-radius: 999px;
-  font-size: 14px;
-  font-weight: 600;
-  margin-left: 8px;
-  text-transform: capitalize;
-  font-family: 'Outfit', sans-serif;
+    display: inline-block;
+    padding: 4px 16px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 600;
+    margin-left: 8px;
+    text-transform: capitalize;
+    font-family: 'Outfit', sans-serif;
 }
 
 .dashboard-status-pill.cancelled {
-  background: #f04438;
-  color: #fff;
+    background: #f04438;
+    color: #fff;
 }
 
 .dashboard-status-pill.ongoing {
-  background: #FFE6C7;
-  color: #EB5E28;
+    background: #FFE6C7;
+    color: #EB5E28;
 }
 
 .dashboard-status-pill.completed {
-  background: #12b76a;
-  color: #fff;
+    background: #12b76a;
+    color: #fff;
 }
 
 .dashboard-progress-row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 8px;
 }
 
 .dashboard-progress-bar-outer {
-  flex: 1;
-  height: 4px;
-  background: #e4e7ec;
-  border-radius: 6px;
-  overflow: hidden;
-  position: relative;
+    flex: 1;
+    height: 4px;
+    background: #e4e7ec;
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
 }
 
 .dashboard-progress-bar-inner {
-  height: 100%;
-  border-radius: 6px;
-  transition: width 0.3s;
+    height: 100%;
+    border-radius: 6px;
+    transition: width 0.3s;
 }
 
 .dashboard-progress-bar-inner.cancelled {
-  background: #f04438;
+    background: #f04438;
 }
 
 .dashboard-progress-bar-inner.ongoing {
-  background: linear-gradient(90deg, #FFB686 0%, #EB5E28 100%);
+    background: linear-gradient(90deg, #FFB686 0%, #EB5E28 100%);
 }
 
 .dashboard-progress-bar-inner.completed {
-  background: #12b76a;
+    background: #12b76a;
 }
 
 .dashboard-progress-percent {
-  font-size: 14px;
-  font-weight: 600;
-  color: #344054;
-  min-width: 38px;
-  text-align: right;
-  font-family: 'Outfit', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #344054;
+    min-width: 38px;
+    text-align: right;
+    font-family: 'Outfit', sans-serif;
 }
 
-.dashboard-actions {
-  width: 100%;
-  max-width: 700px;
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  margin: 0 auto;
-  align-items: center;
+/* --- ADJUSTED STYLES FOR SEAMLESS DROPDOWN --- */
+
+/* Card Footer for Buttons */
+.dashboard-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 12px;
 }
 
-.dashboard-action-btn {
-  width: 100%;
-  max-width: 420px;
-  font-size: 28px;
-  font-family: 'Outfit', sans-serif;
-  border-radius: 14px;
-  padding: 28px 0;
-  font-weight: 800;
-  box-shadow: 0 1px 4px rgba(235, 94, 40, 0.06);
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
+/* Container for the right-side action buttons */
+.dashboard-card-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
 }
 
-.finish-btn {
-  background: linear-gradient(265deg, #FFB686 0%, #EB5E28 100%);
-  color: #fff;
-  border: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+/* Details Button */
+.details-btn {
+    width: 119px;
+    height: 28px;
+    background: transparent;
+    border: 1px solid #EB5E28;
+    border-radius: 999px; /* For pill shape */
+    color: #1D2939;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.report-btn {
-  background: #fff;
-  color: #1d2939;
-  border: 2px solid #1d2939;
+.details-btn:hover {
+    background-color: #FFF3E6;
 }
+
+/* Redesigned Footer Buttons */
+.btn-finish-sprint, .btn-view-board {
+    width: 157px;
+    height: 40px;
+    padding: 10px 0;
+    font-size: 16px; /* Adjusted for better visual balance */
+    font-weight: 500;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid transparent;
+    box-sizing: border-box;
+}
+
+.btn-finish-sprint {
+    background-color: #fff;
+    border-color: #EB5E28;
+    color: #101828;
+}
+
+.btn-finish-sprint:hover {
+    background-color: #FFF9F2;
+}
+
+.btn-finish-sprint:disabled {
+    background: #F2F4F7;
+    color: #98A2B3;
+    border-color: #D0D5DD;
+    cursor: not-allowed;
+}
+
+.btn-view-board {
+    background-color: #EB5E28;
+    border-color: #EB5E28;
+    color: #FFFFFF;
+}
+
+.btn-view-board:hover {
+     background-color: #D45524;
+     border-color: #D45524;
+}
+
+
+/* Details Expander Section */
+.details-expander {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease-in-out; /* Removed margin-top transition */
+    background-color: #fff; /* Match wrapper background */
+    border-top: 1px solid transparent; /* Prepare for border transition */
+}
+
+.details-expander.visible {
+    max-height: 500px; /* Large enough to fit content */
+    border-top: 1px solid #E4E7EC; /* Add separator line on expand */
+}
+
+.sprint-details-container {
+    padding: 24px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.sprint-details-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1D2939;
+    margin: 0 0 24px 0;
+}
+
+.sprint-details-grid {
+    display: flex;
+    gap: 32px; /* Initial gap, will be larger on wider screens */
+}
+
+.details-column {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    flex: 1;
+}
+
+.details-item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.details-label {
+    font-size: 12px;
+    font-weight: 400;
+    color: #667085;
+}
+
+.details-value {
+    font-size: 14px;
+    font-weight: 500;
+    color: #1D2939;
+    margin: 0;
+}
+
+/* --- END OF ADJUSTED STYLES --- */
+
+
+@media (min-width: 768px) {
+    .sprint-details-grid {
+        gap: 216px; /* Wider gap for desktop as requested */
+    }
+}
+
 
 @media (max-width: 768px) {
-  .dashboard-top-section,
-  .dashboard-cards-container,
-  .dashboard-actions {
-    max-width: 100%;
-  }
-  .dashboard-card {
-    padding: 18px 10px 16px 10px;
-  }
+    .dashboard-top-section,
+    .dashboard-cards-container {
+        max-width: 100%;
+    }
+    .dashboard-card {
+        padding: 18px 10px 16px 10px;
+    }
+    .sprint-details-grid {
+        flex-direction: column; /* Stack columns on smaller screens */
+        gap: 28px;
+    }
 }
 
 @media (max-width: 480px) {
-  .dashboard-top-section {
-    padding: 24px 0 16px 0;
-  }
-  .dashboard-card {
-    border-radius: 12px;
-  }
-  .dashboard-action-btn {
-    font-size: 16px;
-    padding: 12px 0;
-  }
+    .dashboard-top-section {
+        padding: 24px 0 16px 0;
+    }
+    .dashboard-card {
+        border-radius: 12px;
+    }
+    .dashboard-card-footer {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+    .details-btn {
+        width: 100%;
+        height: 36px;
+    }
+    .dashboard-card-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+    .btn-finish-sprint, .btn-view-board {
+        width: 100%;
+    }
 }
 
 /* MODAL STYLES */
 .dashboard-modal-backdrop {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(52, 64, 84, 0.35);
-  z-index: 3000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(52, 64, 84, 0.35);
+    z-index: 3000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .dashboard-modal {
-  background: #fff;
-  border-radius: 20px;
-  box-shadow: 0 8px 32px rgba(235, 94, 40, 0.18);
-  padding: 40px 32px 32px 32px;
-  max-width: 95vw;
-  width: 400px;
-  text-align: center;
-  font-family: 'Outfit', sans-serif;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(235, 94, 40, 0.18);
+    padding: 40px 32px 32px 32px;
+    max-width: 95vw;
+    width: 400px;
+    text-align: center;
+    font-family: 'Outfit', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .dashboard-modal h2 {
-  font-size: 1.6rem;
-  font-weight: 700;
-  margin-bottom: 12px;
-  color: #1d2939;
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: #1d2939;
 }
 
 .dashboard-modal-subtitle {
-  font-size: 1.1rem;
-  color: #667085;
-  margin-bottom: 32px;
+    font-size: 1.1rem;
+    color: #667085;
+    margin-bottom: 32px;
 }
 
 .dashboard-modal-actions {
-  display: flex;
-  gap: 18px;
-  width: 100%;
-  justify-content: center;
+    display: flex;
+    gap: 18px;
+    width: 100%;
+    justify-content: center;
 }
 
 .dashboard-modal-btn {
-  min-width: 100px;
-  font-size: 1.1rem;
-  padding: 12px 0;
-  border-radius: 10px;
-  font-weight: 600;
+    min-width: 100px;
+    font-size: 1.1rem;
+    padding: 12px 0;
+    border-radius: 10px;
+    font-weight: 600;
 }
 
-/* Ensure the "Close" button in the finish sprint modal is black */
-.dashboard-modal-btn[variant="secondary"],
-.dashboard-modal-btn.secondary {
-  color: #111 !important;
+.dashboard-modal-btn[variant="secondary"] {
+    color: #111 !important;
 }
 
 @media (max-width: 480px) {
-  .dashboard-modal {
-    padding: 24px 8px 20px 8px;
-    width: 95vw;
-  }
-  .dashboard-modal h2 {
-    font-size: 1.2rem;
-  }
-  .dashboard-modal-btn {
-    font-size: 1rem;
-    padding: 10px 0;
-  }
+    .dashboard-modal {
+        padding: 24px 8px 20px 8px;
+        width: 95vw;
+    }
+    .dashboard-modal h2 {
+        font-size: 1.2rem;
+    }
+    .dashboard-modal-btn {
+        font-size: 1rem;
+        padding: 10px 0;
+    }
 }

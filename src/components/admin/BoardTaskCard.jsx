@@ -2,9 +2,6 @@ import React from "react";
 import "./BoardTaskCard.css";
 import { TASK_TYPE_COLORS } from "../../utils/taskTypeColors";
 
-import { useState } from "react";
-import TaskDetailsModal from "./TaskDetailsModal";
-
 export default function BoardTaskCard({
   task,
   draggable,
@@ -14,28 +11,9 @@ export default function BoardTaskCard({
   onMoveTask,
   currentColumnId,
   onEditTask,
-  onDeleteTask
+  onDeleteTask,
+  onCardClick
 }) {
-  const [showDetailsModal, setShowDetailsModal] = useState(false);
-
-  // Dummy handlers for now; should be replaced with actual logic in parent
-  const handleMoveTask = (taskId, columnId) => {
-    if (onMoveTask) onMoveTask(taskId, columnId);
-  };
-  const handleEditTask = (task) => {
-    setShowDetailsModal(false);
-    if (typeof onEditTask === "function") {
-      onEditTask(task);
-    }
-  };
-  // Use the onDeleteTask prop from parent (BoardKanban/BoardPage)
-  const handleDeleteTask = (taskId) => {
-    if (typeof onDeleteTask === "function") {
-      onDeleteTask(taskId);
-    }
-    setShowDetailsModal(false);
-  };
-
   return (
     <div
       className="board-task-card"
@@ -50,7 +28,7 @@ export default function BoardTaskCard({
           className="board-task-card__menu-btn"
           onClick={e => {
             e.stopPropagation();
-            setShowDetailsModal(true);
+            if (onCardClick) onCardClick(task);
           }}
           aria-label="Task options"
         >
@@ -113,18 +91,6 @@ export default function BoardTaskCard({
           );
         })()}
       </div>
-      {showDetailsModal && columns && (
-        <TaskDetailsModal
-          open={showDetailsModal}
-          onClose={() => setShowDetailsModal(false)}
-          task={task}
-          columns={columns}
-          onMoveTask={handleMoveTask}
-          onEditTask={onEditTask}
-          onDeleteTask={onDeleteTask}
-          currentColumnId={currentColumnId}
-        />
-      )}
     </div>
   );
 }

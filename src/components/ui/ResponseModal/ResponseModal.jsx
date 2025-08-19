@@ -19,17 +19,17 @@ const PRIORITIES = [
   { value: "urgent", label: "Urgent" },
 ];
 
-const CREDIT_TIERS = [
+const DEFAULT_CREDIT_TIERS = [
   {
-    label: "🚀 Starter: Engagements between 10 to 150 hours",
+    label: "Starter",
     key: "starter",
   },
   {
-    label: "🌱 Growth: For engagements between 151 to 250 hours",
+    label: "Growth",
     key: "growth",
   },
   {
-    label: "🏗️ Scale: For engagements of 251 hours or more",
+    label: "Scale",
     key: "scale",
   },
 ];
@@ -75,6 +75,11 @@ export default function ResponseModal({ onClose }) {
   const [apiError, setApiError] = useState("");
   const [success, setSuccess] = useState("");
   const [createSprints, { isLoading }] = useCreateSprintsForQuestionnaireMutation();
+
+  // Editable credit tiers state
+  const [creditTiers, setCreditTiers] = useState(DEFAULT_CREDIT_TIERS);
+  const [editingTierIdx, setEditingTierIdx] = useState(null);
+  const [editingTierValue, setEditingTierValue] = useState("");
 
   // Handle input change for a sprint
   const handleSprintChange = (idx, field, value) => {
@@ -146,7 +151,7 @@ export default function ResponseModal({ onClose }) {
         isValid = false;
       }
 
-      CREDIT_TIERS.forEach((tier, tierIdx) => {
+      creditTiers.forEach((tier, tierIdx) => {
         if (s.enabledTiers[tier.key]) {
           const p = s.packageOptions[tierIdx];
           const tierErrors = { hourlyRate: "", amount: "", qty: "" };
@@ -181,11 +186,10 @@ export default function ResponseModal({ onClose }) {
         priority: s.priority,
         deliverables: deliverablesArr,
         packageOptions: s.packageOptions
-          .filter((p, idx) => s.enabledTiers[CREDIT_TIERS[idx].key])
-          .map((p) => {
-            const tierIndex = s.packageOptions.indexOf(p);
+          .filter((p, idx) => s.enabledTiers[creditTiers[idx].key])
+          .map((p, tierIndex) => {
             return {
-              name: CREDIT_TIERS[tierIndex].label,
+              name: creditTiers[tierIndex].label,
               description: s.objective,
               price: parseFloat(p.amount) || 0,
               currency: "USD",
@@ -193,7 +197,7 @@ export default function ResponseModal({ onClose }) {
               duration: parseInt(s.estimatedDuration, 10) || 1,
               features: [],
               teamSize: 1,
-              isRecommended: CREDIT_TIERS[tierIndex].key === "growth",
+              isRecommended: creditTiers[tierIndex].key === "growth",
               hourlyRate: parseFloat(p.hourlyRate) || 0,
               discount: p.discount ? parseFloat(p.discount) : 0,
               tier: p.tier,
@@ -346,16 +350,63 @@ export default function ResponseModal({ onClose }) {
                 </p>
                 {validationErrors[idx]?.tierError && <p className="input-error-message" style={{marginBottom: '16px'}}>{validationErrors[idx].tierError}</p>}
                 
-                {CREDIT_TIERS.map((tier, tierIdx) => (
+                {creditTiers.map((tier, tierIdx) => (
                   <div className="response-modal-credit-tier" key={tier.key}>
-                    <div className="response-modal-credit-tier-header">
-                      <label className="response-modal-tier-checkbox">
+                    <div className="response-modal-credit-tier-header" style={{ display: "flex", alignItems: "center" }}>
+                      <label className="response-modal-tier-checkbox" style={{ display: "flex", alignItems: "center" }}>
                         <input
                           type="checkbox"
                           checked={s.enabledTiers[tier.key]}
                           onChange={() => handleTierToggle(idx, tier.key)}
                         />
-                        <span className="response-modal-credit-tier-label">{tier.label}</span>
+                        {editingTierIdx === tierIdx ? (
+                          <>
+                            <input
+                              type="text"
+                              value={editingTierValue}
+                              onChange={e => setEditingTierValue(e.target.value)}
+                              style={{ marginLeft: 8, fontSize: 16, fontWeight: 500, width: 260 }}
+                              autoFocus
+                            />
+                            <img
+                              src="/assets/icons/check-mark.svg"
+                              alt="Save"
+                              style={{ width: 18, height: 18, marginLeft: 8, cursor: "pointer" }}
+                              onClick={() => {
+                                setCreditTiers(prev =>
+                                  prev.map((t, i) =>
+                                    i === tierIdx ? { ...t, label: editingTierValue } : t
+                                  )
+                                );
+                                setEditingTierIdx(null);
+                              }}
+                            />
+                            <img
+                              src="/assets/icons/stop.svg"
+                              alt="Cancel"
+                              style={{ width: 18, height: 18, marginLeft: 8, cursor: "pointer" }}
+                              onClick={() => {
+                                setEditingTierIdx(null);
+                                setEditingTierValue(creditTiers[tierIdx].label);
+                              }}
+                            />
+                          </>
+                        ) : (
+                          <>
+                            <span className="response-modal-credit-tier-label" style={{ marginLeft: 8 }}>
+                              {tier.label}
+                            </span>
+                            <img
+                              src="/assets/icons/pencil.svg"
+                              alt="Edit"
+                              style={{ width: 16, height: 16, marginLeft: 8, cursor: "pointer" }}
+                              onClick={() => {
+                                setEditingTierIdx(tierIdx);
+                                setEditingTierValue(tier.label);
+                              }}
+                            />
+                          </>
+                        )}
                       </label>
                     </div>
                     {s.enabledTiers[tier.key] && (

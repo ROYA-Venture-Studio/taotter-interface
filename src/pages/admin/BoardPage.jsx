@@ -15,7 +15,7 @@ const FILTERS = [
   { key: "todo", label: "To Do" },
   { key: "inprogress", label: "In Progress" },
   { key: "review", label: "Review" },
-  { key: "completed", label: "Completed" }
+  { key: "completed", label: "Done" }
 ];
 
 const STATUS_MAP = {
@@ -31,9 +31,10 @@ export default function BoardPage() {
   const [lastColumnsSnapshot, setLastColumnsSnapshot] = useState([]);
   const { sprintId } = useParams(); // Assume route is /admin/board/:sprintId
   const [filter, setFilter] = useState("all");
-  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalMode, setModalMode] = useState(null); // 'details' | 'edit' | 'create'
+  const [selectedTask, setSelectedTask] = useState(null);
   const [editTask, setEditTask] = useState(null);
-  const [isEditMode, setIsEditMode] = useState(false);
   const navigate = useNavigate();
 
   // Fetch board by sprintId (you may need to adjust this to fetch by boardId if needed)
@@ -167,14 +168,31 @@ export default function BoardPage() {
   };
 
   // Edit task handler
+  const handleCardClick = (task) => {
+    setSelectedTask(task);
+    setEditTask(null);
+    setModalMode('details');
+    setModalOpen(true);
+  };
+
   const handleEditTask = (task) => {
-    console.log("handleEditTask called with:", task);
     setEditTask(task);
-    setIsEditMode(true);
-    setShowCreateModal(true);
-    setTimeout(() => {
-      console.log("showCreateModal:", true, "editTask:", task, "isEditMode:", true);
-    }, 100);
+    setModalMode('edit');
+    setModalOpen(true);
+  };
+
+  const handleCreateClick = () => {
+    setSelectedTask(null);
+    setEditTask(null);
+    setModalMode('create');
+    setModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
+    setModalMode(null);
+    setSelectedTask(null);
+    setEditTask(null);
   };
 
   // RTK Query delete mutation
@@ -268,7 +286,7 @@ export default function BoardPage() {
             </div>
             <button
               className="create-task-btn"
-              onClick={() => setShowCreateModal(true)}
+              onClick={handleCreateClick}
               style={{
                 marginLeft: "auto",
                 background: "#EB5E28",
@@ -291,61 +309,66 @@ export default function BoardPage() {
           ) : error ? (
             <div>Error loading board</div>
           ) : (
-            <BoardKanban
-              columns={localColumns}
-              onMoveTask={handleMoveTask}
-              onEditTask={handleEditTask}
-              onDeleteTask={handleDeleteTask}
-            />
+            <>
+              <BoardKanban
+                columns={localColumns}
+                onMoveTask={handleMoveTask}
+                onEditTask={handleEditTask}
+                onDeleteTask={handleDeleteTask}
+                onCardClick={handleCardClick}
+              />
+              {modalOpen && (
+                <div>
+                  {modalMode === 'details' && selectedTask && (
+                    <TaskDetailsModal
+                      open={true}
+                      onClose={closeModal}
+                      task={selectedTask}
+                      columns={boardColumns}
+                      onEditTask={handleEditTask}
+                      onDeleteTask={handleDeleteTask}
+                      onMoveTask={null}
+                      currentColumnId={selectedTask?.columnId}
+                      admins={admins}
+                    />
+                  )}
+                  {(modalMode === 'edit' || modalMode === 'create') && (
+                    <TaskModal
+                      open={true}
+                      onClose={closeModal}
+                      onSubmit={async (taskData) => {
+                        const formData = taskData instanceof FormData ? taskData : new FormData();
+                        if (!(taskData instanceof FormData)) {
+                          Object.entries(taskData).forEach(([key, value]) => {
+                            formData.append(key, value);
+                          });
+                        }
+                        formData.append('boardId', boardId);
+
+                        try {
+                          if (modalMode === 'edit' && editTask && (formData.get('taskId') || formData.get('id') || editTask.id)) {
+                            const taskId = formData.get('taskId') || formData.get('id') || editTask.id;
+                            await editTaskMutation({ taskId, formData }).unwrap();
+                          } else {
+                            await createTask(formData).unwrap();
+                          }
+                          closeModal();
+                          refetch();
+                        } catch (err) {
+                          alert("Failed to " + (modalMode === 'edit' ? "update" : "create") + " task: " + (err?.data?.message || err.message));
+                        }
+                      }}
+                      taskToEdit={modalMode === 'edit' ? editTask : null}
+                      columns={boardColumns}
+                      admins={admins}
+                    />
+                  )}
+                </div>
+              )}
+            </>
           )}
         </div>
       </div>
-      <TaskModal
-        open={showCreateModal}
-        onClose={() => {
-          setShowCreateModal(false);
-          setEditTask(null);
-          setIsEditMode(false);
-        }}
-        onSubmit={async (taskData) => {
-          // Always use FormData for create and edit
-          const formData = taskData instanceof FormData ? taskData : new FormData();
-          if (!(taskData instanceof FormData)) {
-            // If taskData is a plain object, append its fields
-            Object.entries(taskData).forEach(([key, value]) => {
-              formData.append(key, value);
-            });
-          }
-          formData.append('boardId', boardId);
-
-          if (isEditMode && editTask && (formData.get('taskId') || formData.get('id') || editTask.id)) {
-            // Edit mode
-            try {
-              // RTK Query expects { taskId, ...body }
-              const taskId = formData.get('taskId') || formData.get('id') || editTask.id;
-              await editTaskMutation({ taskId, formData }).unwrap();
-              setShowCreateModal(false);
-              setEditTask(null);
-              setIsEditMode(false);
-              refetch();
-            } catch (err) {
-              alert("Failed to update task: " + (err?.data?.message || err.message));
-            }
-          } else {
-            // Create mode
-            try {
-              await createTask(formData).unwrap();
-              setShowCreateModal(false);
-              refetch();
-            } catch (err) {
-              alert("Failed to create task: " + (err?.data?.message || err.message));
-            }
-          }
-        }}
-        taskToEdit={isEditMode ? (console.log("TaskModal opened with:", editTask), editTask) : null}
-        columns={boardColumns}
-        admins={admins}
-      />
     </AdminLayout>
   );
 }

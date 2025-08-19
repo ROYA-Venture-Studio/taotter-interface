@@ -37,17 +37,7 @@ const SprintOnboardingStep2 = () => {
     if (sprintData?.data?.sprint?.packageOptions) {
       const packages = sprintData.data.sprint.packageOptions
       
-      const tierMapping = {
-        'starter': { icon: '🚀', baseDescription: 'For engagements between 10 to 150 hours' },
-        'growth': { icon: '🌱', baseDescription: 'For engagements between 151 to 250 hours' },
-        'scale': { icon: '🏗', baseDescription: 'For engagements of 251 hours or more' }
-      }
-
-      const formattedTiers = packages.map((pkg, index) => {
-        const tierKey = pkg.tier || 'starter'
-        const tierInfo = tierMapping[tierKey] || tierMapping['starter']
-        
-        // Calculate hourly rate: use pkg.hourlyRate if present, else price/engagementHours
+      const formattedTiers = packages.map((pkg) => {
         const currency = pkg.currency || "QAR";
         const hourlyRate = pkg.hourlyRate && pkg.hourlyRate > 0
           ? pkg.hourlyRate
@@ -59,13 +49,13 @@ const SprintOnboardingStep2 = () => {
         const total = subtotal - discountAmount;
         return {
           id: pkg._id,
-          tierKey: tierKey,
-          icon: tierInfo.icon,
-          name: pkg.name.split(':')[0].replace(/🚀|🌱|🏗/g, '').trim(),
-          description: pkg.name.split(':')[1]?.trim() || tierInfo.baseDescription,
+          tierKey: pkg.tier || '',
+          icon: '', // No emoji
+          name: pkg.name,
+          description: pkg.description || '',
           hourlyRate: `${currency} ${hourlyRate.toFixed(2)}/hour`,
           originalRate: null,
-          details: pkg.description || 'Sprint package details',
+          details: pkg.description || '',
           idealFor: `Ideal for ${estimatedHours} hours of engagement`,
           pricing: {
             estimatedHours: estimatedHours,
@@ -260,7 +250,7 @@ const SprintOnboardingStep2 = () => {
                     <div className="tier-info">
                       <div className="tier-header">
                         <span className="tier-name">
-                          {tier.icon} {tier.name}
+                          {tier.name}
                         </span>
                         <div className="tier-description">{tier.description}</div>
                       </div>
