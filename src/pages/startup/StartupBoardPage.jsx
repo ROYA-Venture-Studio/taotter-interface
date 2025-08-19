@@ -12,23 +12,26 @@ const FILTERS = [
   { key: "all", label: "All Tasks" },
   { key: "todo", label: "To Do" },
   { key: "inprogress", label: "In Progress" },
-  { key: "completed", label: "Completed" }
+  { key: "review", label: "Review" },
+  { key: "done", label: "Done" }
 ];
 
 const STATUS_MAPPING = {
   todo: "To Do",
   inprogress: "In Progress",
-  completed: "Completed"
+  review: "Review",
+  done: "Done"
 };
 
 export default function StartupBoardPage() {
   const { sprintId } = useParams();
   const [filter, setFilter] = useState("all");
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalMode, setModalMode] = useState(null); // 'details' | 'edit' | 'create'
   const [selectedTask, setSelectedTask] = useState(null);
-  const [showDetailsModal, setShowDetailsModal] = useState(false);
-  const [showCreateModal, setShowCreateModal] = useState(false);
   const [editTask, setEditTask] = useState(null);
-  const [isEditMode, setIsEditMode] = useState(false);
+  const [localColumns, setLocalColumns] = useState([]);
+  const [lastColumnsSnapshot, setLastColumnsSnapshot] = useState([]);
 
   // Fetch board by sprintId
   const { data, isLoading, error, refetch } = useGetStartupBoardBySprintQuery(sprintId);
@@ -48,10 +51,12 @@ export default function StartupBoardPage() {
       .filter(col => {
         if (filter === "all") return true;
         // Only show the selected column for the filter
+        const name = col.name.toLowerCase();
         return (
-          (filter === "todo" && col.name.toLowerCase().includes("to do")) ||
-          (filter === "inprogress" && col.name.toLowerCase().includes("progress")) ||
-          (filter === "completed" && col.name.toLowerCase().includes("complete"))
+          (filter === "todo" && name.includes("to do")) ||
+          (filter === "inprogress" && name.includes("progress")) ||
+          (filter === "review" && name.includes("review")) ||
+          (filter === "done" && (name.includes("done") || name.includes("complete")))
         );
       })
       .map(col => {
@@ -73,23 +78,36 @@ export default function StartupBoardPage() {
       });
   }, [data, filter]);
 
+  // Sync localColumns with columns from backend on load/refetch/filter change
+  React.useEffect(() => {
+    setLocalColumns(columns);
+  }, [columns]);
+
   function handleCardClick(task) {
-    // Always ensure the task has an id property for the modal
     setSelectedTask({ ...task, id: task.id || task._id });
-    setShowDetailsModal(true);
+    setEditTask(null);
+    setModalMode('details');
+    setModalOpen(true);
   }
 
   function handleEditTask(task) {
     setEditTask(task);
-    setIsEditMode(true);
-    setShowCreateModal(true);
-    setShowDetailsModal(false);
+    setModalMode('edit');
+    setModalOpen(true);
+  }
+
+  function handleCreateClick() {
+    setSelectedTask(null);
+    setEditTask(null);
+    setModalMode('create');
+    setModalOpen(true);
   }
 
   function closeModal() {
+    setModalOpen(false);
+    setModalMode(null);
+    setSelectedTask(null);
     setEditTask(null);
-    setIsEditMode(false);
-    setShowCreateModal(false);
   }
 
   const boardId = data?.data?.board?.id;
@@ -117,16 +135,44 @@ export default function StartupBoardPage() {
     }
   };
 
-  // Move task handler for drag-and-drop
+  // Move task handler for drag-and-drop (optimistic UI)
   const handleMoveTask = async (taskId, targetColumnId) => {
     // Find the target column and the new position (end of column)
-    const col = columns.find(c => c.key === targetColumnId);
+    const col = localColumns.find(c => c.key === targetColumnId);
     const position = col ? col.tasks.length : 0;
-    
+
+    // Optimistically update localColumns
+    setLastColumnsSnapshot(localColumns);
+    setLocalColumns(prevCols => {
+      // Remove task from its current column
+      let taskToMove = null;
+      const newCols = prevCols.map(col => {
+        const filtered = col.tasks.filter(t => {
+          if (t.id === taskId) {
+            taskToMove = t;
+            return false;
+          }
+          return true;
+        });
+        return { ...col, tasks: filtered };
+      });
+      // Add task to target column at new position
+      return newCols.map(col => {
+        if (col.key === targetColumnId && taskToMove) {
+          const updatedTask = { ...taskToMove };
+          col.tasks.splice(position, 0, updatedTask);
+          return { ...col, tasks: [...col.tasks] };
+        }
+        return col;
+      });
+    });
+
     try {
       await moveStartupTask({ taskId, columnId: targetColumnId, position }).unwrap();
       refetch();
     } catch (err) {
+      // Rollback on error
+      setLocalColumns(lastColumnsSnapshot);
       alert("Failed to move task: " + (err?.data?.message || err.message));
     }
   };
@@ -170,9 +216,9 @@ export default function StartupBoardPage() {
                 </button>
               ))}
             </div>
-            <button
+          <button
               className="create-task-btn"
-              onClick={() => setShowCreateModal(true)}
+              onClick={handleCreateClick}
               style={{
                 marginLeft: "auto",
                 background: "#EB5E28",
@@ -197,80 +243,87 @@ export default function StartupBoardPage() {
           ) : (
             <>
               <BoardKanban
-                columns={columns}
+                columns={localColumns}
                 onMoveTask={handleMoveTask}
                 onEditTask={handleEditTask}
                 onDeleteTask={handleDeleteTask}
+                onCardClick={handleCardClick}
               />
-              {selectedTask && (
-                <TaskDetailsModal
-                  open={showDetailsModal}
-                  onClose={() => setShowDetailsModal(false)}
-                  task={selectedTask}
-                  columns={boardColumns}
-                  onEditTask={handleEditTask}
-                  onDeleteTask={handleDeleteTask}
-                  onMoveTask={null}
-                  currentColumnId={selectedTask?.columnId}
-                  admins={[]}
-                />
+              {modalOpen && (
+                <div>
+                  {modalMode === 'details' && selectedTask && (
+                    <TaskDetailsModal
+                      open={true}
+                      onClose={closeModal}
+                      task={selectedTask}
+                      columns={boardColumns}
+                      onEditTask={handleEditTask}
+                      onDeleteTask={handleDeleteTask}
+                      onMoveTask={null}
+                      currentColumnId={selectedTask?.columnId}
+                      admins={[]}
+                    />
+                  )}
+                  {(modalMode === 'edit' || modalMode === 'create') && (
+                    <TaskModal
+                      open={true}
+                      onClose={closeModal}
+                      onSubmit={async (taskData) => {
+                        let formData;
+                        if (taskData instanceof FormData) {
+                          formData = taskData;
+                          if (boardId) formData.append("boardId", boardId);
+                          if (modalMode === 'edit' && editTask && (formData.get("taskId") == null) && editTask.id) {
+                            formData.append("taskId", editTask.id);
+                          }
+                        } else {
+                          formData = new FormData();
+                          if (modalMode === 'edit' && editTask && taskData.id) {
+                            formData.append("taskId", taskData.id);
+                          }
+                          if (boardId) formData.append("boardId", boardId);
+                          if (taskData.title) formData.append("title", taskData.title);
+                          if (taskData.description) formData.append("description", taskData.description);
+                          if (taskData.columnId) formData.append("columnId", taskData.columnId);
+                          else if (taskData.column) formData.append("columnId", taskData.column);
+                          if (taskData.dueDate) formData.append("dueDate", taskData.dueDate);
+                          if (taskData.taskType) formData.append("taskType", taskData.taskType);
+                          if (taskData.priority) formData.append("priority", taskData.priority);
+                          if (taskData.assigneeId) formData.append("assigneeId", taskData.assigneeId);
+                          if (taskData.status) formData.append("status", taskData.status);
+                          if (taskData.comments) formData.append("comments", taskData.comments);
+                          if (taskData.links) formData.append("links", taskData.links);
+                          if (taskData.attachments && Array.isArray(taskData.attachments)) {
+                            taskData.attachments.forEach(file => {
+                              if (file instanceof File) {
+                                formData.append("attachments", file);
+                              }
+                            });
+                          }
+                        }
+                        try {
+                          if (modalMode === 'edit' && editTask && (formData.get("taskId") || formData.get("id"))) {
+                            await editStartupTask({ taskId: formData.get("taskId") || formData.get("id"), formData }).unwrap();
+                          } else {
+                            await createStartupTask(formData).unwrap();
+                          }
+                          closeModal();
+                          refetch();
+                        } catch (err) {
+                          alert("Failed to " + (modalMode === 'edit' ? "update" : "create") + " task: " + (err?.data?.message || err.message));
+                        }
+                      }}
+                      taskToEdit={modalMode === 'edit' ? editTask : null}
+                      columns={boardColumns}
+                      admins={[]} // Empty array since startups can't assign
+                      hideAssignment={true}
+                    />
+                  )}
+                </div>
               )}
             </>
           )}
         </div>
-        <TaskModal
-          open={showCreateModal}
-          onClose={closeModal}
-          onSubmit={async (taskData) => {
-            let formData;
-            if (taskData instanceof FormData) {
-              formData = taskData;
-              if (boardId) formData.append("boardId", boardId);
-              if (isEditMode && editTask && (formData.get("taskId") == null) && editTask.id) {
-                formData.append("taskId", editTask.id);
-              }
-            } else {
-              formData = new FormData();
-              if (isEditMode && editTask && taskData.id) {
-                formData.append("taskId", taskData.id);
-              }
-              if (boardId) formData.append("boardId", boardId);
-              if (taskData.title) formData.append("title", taskData.title);
-              if (taskData.description) formData.append("description", taskData.description);
-              if (taskData.columnId) formData.append("columnId", taskData.columnId);
-              else if (taskData.column) formData.append("columnId", taskData.column);
-              if (taskData.dueDate) formData.append("dueDate", taskData.dueDate);
-              if (taskData.taskType) formData.append("taskType", taskData.taskType);
-              if (taskData.priority) formData.append("priority", taskData.priority);
-              if (taskData.assigneeId) formData.append("assigneeId", taskData.assigneeId);
-              if (taskData.status) formData.append("status", taskData.status);
-              if (taskData.comments) formData.append("comments", taskData.comments);
-              if (taskData.links) formData.append("links", taskData.links);
-              if (taskData.attachments && Array.isArray(taskData.attachments)) {
-                taskData.attachments.forEach(file => {
-                  if (file instanceof File) {
-                    formData.append("attachments", file);
-                  }
-                });
-              }
-            }
-            try {
-              if (isEditMode && editTask && (formData.get("taskId") || formData.get("id"))) {
-                await editStartupTask({ taskId: formData.get("taskId") || formData.get("id"), formData }).unwrap();
-              } else {
-                await createStartupTask(formData).unwrap();
-              }
-              closeModal();
-              refetch();
-            } catch (err) {
-              alert("Failed to " + (isEditMode ? "update" : "create") + " task: " + (err?.data?.message || err.message));
-            }
-          }}
-          taskToEdit={isEditMode ? editTask : null}
-          columns={boardColumns}
-          admins={[]} // Empty array since startups can't assign
-          hideAssignment={true}
-        />
       </div>
   );
 }

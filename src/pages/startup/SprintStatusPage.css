@@ -268,10 +268,10 @@
   transition: color 0.2s ease;
   margin: 8px 0;
 }
-
+/* 
 .sprint-get-started-btn:hover:not(:disabled) {
   color: #c94d1e;
-}
+} */
 
 .sprint-get-started-btn:disabled {
   color: #9CA3AF;
@@ -297,10 +297,12 @@
   transition: background 0.15s;
 }
 
-.sprint-navigation-buttons .sprint-get-started-btn:hover {
+/* .sprint-navigation-buttons .sprint-get-started-btn:hover,
+.sprint-navigation-buttons .sprint-get-started-btn:active,
+.sprint-navigation-buttons .sprint-get-started-btn:focus {
   background: #c94d1e;
-  color: #fff;
-}
+  color: #fff !important;
+} */
 
 /* Responsive Design */
 @media (max-width: 1200px) {
