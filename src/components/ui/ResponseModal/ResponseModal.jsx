@@ -34,6 +34,12 @@ const DEFAULT_CREDIT_TIERS = [
   },
 ];
 
+// Pricing model options (append-only)
+const PRICING_MODELS = [
+  { value: "hourly", label: "Hourly (Hourly Rate × QTY)" },
+  { value: "fixed", label: "Fixed Amount" },
+];
+
 function emptySprint() {
   return {
     name: "",
@@ -49,9 +55,9 @@ function emptySprint() {
       scale: false,
     },
     packageOptions: [
-      { tier: "starter", hourlyRate: "", amount: "", qty: "", discount: "", paymentLink: "" },
-      { tier: "growth", hourlyRate: "", amount: "", qty: "", discount: "", paymentLink: "" },
-      { tier: "scale", hourlyRate: "", amount: "", qty: "", discount: "", paymentLink: "" },
+      { tier: "starter", pricingModel: "hourly", hourlyRate: "", amount: "", qty: "", discount: "", paymentLink: "" },
+      { tier: "growth", pricingModel: "hourly", hourlyRate: "", amount: "", qty: "", discount: "", paymentLink: "" },
+      { tier: "scale", pricingModel: "hourly", hourlyRate: "", amount: "", qty: "", discount: "", paymentLink: "" },
     ],
   };
 }
@@ -61,9 +67,9 @@ function emptySprintErrors() {
   return {
     name: "", label: "", type: "", estimatedDuration: "", objective: "", deliverables: "", tierError: "",
     packageOptions: [
-      { hourlyRate: "", amount: "", qty: "" },
-      { hourlyRate: "", amount: "", qty: "" },
-      { hourlyRate: "", amount: "", qty: "" },
+      { pricingModel: "", hourlyRate: "", amount: "", qty: "" },
+      { pricingModel: "", hourlyRate: "", amount: "", qty: "" },
+      { pricingModel: "", hourlyRate: "", amount: "", qty: "" },
     ],
   };
 }
@@ -123,6 +129,31 @@ export default function ResponseModal({ onClose }) {
     );
   };
 
+  // Handle pricing model change (append-only)
+  const handlePricingModelChange = (sprintIdx, tierIdx, value) => {
+    setSprints((prev) =>
+      prev.map((s, i) =>
+        i === sprintIdx
+          ? {
+              ...s,
+              packageOptions: s.packageOptions.map((p, j) =>
+                j === tierIdx
+                  ? {
+                      ...p,
+                      pricingModel: value,
+                      // Reset fields not relevant to selected model
+                      hourlyRate: value === "hourly" ? p.hourlyRate : "",
+                      qty: value === "hourly" ? p.qty : "",
+                      amount: value === "fixed" ? p.amount : "",
+                    }
+                  : p
+              ),
+            }
+          : s
+      )
+    );
+  };
+
   // Add a new sprint section
   const handleAddSprint = () => {
     setSprints((prev) => [...prev, emptySprint()]);
@@ -154,10 +185,18 @@ export default function ResponseModal({ onClose }) {
       creditTiers.forEach((tier, tierIdx) => {
         if (s.enabledTiers[tier.key]) {
           const p = s.packageOptions[tierIdx];
-          const tierErrors = { hourlyRate: "", amount: "", qty: "" };
-          if (!p.hourlyRate) { tierErrors.hourlyRate = "Required"; isValid = false; }
-          if (!p.amount) { tierErrors.amount = "Required"; isValid = false; }
-          if (!p.qty) { tierErrors.qty = "Required"; isValid = false; }
+          const tierErrors = { pricingModel: "", hourlyRate: "", amount: "", qty: "" };
+          if (!p.pricingModel) {
+            tierErrors.pricingModel = "Select pricing model";
+            isValid = false;
+          }
+          if (p.pricingModel === "hourly") {
+            if (!p.hourlyRate) { tierErrors.hourlyRate = "Required"; isValid = false; }
+            if (!p.qty) { tierErrors.qty = "Required"; isValid = false; }
+          }
+          if (p.pricingModel === "fixed") {
+            if (!p.amount) { tierErrors.amount = "Required"; isValid = false; }
+          }
           sprintError.packageOptions[tierIdx] = tierErrors;
         }
       });
@@ -191,17 +230,22 @@ export default function ResponseModal({ onClose }) {
             return {
               name: creditTiers[tierIndex].label,
               description: s.objective,
-              price: parseFloat(p.amount) || 0,
+              price: p.pricingModel === "hourly"
+                ? (parseFloat(p.hourlyRate) || 0) * (parseInt(p.qty, 10) || 0)
+                : parseFloat(p.amount) || 0,
               currency: "USD",
-              engagementHours: parseInt(p.qty, 10) || 0,
+              engagementHours: p.pricingModel === "hourly" ? parseInt(p.qty, 10) || 0 : undefined,
               duration: parseInt(s.estimatedDuration, 10) || 1,
               features: [],
               teamSize: 1,
               isRecommended: creditTiers[tierIndex].key === "growth",
-              hourlyRate: parseFloat(p.hourlyRate) || 0,
+              hourlyRate: p.pricingModel === "hourly" ? parseFloat(p.hourlyRate) || 0 : undefined,
+              amount: p.pricingModel === "fixed" ? parseFloat(p.amount) || 0 : undefined,
               discount: p.discount ? parseFloat(p.discount) : 0,
               tier: p.tier,
               paymentLink: p.paymentLink || "",
+              pricingModel: p.pricingModel,
+              QTY: p.pricingModel === "hourly" ? parseInt(p.qty, 10) || 0 : undefined,
             };
           }),
       };
@@ -411,59 +455,86 @@ export default function ResponseModal({ onClose }) {
                     </div>
                     {s.enabledTiers[tier.key] && (
                       <div className="response-modal-credit-tier-fields">
+                        {/* Pricing Model Selector */}
                         <div className="response-modal-form-row">
-                          <div className="response-modal-form-section">
-                            <label>Hourly Rate</label>
-                            <input
-                              type="number" min={0} placeholder="Enter hourly rate"
-                              className={`response-modal-input ${validationErrors[idx]?.packageOptions[tierIdx]?.hourlyRate ? 'input-error' : ''}`}
-                              value={s.packageOptions[tierIdx].hourlyRate}
-                              onChange={(e) => handlePackageChange(idx, tierIdx, "hourlyRate", e.target.value)}
-                              onKeyDown={e => {
-                                if (["e", "E", "+", "-"].includes(e.key)) e.preventDefault();
-                              }}
-                            />
-                            {validationErrors[idx]?.packageOptions[tierIdx]?.hourlyRate && <p className="input-error-message">{validationErrors[idx]?.packageOptions[tierIdx]?.hourlyRate}</p>}
-                          </div>
-                          <div className="response-modal-form-section">
-                            <label>Amount</label>
-                            <input
-                              type="number" min={0} placeholder="Enter amount"
-                              className={`response-modal-input ${validationErrors[idx]?.packageOptions[tierIdx]?.amount ? 'input-error' : ''}`}
-                              value={s.packageOptions[tierIdx].amount}
-                              onChange={(e) => handlePackageChange(idx, tierIdx, "amount", e.target.value)}
-                              onKeyDown={e => {
-                                if (["e", "E", "+", "-"].includes(e.key)) e.preventDefault();
-                              }}
-                            />
-                            {validationErrors[idx]?.packageOptions[tierIdx]?.amount && <p className="input-error-message">{validationErrors[idx]?.packageOptions[tierIdx]?.amount}</p>}
+                          <div className="response-modal-form-section" style={{ width: "100%" }}>
+                            <label>Pricing Model</label>
+                            <select
+                              value={s.packageOptions[tierIdx].pricingModel}
+                              onChange={e => handlePricingModelChange(idx, tierIdx, e.target.value)}
+                              className={`response-modal-input ${validationErrors[idx]?.packageOptions[tierIdx]?.pricingModel ? 'input-error' : ''}`}
+                            >
+                              <option value="">Select model</option>
+                              {PRICING_MODELS.map(pm => (
+                                <option key={pm.value} value={pm.value}>{pm.label}</option>
+                              ))}
+                            </select>
+                            {validationErrors[idx]?.packageOptions[tierIdx]?.pricingModel && <p className="input-error-message">{validationErrors[idx]?.packageOptions[tierIdx]?.pricingModel}</p>}
                           </div>
                         </div>
-                        <div className="response-modal-form-row">
-                            <div className="response-modal-form-section" style={{ width: "100%" }}>
-                                <label>Payment Link (Stripe or other)</label>
+                        {/* Conditional Pricing Fields */}
+                        {s.packageOptions[tierIdx].pricingModel === "hourly" && (
+                          <>
+                            <div className="response-modal-form-row">
+                              <div className="response-modal-form-section">
+                                <label>Hourly Rate</label>
                                 <input
-                                type="url" placeholder="https://your-stripe-link.com"
-                                className="response-modal-input"
-                                value={s.packageOptions[tierIdx].paymentLink || ""}
-                                onChange={(e) => handlePackageChange(idx, tierIdx, "paymentLink", e.target.value)}
+                                  type="number" min={0} placeholder="Enter hourly rate"
+                                  className={`response-modal-input ${validationErrors[idx]?.packageOptions[tierIdx]?.hourlyRate ? 'input-error' : ''}`}
+                                  value={s.packageOptions[tierIdx].hourlyRate}
+                                  onChange={(e) => handlePackageChange(idx, tierIdx, "hourlyRate", e.target.value)}
+                                  onKeyDown={e => {
+                                    if (["e", "E", "+", "-"].includes(e.key)) e.preventDefault();
+                                  }}
                                 />
+                                {validationErrors[idx]?.packageOptions[tierIdx]?.hourlyRate && <p className="input-error-message">{validationErrors[idx]?.packageOptions[tierIdx]?.hourlyRate}</p>}
+                              </div>
+                              <div className="response-modal-form-section">
+                                <label>QTY (hours)</label>
+                                <input
+                                  type="number" min={1} placeholder="Enter qty in hours"
+                                  className={`response-modal-input ${validationErrors[idx]?.packageOptions[tierIdx]?.qty ? 'input-error' : ''}`}
+                                  value={s.packageOptions[tierIdx].qty}
+                                  onChange={(e) => handlePackageChange(idx, tierIdx, "qty", e.target.value)}
+                                  onKeyDown={e => {
+                                    if (["e", "E", "+", "-"].includes(e.key)) e.preventDefault();
+                                  }}
+                                />
+                                {validationErrors[idx]?.packageOptions[tierIdx]?.qty && <p className="input-error-message">{validationErrors[idx]?.packageOptions[tierIdx]?.qty}</p>}
+                              </div>
                             </div>
+                          </>
+                        )}
+                        {s.packageOptions[tierIdx].pricingModel === "fixed" && (
+                          <div className="response-modal-form-row">
+                            <div className="response-modal-form-section">
+                              <label>Amount</label>
+                              <input
+                                type="number" min={0} placeholder="Enter amount"
+                                className={`response-modal-input ${validationErrors[idx]?.packageOptions[tierIdx]?.amount ? 'input-error' : ''}`}
+                                value={s.packageOptions[tierIdx].amount}
+                                onChange={(e) => handlePackageChange(idx, tierIdx, "amount", e.target.value)}
+                                onKeyDown={e => {
+                                  if (["e", "E", "+", "-"].includes(e.key)) e.preventDefault();
+                                }}
+                              />
+                              {validationErrors[idx]?.packageOptions[tierIdx]?.amount && <p className="input-error-message">{validationErrors[idx]?.packageOptions[tierIdx]?.amount}</p>}
+                            </div>
+                          </div>
+                        )}
+                        {/* Payment Link and Discount */}
+                        <div className="response-modal-form-row">
+                          <div className="response-modal-form-section" style={{ width: "100%" }}>
+                            <label>Payment Link (Stripe or other)</label>
+                            <input
+                              type="url" placeholder="https://your-stripe-link.com"
+                              className="response-modal-input"
+                              value={s.packageOptions[tierIdx].paymentLink || ""}
+                              onChange={(e) => handlePackageChange(idx, tierIdx, "paymentLink", e.target.value)}
+                            />
+                          </div>
                         </div>
                         <div className="response-modal-form-row">
-                          <div className="response-modal-form-section">
-                            <label>QTY (hours)</label>
-                            <input
-                              type="number" min={1} placeholder="Enter qty in hours"
-                              className={`response-modal-input ${validationErrors[idx]?.packageOptions[tierIdx]?.qty ? 'input-error' : ''}`}
-                              value={s.packageOptions[tierIdx].qty}
-                              onChange={(e) => handlePackageChange(idx, tierIdx, "qty", e.target.value)}
-                              onKeyDown={e => {
-                                if (["e", "E", "+", "-"].includes(e.key)) e.preventDefault();
-                              }}
-                            />
-                            {validationErrors[idx]?.packageOptions[tierIdx]?.qty && <p className="input-error-message">{validationErrors[idx]?.packageOptions[tierIdx]?.qty}</p>}
-                          </div>
                           <div className="response-modal-form-section">
                             <label>Discount</label>
                             <input

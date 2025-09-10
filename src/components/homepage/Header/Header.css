@@ -1,0 +1,121 @@
+.homepage-header {
+  position: relative;
+  z-index: 1000;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+/* Enhanced Responsive Fixes - Appended */
+@media (max-width: 1440px) {
+  .homepage-header-container {
+    padding-left: clamp(1rem, 5vw, 6.25rem);
+    padding-right: clamp(1rem, 5vw, 6.25rem);
+    padding-top: clamp(0.5rem, 2vw, 2.5rem);
+  }
+}
+
+.homepage-header-container {
+  max-width: 1440px;
+  padding: 0 4.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 auto; /* Center horizontally */
+}
+
+.homepage-logo-image {
+  height: 58px;
+  width: auto;
+  max-width: 200px;
+}
+
+.homepage-nav {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+/* Mobile header layout fixes */
+@media (max-width: 768px) {
+  .homepage-header-container {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    flex-wrap: nowrap !important;
+    min-width: 0 !important;
+  }
+  .homepage-logo-image {
+    width: 140px !important;
+    height: 41px !important;
+    max-width: none;
+  }
+  .homepage-nav {
+    gap: 0 !important;
+    flex-wrap: nowrap !important;
+    min-width: 0 !important;
+  }
+  .homepage-nav-link {
+    font-size: 1rem !important;
+    margin-left: 18px !important;
+  }
+  .homepage-nav-button {
+    font-size: clamp(12px, 4vw, 16px) !important;
+    font-weight: 400 !important;
+    margin-left: 12px !important;
+    width: min(195px, 100%) !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    flex-shrink: 1 !important;
+    height: 36px !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    box-sizing: border-box !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 0.9 !important;
+  }
+
+  @media (max-width: 480px) {
+    .homepage-nav-button {
+      white-space: normal !important;
+      text-overflow: clip !important;
+    }
+  }
+}
+
+.homepage-nav-link {
+  background: none;
+  border: none;
+  color: var(--text-primary);
+  font-size: 1.5rem;
+  font-weight: 400;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.homepage-nav-link:hover {
+  color: var(--accent-color);
+}
+
+.homepage-nav-button {
+  padding: 0.625rem 1.5rem;
+  border: 2px solid #EB5E27;
+  border-radius: 1.5rem;
+  background: transparent;
+  color: var(--text-primary);
+  font-size: 1.5rem;
+  font-weight: 400;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.homepage-nav-button:hover {
+  background: var(--accent-color);
+  border-color: var(--accent-color);
+}

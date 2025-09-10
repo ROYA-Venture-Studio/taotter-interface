@@ -32,6 +32,7 @@ export default function StartupBoardPage() {
   const [editTask, setEditTask] = useState(null);
   const [localColumns, setLocalColumns] = useState([]);
   const [lastColumnsSnapshot, setLastColumnsSnapshot] = useState([]);
+  const [adminProtectModal, setAdminProtectModal] = useState({ open: false, message: "" });
 
   // Fetch board by sprintId
   const { data, isLoading, error, refetch } = useGetStartupBoardBySprintQuery(sprintId);
@@ -91,6 +92,10 @@ export default function StartupBoardPage() {
   }
 
   function handleEditTask(task) {
+    if (task && task.createdByModel === "Admin") {
+      setAdminProtectModal({ open: true, message: "You cannot edit tasks created by the admin." });
+      return;
+    }
     setEditTask(task);
     setModalMode('edit');
     setModalOpen(true);
@@ -137,6 +142,14 @@ export default function StartupBoardPage() {
 
   // Move task handler for drag-and-drop (optimistic UI)
   const handleMoveTask = async (taskId, targetColumnId) => {
+    // Find the task object
+    const allTasks = localColumns.flatMap(col => col.tasks);
+    const task = allTasks.find(t => t.id === taskId);
+    if (task && task.createdByModel === "Admin") {
+      setAdminProtectModal({ open: true, message: "You cannot move tasks created by the admin." });
+      return;
+    }
+
     // Find the target column and the new position (end of column)
     const col = localColumns.find(c => c.key === targetColumnId);
     const position = col ? col.tasks.length : 0;
@@ -179,6 +192,13 @@ export default function StartupBoardPage() {
 
   // Named delete handler for TaskDetailsModal (mimic admin)
   async function handleDeleteTask(taskId) {
+    // Prevent deleting admin-created tasks
+    const allTasks = localColumns.flatMap(col => col.tasks);
+    const task = allTasks.find(t => t.id === taskId);
+    if (task && task.createdByModel === "Admin") {
+      setAdminProtectModal({ open: true, message: "You cannot delete tasks created by the admin." });
+      return;
+    }
     if (!taskId) return;
     try {
       await deleteStartupTask(taskId).unwrap();
@@ -191,6 +211,59 @@ export default function StartupBoardPage() {
 
   return (
     <div className="board-page">
+      {adminProtectModal.open && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100vw",
+            height: "100vh",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 9999,
+            background: "rgba(0,0,0,0.25)"
+          }}
+          onClick={() => setAdminProtectModal({ open: false, message: "" })}
+        >
+          <div
+            style={{
+              background: "#fff",
+              borderRadius: "10px",
+              boxShadow: "0 2px 16px rgba(0,0,0,0.18)",
+              padding: "32px",
+              minWidth: "320px",
+              maxWidth: "90vw",
+              textAlign: "center",
+              position: "relative"
+            }}
+            onClick={e => e.stopPropagation()}
+          >
+            <div style={{ fontSize: "1.5rem", fontWeight: 700, marginBottom: "8px", color: "#222", textAlign: "center", paddingTop: "8px" }}>
+              Unable to Move Task
+            </div>
+            <div style={{ marginBottom: "24px", color: "#444", textAlign: "center" }}>
+              {adminProtectModal.message}
+            </div>
+            <button
+              style={{
+                background: "#EB5E28",
+                color: "#fff",
+                border: "none",
+                borderRadius: "6px",
+                padding: "8px 24px",
+                fontSize: "1rem",
+                fontWeight: 500,
+                cursor: "pointer"
+              }}
+              onClick={() => setAdminProtectModal({ open: false, message: "" })}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
         <div className="board-page-header-row">
           <div className="board-page-title">Sprint Board</div>
           <div className="board-page-breadcrumb">
@@ -248,7 +321,14 @@ export default function StartupBoardPage() {
                 onEditTask={handleEditTask}
                 onDeleteTask={handleDeleteTask}
                 onCardClick={handleCardClick}
+                isAdminTask={task => task.createdByModel === "Admin"} // Pass utility to BoardKanban
               />
+              {/* 
+                To fully prevent drag-and-drop and show tooltips for admin tasks,
+                update BoardKanban to:
+                - Disable drag for tasks where isAdminTask(task) is true
+                - Show a tooltip "You cannot Edit or Delete Tasks created by the admin" on edit/delete buttons for admin tasks
+              */}
               {modalOpen && (
                 <div>
                   {modalMode === 'details' && selectedTask && (
@@ -262,6 +342,7 @@ export default function StartupBoardPage() {
                       onMoveTask={null}
                       currentColumnId={selectedTask?.columnId}
                       admins={[]}
+                      isStartupUser={true}
                     />
                   )}
                   {(modalMode === 'edit' || modalMode === 'create') && (

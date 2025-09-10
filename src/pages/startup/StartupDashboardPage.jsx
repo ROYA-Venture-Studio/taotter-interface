@@ -201,8 +201,7 @@ function SprintCard({ sprint, onNoBoardClick }) {
                             <div className="dashboard-modal-actions">
                                 <Button
                                     type="button"
-                                    variant="secondary"
-                                    className="dashboard-modal-btn"
+                                    className="dashboard-modal-btn secondary"
                                     onClick={e => {
                                         e.stopPropagation();
                                         setShowFinishModal(false);
@@ -212,8 +211,7 @@ function SprintCard({ sprint, onNoBoardClick }) {
                                 </Button>
                                 <Button
                                     type="button"
-                                    variant="primary"
-                                    className="dashboard-modal-btn"
+                                    className="dashboard-modal-btn primary"
                                     onClick={handleFinishSprint}
                                     disabled={isFinishing}
                                 >

@@ -39,31 +39,44 @@ const SprintOnboardingStep2 = () => {
       
       const formattedTiers = packages.map((pkg) => {
         const currency = pkg.currency || "QAR";
-        const hourlyRate = pkg.hourlyRate && pkg.hourlyRate > 0
-          ? pkg.hourlyRate
-          : (pkg.engagementHours > 0 ? (pkg.price || 0) / pkg.engagementHours : 0);
-        const estimatedHours = pkg.engagementHours || 0;
-        const discountPercent = pkg.discount ? Number(pkg.discount) : 0;
-        const subtotal = hourlyRate * estimatedHours;
-        const discountAmount = subtotal * (discountPercent / 100);
-        const total = subtotal - discountAmount;
+        let pricing = {};
+        if (pkg.pricingModel === "hourly" || (pkg.hourlyRate && pkg.QTY)) {
+          const hourlyRate = pkg.hourlyRate || 0;
+          const qty = pkg.QTY || pkg.engagementHours || 0;
+          const discountPercent = pkg.discount ? Number(pkg.discount) : 0;
+          const subtotal = hourlyRate * qty;
+          const discountAmount = subtotal * (discountPercent / 100);
+          const total = subtotal - discountAmount;
+          pricing = {
+            model: "hourly",
+            hourlyRate: `${currency} ${hourlyRate.toFixed(2)}/hour`,
+            qty: `${qty} hours`,
+            subtotal: `${currency} ${subtotal.toFixed(2)}`,
+            discount: discountPercent ? `-${discountPercent}%` : '0%',
+            discountAmount: discountPercent ? `-${currency} ${discountAmount.toFixed(2)}` : null,
+            total: `${currency} ${total.toFixed(2)}`
+          };
+        } else if (pkg.pricingModel === "fixed" || pkg.amount) {
+          const amount = pkg.amount || pkg.price || 0;
+          const discountPercent = pkg.discount ? Number(pkg.discount) : 0;
+          const discountAmount = amount * (discountPercent / 100);
+          const total = amount - discountAmount;
+          pricing = {
+            model: "fixed",
+            amount: `${currency} ${amount.toFixed(2)}`,
+            discount: discountPercent ? `-${discountPercent}%` : '0%',
+            discountAmount: discountPercent ? `-${currency} ${discountAmount.toFixed(2)}` : null,
+            total: `${currency} ${total.toFixed(2)}`
+          };
+        }
         return {
           id: pkg._id,
           tierKey: pkg.tier || '',
           icon: '', // No emoji
           name: pkg.name,
           description: pkg.description || '',
-          hourlyRate: `${currency} ${hourlyRate.toFixed(2)}/hour`,
-          originalRate: null,
           details: pkg.description || '',
-          idealFor: `Ideal for ${estimatedHours} hours of engagement`,
-          pricing: {
-            estimatedHours: estimatedHours,
-            discount: discountPercent ? `-${discountPercent}%` : '0%',
-            subtotal: `${currency} ${subtotal.toFixed(2)}`,
-            discountAmount: discountPercent ? `-${currency} ${discountAmount.toFixed(2)}` : null,
-            total: `${currency} ${total.toFixed(2)}`
-          },
+          pricing,
           paymentLink: pkg.paymentLink || "",
           packageData: pkg
         }
@@ -236,10 +249,11 @@ const SprintOnboardingStep2 = () => {
             <div className="sprint-onboarding-mobile-header-title">
               Start Your Sprint
             </div>
+            ...........................
           </div>
           <div className="sprint-onboarding-mobile-container">
             <div className="sprint-onboarding-mobile-title">
-              Choose your preferred Taotter Credit Tier
+              Choose your preferred Leansprintr Credit Tier
             </div>
             <p>Select from the available tiers for {sprintData.data.sprint.name}</p>
             
@@ -256,50 +270,53 @@ const SprintOnboardingStep2 = () => {
                       </div>
                       
                       <div className="tier-pricing">
-                        <div className="hourly-rate">
-                          <span className="current-rate">
-                            Hourly Rate: {tier.hourlyRate}
-                          </span>
-                        </div>
-                        
                         <div className="tier-details-text">{tier.details}</div>
-                        <div className="tier-ideal">{tier.idealFor}</div>
-                        <div className="tier-breakdown">
-                          <span className="breakdown-label">Estimated Hours:</span> {tier.pricing.estimatedHours} hours<br />
-                          <span className="breakdown-label">Engagement Hours:</span> {tier.packageData.engagementHours}<br />
-                          <span className="breakdown-label">Discount:</span> {tier.pricing.discount}<br />
-                          <span className="breakdown-label">Subtotal:</span> {tier.pricing.subtotal}<br />
-                          {tier.pricing.discountAmount && (
-                            <>
-                              <span className="breakdown-label">Discount Amount:</span> {tier.pricing.discountAmount}<br />
-                            </>
-                          )}
-                        </div>
+                        {/* Pricing breakdown by model */}
+                        {tier.pricing.model === "hourly" && (
+                          <>
+<div className="hourly-rate">
+  <span className="current-rate">
+    Hourly Rate: <span style={{ color: "#000" }}>{tier.pricing.hourlyRate}</span>
+  </span>
+</div>
+<div className="tier-breakdown">
+  <span className="breakdown-label">QTY:</span> {tier.pricing.qty}<br />
+  <span className="breakdown-label">Discount:</span> {tier.pricing.discount}<br />
+  <span className="breakdown-label">Subtotal:</span> {tier.pricing.subtotal}<br />
+  {tier.pricing.discountAmount && (
+    <>
+      <span className="breakdown-label">Discount Amount:</span> {tier.pricing.discountAmount}<br />
+    </>
+  )}
+</div>
+                          </>
+                        )}
+{tier.pricing.model === "fixed" && (
+  <div className="tier-breakdown">
+    <span className="breakdown-label">Amount:</span> {tier.pricing.amount}<br />
+    <span className="breakdown-label">Discount:</span> {tier.pricing.discount}<br />
+    {tier.pricing.discountAmount && (
+      <>
+        <span className="breakdown-label">Discount Amount:</span> {tier.pricing.discountAmount}<br />
+      </>
+    )}
+  </div>
+)}
                       </div>
                     </div>
                   </div>
                   
                   <div className="tier-action">
-                    {tier.paymentLink ? (
-                      <Button
-                        variant="primary"
-                        onClick={() => {
-                          handleTierSelection(tier.id)
-                          handlePay(tier)
-                        }}
-                        className={`tier-select-btn ${selectedTier === tier.id ? 'selected' : ''}`}
-                      >
-                        Pay
-                      </Button>
-                    ) : (
-                      <Button
-                        variant="primary"
-                        onClick={() => handleTierSelection(tier.id)}
-                        className={`tier-select-btn ${selectedTier === tier.id ? 'selected' : ''}`}
-                      >
-                        {selectedTier === tier.id ? 'Selected' : 'Select'}
-                      </Button>
-                    )}
+                    <Button
+                      variant="primary"
+                      onClick={() => {
+                        handleTierSelection(tier.id)
+                        handlePay(tier)
+                      }}
+                      className={`tier-select-btn ${selectedTier === tier.id ? 'selected' : ''}`}
+                    >
+                      Pay
+                    </Button>
                     <div className="tier-total">{tier.pricing.total}</div>
                   </div>
                 </div>
@@ -330,7 +347,7 @@ const SprintOnboardingStep2 = () => {
         <div className="sprint-onboarding-split-container">
           <div className="sprint-onboarding-left">
             <div className="sprint-onboarding-form-title">
-              Choose your preferred Taotter Credit Tier
+              Choose your preferred Leansprintr Credit Tier
             </div>
             <div className="sprint-onboarding-form-subtitle">
               Select from the available tiers for {sprintData.data.sprint.name}
@@ -348,20 +365,40 @@ const SprintOnboardingStep2 = () => {
                         <div className="tier-description">{tier.description}</div>
                       </div>
                       
-                      <div className="tier-pricing">
-                        <div className="hourly-rate">
-                          <span className="current-rate">
-                            Hourly Rate: {tier.hourlyRate}
-                          </span>
-                        </div>
-                        
-                        <div className="tier-details-text">{tier.details}</div>
-                        <div className="tier-ideal">{tier.idealFor}</div>
-                        <div className="tier-breakdown">
-                          <span className="breakdown-label">Estimated Hours:</span> {tier.pricing.estimatedHours} hours<br />
-                          <span className="breakdown-label">Discount:</span> {tier.pricing.discount}
-                        </div>
-                      </div>
+<div className="tier-pricing">
+  <div className="tier-details-text">{tier.details}</div>
+  {/* Pricing breakdown by model */}
+{tier.pricing.model === "hourly" && (
+  <>
+<div className="hourly-rate">
+  <span className="current-rate">
+    Hourly Rate: <span style={{ color: "#000" }}>{tier.pricing.hourlyRate}</span>
+  </span>
+</div>
+    <div className="tier-breakdown">
+      <span className="breakdown-label">QTY:</span> {tier.pricing.qty}<br />
+      <span className="breakdown-label">Discount:</span> {tier.pricing.discount}<br />
+      <span className="breakdown-label">Subtotal:</span> {tier.pricing.subtotal}<br />
+      {tier.pricing.discountAmount && (
+        <>
+          <span className="breakdown-label">Discount Amount:</span> {tier.pricing.discountAmount}<br />
+        </>
+      )}
+    </div>
+  </>
+)}
+{tier.pricing.model === "fixed" && (
+  <div className="tier-breakdown">
+    <span className="breakdown-label">Amount:</span> {tier.pricing.amount}<br />
+    <span className="breakdown-label">Discount:</span> {tier.pricing.discount}<br />
+    {tier.pricing.discountAmount && (
+      <>
+        <span className="breakdown-label">Discount Amount:</span> {tier.pricing.discountAmount}<br />
+      </>
+    )}
+  </div>
+)}
+</div>
                     </div>
                   </div>
                   

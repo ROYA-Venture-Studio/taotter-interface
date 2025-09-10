@@ -161,38 +161,50 @@ export default function RequestDetailPage() {
       </div>
       <div className="request-detail-section request-detail-section-attachments">
         <h2 className="request-detail-section-title">Attachments</h2>
-        <div className="request-detail-attachments">
-          {attachments.map((att, i) => {
-            function getFileIcon(filename) {
-              const ext = filename.split('.').pop().toLowerCase();
-              if (['doc', 'docx', 'ppt', 'pptx', 'txt', 'csv', 'xls', 'xlsx'].includes(ext)) return "/assets/icons/file - text.svg";
-              if (['jpg', 'jpeg', 'png', 'gif', 'bmp', 'svg', 'webp'].includes(ext)) return "/assets/icons/file-image.svg";
-              if (ext === 'pdf') return "/assets/icons/file-pdf.svg";
-              return "/assets/icons/file - text.svg";
-            }
-            return (
-              <div className="request-detail-attachment" key={i} style={{ display: "flex", alignItems: "baseline" }}>
-                <img src={getFileIcon(att.name)} alt="icon" style={{ width: 20, marginRight: 8 }} />
-                <a
-                  className="request-detail-attachment-link"
-                  href={att.file}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {att.name}
-                </a>
+        {(attachments.length > 0 || contact || demoLink) ? (
+          <>
+            <div className="request-detail-attachments">
+              {attachments.map((att, i) => {
+                function getFileIcon(filename) {
+                  const ext = filename.split('.').pop().toLowerCase();
+                  if (['doc', 'docx', 'ppt', 'pptx', 'txt', 'csv', 'xls', 'xlsx'].includes(ext)) return "/assets/icons/file - text.svg";
+                  if (['jpg', 'jpeg', 'png', 'gif', 'bmp', 'svg', 'webp'].includes(ext)) return "/assets/icons/file-image.svg";
+                  if (ext === 'pdf') return "/assets/icons/file-pdf.svg";
+                  return "/assets/icons/file - text.svg";
+                }
+                return (
+                  <div className="request-detail-attachment" key={i} style={{ display: "flex", alignItems: "baseline" }}>
+                    <img src={getFileIcon(att.name)} alt="icon" style={{ width: 20, marginRight: 8 }} />
+                    <a
+                      className="request-detail-attachment-link"
+                      href={att.file}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {att.name}
+                    </a>
+                  </div>
+                );
+              })}
+            </div>
+            {contact && (
+              <div>
+                <span className="request-detail-info-label">Existing contact</span>
+                <span className="request-detail-info-value">{contact}</span>
               </div>
-            );
-          })}
-        </div>
-        <div className="request-detail-info-group">
-          <span className="request-detail-info-label">Existing teacher contact</span>
-          <span className="request-detail-info-value">{contact}</span>
-        </div>
-        <div className="request-detail-info-group">
-          <span className="request-detail-info-label">Demo Link</span>
-          <a className="request-detail-info-value" href={demoLink} target="_blank" rel="noopener noreferrer">{demoLink}</a>
-        </div>
+            )}
+            {demoLink && (
+              <div>
+                <span className="request-detail-info-label">Demo Link</span>
+                <a className="request-detail-info-value" href={demoLink} target="_blank" rel="noopener noreferrer">{demoLink}</a>
+              </div>
+            )}
+          </>
+        ) : (
+          <div>
+            <span>No Attachments Uploaded.</span>
+          </div>
+        )}
       </div>
       {showModal && <ResponseModal onClose={() => setShowModal(false)} />}
     </div>
