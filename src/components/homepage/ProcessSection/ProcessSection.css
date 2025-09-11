@@ -13,7 +13,6 @@
   max-width: 100vw;
   width: 100%;
   text-align: center;
-  box-sizing: border-box;
 }
 
 .process-container {
@@ -198,11 +197,7 @@
 }
 .process-image {
   display: block;
-  margin: 0 auto;
-  width: 100%;
-  max-width: 100vw;
-  height: auto;
-  object-fit: contain;
+  margin: 0 6.5rem;
 }
 
 /* .process-image {

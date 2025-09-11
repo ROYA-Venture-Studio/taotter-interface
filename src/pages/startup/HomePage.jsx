@@ -25,26 +25,24 @@ export default function HomePage() {
   return (
     <div className="leansprint-homepage">
       <Header />
+{/* Background images container for proper clipping and stacking */}
+<div className="homepage-background-images">
+  <img src={bg1} alt="" className="homepage-bg-image homepage-bg-image-1" />
+  <img src={bg2} alt="" className="homepage-bg-image homepage-bg-image-2" />
+  <img src={bg3} alt="" className="homepage-bg-image homepage-bg-image-3" />
+  <img src={bg4} alt="" className="homepage-bg-image homepage-bg-image-4" />
+  <img src={bg5} alt="" className="homepage-bg-image homepage-bg-image-5" />
+  <img src={bg6} alt="" className="homepage-bg-image homepage-bg-image-6" />
+  <img src={bg7} alt="" className="homepage-bg-image homepage-bg-image-7" />
+</div>
       <HeroSection />
-      <IdeasSection />
-      {/* Image 1 between section 2 and 3 */}
-      {/* <img src={bg1} alt="" className="homepage-bg-image homepage-bg-image-1" /> */}
+<IdeasSection />
       <AISolutionSection />
-      {/* Image 2 in section 3 */}
-      {/* <img src={bg2} alt="" className="homepage-bg-image homepage-bg-image-2" /> */}
       <SprintRecipesSection />
-      {/* Image 3 in section 4 */}
-      {/* <img src={bg3} alt="" className="homepage-bg-image homepage-bg-image-3" /> */}
       <ProcessSection />
-      {/* Images 4 and 5 in section 5 */}
-      {/* <img src={bg4} alt="" className=" homepage-bg-image-4" /> */}
-      {/* <img src={bg5} alt="" className="homepage-bg-image homepage-bg-image-5" /> */}
       <MotionSection />
       <FoundersSection />
       <FinalCTASection />
-      {/* Images 6 and 7 in FinalCTASection */}
-      {/* <img src={bg6} alt="" className="homepage-bg-image homepage-bg-image-6" /> */}
-      {/* <img src={bg7} alt="" className="homepage-bg-image homepage-bg-image-7" /> */}
       <SignupSection />
       <FooterSection />
     </div>

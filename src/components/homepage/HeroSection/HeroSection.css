@@ -1,15 +1,14 @@
 .hero-section {
-  margin-top: 100px;
+  margin-top: 75px;
   padding-bottom: 4rem;
   min-height: auto;
-  display: block;
+  /* display: block; */
 }
 
 
 .hero-container {
   max-width: 1440px;
-  padding: 0 100px;
-  margin: 0 auto; /* Center horizontally */
+  margin: 0 100px !important; /* Center horizontally */
   position: relative;
   z-index: 2;
 }
@@ -31,7 +30,7 @@
   font-weight: 600;
   line-height: 1.2;
   margin: 0 auto;
-  text-align: center;
+  text-align: left;
   width: 100%;
   max-width: 100%;
   display: block;

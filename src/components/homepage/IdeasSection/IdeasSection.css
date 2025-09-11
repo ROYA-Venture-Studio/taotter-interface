@@ -1,7 +1,7 @@
 .ideas-section {
   margin: 100px auto;
   padding: 0;
-  position: relative;
+  /* position: relative; */
   max-width: 1440px;
   width: 100%;
 }
@@ -30,6 +30,7 @@
   font-weight: 700;
   line-height: 1.2;
   margin-bottom: 3rem;
+  /* z-index: 3; */
 }
 
 .ideas-content {
@@ -63,7 +64,7 @@
   margin-bottom: 1.5rem;
   color: var(--text-primary);
   background: transparent;
-  position: relative;
+  /* position: relative; */
   z-index: 1;
 }
 
@@ -75,7 +76,7 @@
   color: var(--accent-color);
   font-weight: 700;
   background: transparent;
-  position: relative;
+  /* position: relative; */
   z-index: 1;
 }
 
@@ -239,7 +240,7 @@
     color: var(--text-primary) !important;
     margin-bottom: 16px !important;
     background: transparent !important;
-    position: relative !important;
+    /* position: relative !important; */
     z-index: 1 !important;
     text-align: left !important;
   }
@@ -251,7 +252,7 @@
     font-weight: 400 !important;
     font-size: 20px !important;
     background: transparent !important;
-    position: relative !important;
+    /* position: relative !important; */
     z-index: 1 !important;
   }
 }

@@ -13,7 +13,7 @@
 /* New layout styles for simplified MotionSection */
 .motion-section {
   background: #121212;
-  /* margin: 100px auto; */
+  margin: 100px auto;
   padding: 0;
   max-width: 1440px;
   width: 100%;
@@ -404,43 +404,43 @@
   .motion-mobile {
     padding: 0;
     text-align: center;
-  }
-  .motion-title-mobile {
-    font-size: 30px;
-    font-weight: 500;
-    color: #fff;
-    line-height: 1.15;
-    margin-bottom: 0;
-    text-align: center;
-    width: 100%;
-  }
-  .motion-title-mobile span {
-    font-size: 30px;
-    font-weight: 500;
-    color: #fff;
-    font-style: normal;
-    margin: 0;
-  }
-  .motion-title-mobile span[style*="font-weight: 700"] {
-    font-weight: 700;
-    color: #fff;
-    font-style: normal;
-  }
-  .motion-title-mobile span[style*="font-style: italic"] {
-    font-style: italic;
-    color: #F95738;
-    font-weight: 700;
-  }
-  .motion-description-mobile {
-    font-size: 16px;
-    font-weight: 500;
-    color: #fff;
-    margin: 0;
-    text-align: center;
-  }
-  .motion-image-row-mobile {
-    margin-top: 48px;
-    display: flex;
+}
+
+/* --- Centering enhancements for MotionSection --- */
+.motion-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.motion-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.motion-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.motion-image-row,
+.motion-image-row-mobile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.motion-mobile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
     justify-content: center;
     align-items: center;
     width: 100%;
