@@ -272,10 +272,18 @@ if (sprint.questionnaireId) {
     const handleFinishSprint = async (e) => {
         e.stopPropagation();
         try {
+            // Optimistic update - immediately update UI
+            setLocalStatus('completed');
+            
             await finishSprint({ id: sprint.id }).unwrap();
             setShowFinishModal(false);
+            
+            // Note: RTK Query cache invalidation will refresh the data
         } catch (err) {
-            alert('Failed to finish sprint');
+            console.error('Failed to finish sprint:', err);
+            // Revert optimistic update on error
+            setLocalStatus(sprint.status);
+            alert('Failed to finish sprint. Please try again.');
         }
     };
 
