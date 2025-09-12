@@ -8,16 +8,15 @@ const PaymentPendingPage = () => {
   const { data, isLoading, error } = useGetSprintsQuery({}, { pollingInterval: 120000 });
 
   useEffect(() => {
-    console.log(data)
-    if (data && Array.isArray(data.data.sprints)) {
+    if (!isLoading && data && Array.isArray(data.data.sprints)) {
       const paidSprint = data.data.sprints?.find(
         sprint => sprint.selectedPackagePaymentStatus === "paid"
       );
       if (paidSprint) {
-        navigate("/startup/dashboard");
+        navigate("/startup/dashboard", { replace: true });
       }
     }
-  }, [data, navigate]);
+  }, [isLoading, data, navigate]);
 
   if (isLoading) {
     return (
