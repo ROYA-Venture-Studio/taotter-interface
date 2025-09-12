@@ -47,7 +47,7 @@ export const sprintsApi = api.injectEndpoints({
         method: "POST",
         body: { packageId },
       }),
-      invalidatesTags: ["Sprints", "MySprintQuery"],
+      invalidatesTags: ["Sprints", "MySprints"],
     }),
     // Startup: Upload documents
     uploadDocuments: builder.mutation({
@@ -56,7 +56,7 @@ export const sprintsApi = api.injectEndpoints({
         method: "POST",
         body, // body should be the FormData object itself
       }),
-      invalidatesTags: ["Sprints", "MySprintQuery"],
+      invalidatesTags: ["Sprints", "MySprints"],
     }),
     // Startup: Schedule meeting
     scheduleMeeting: builder.mutation({
@@ -65,7 +65,7 @@ export const sprintsApi = api.injectEndpoints({
         method: "POST",
         body,
       }),
-      invalidatesTags: ["Sprints", "MySprintQuery"],
+      invalidatesTags: ["Sprints", "MySprints"],
     }),
     // Startup: Finish sprint (NEW)
     finishSprint: builder.mutation({
