@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../../components/ui';
-import { useGetMySprintsQuery } from '../../store/api/sprintsApi';
+import { useGetMySprintsQuery, useGetProposalsByQuestionnaireQuery } from '../../store/api/sprintsApi';
 import { useGetStartupBoardBySprintQuery } from '../../store/api/boardsApi';
 import { useFinishSprintMutation } from '../../store/api/sprintsApi';
 import './StartupDashboardPage.css';
@@ -79,35 +79,14 @@ function SprintCard({ sprint, onNoBoardClick }) {
 
     if (isOnboarding) {
         const navigate = useNavigate();
-        const [hasProposals, setHasProposals] = React.useState(false);
-        const [checking, setChecking] = React.useState(true);
-React.useEffect(() => {
-    let mounted = true;
-    // Only run effect if questionnaireId is a valid ObjectId and has changed
-    const id = String(sprint.questionnaireId || '').trim();
-    if (!id || !/^[0-9a-fA-F]{24}$/.test(id)) {
-        setHasProposals(false);
-        setChecking(false);
-        return () => { mounted = false; };
-    }
-    setChecking(true);
-    (async () => {
-        try {
-            const token = localStorage.getItem('token');
-            const res = await fetch(`/api/sprints/questionnaire/${id}/proposals`, {
-                headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}) }
-            });
-            const json = await res.json();
-            if (!mounted) return;
-            setHasProposals(Array.isArray(json?.data?.proposals) && json.data.proposals.length > 0);
-        } catch (e) {
-            if (mounted) setHasProposals(false);
-        } finally {
-            if (mounted) setChecking(false);
-        }
-    })();
-    return () => { mounted = false; };
-}, [sprint.questionnaireId]);
+        // RTK Query for proposals
+        const questionnaireId = String(sprint.questionnaireId || '').trim();
+        const isValidQuestionnaireId = questionnaireId && /^[0-9a-fA-F]{24}$/.test(questionnaireId);
+        const { data: proposalsData, isLoading: proposalsLoading, error: proposalsError } =
+          useGetProposalsByQuestionnaireQuery(questionnaireId, { skip: !isValidQuestionnaireId });
+
+        const hasProposals = Array.isArray(proposalsData?.data?.proposals) && proposalsData.data.proposals.length > 0;
+        const checking = proposalsLoading;
         const handleProceedOnboarding = (e) => {
             e.stopPropagation();
 if (hasProposals && sprint.questionnaireId) {
@@ -587,34 +566,7 @@ const StartupDashboardPage = () => {
 
 import { useCreateQuestionnaireMutation } from '../../store/api/questionnairesApi';
 
-// Helper for POST request to create temp sprint
-async function createTempSprint({ questionnaireId, formData }) {
-    // Get JWT token from localStorage or Redux (adjust as needed)
-    const token = localStorage.getItem('token');
-    // Map questionnaire stage to valid Sprint type
-    const mapStageToSprintType = (stage) => {
-        if (!stage) return 'custom';
-        const map = { idea: 'custom', validation: 'validation', growth: 'mvp' };
-        return map[stage] || 'custom';
-    };
-    const res = await fetch('/api/sprints/startup/create-temp', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            ...(token ? { 'Authorization': `Bearer ${token}` } : {})
-        },
-        body: JSON.stringify({
-            questionnaireId,
-            name: formData.startupName,
-            description: formData.taskDescription,
-            type: mapStageToSprintType(formData.stage),
-            estimatedDuration: 14 // Default, or map from timeline
-        })
-    });
-    if (!res.ok) throw new Error('Failed to create temp sprint');
-    const data = await res.json();
-    return data.data.sprint;
-}
+import { useCreateTempSprintMutation } from '../../store/api/sprintsApi';
 
 function StartSprintModal({ onClose, onSprintCreated }) {
     const [currentStep, setCurrentStep] = useState(1);
@@ -708,6 +660,7 @@ function StartSprintModal({ onClose, onSprintCreated }) {
 
     // API mutation
     const [createQuestionnaire] = useCreateQuestionnaireMutation();
+    const [createTempSprint] = useCreateTempSprintMutation();
 
     // Form submission
     const handleSubmit = async () => {
@@ -758,6 +711,19 @@ function StartSprintModal({ onClose, onSprintCreated }) {
             const questionnaireId = createdQ?.id || createdQ?._id;
             const temporaryId = createdQ?.temporaryId || createdQ?.temporaryId;
 
+            // Helper to create temp sprint via RTK Query
+            const createTempSprintRTK = async (qid) => {
+                const sprintResponse = await createTempSprint({
+                    questionnaireId: qid,
+                    name: formData.startupName,
+                    description: formData.taskDescription,
+                    type: formData.stage ? (['idea', 'validation', 'growth'].includes(formData.stage) ? { idea: 'custom', validation: 'validation', growth: 'mvp' }[formData.stage] : 'custom') : 'custom',
+                    estimatedDuration: 14
+                }).unwrap();
+                const sprint = sprintResponse.data.sprint;
+                onSprintCreated(sprint);
+            };
+
             if (temporaryId) {
                 const token = localStorage.getItem('token');
                 try {
@@ -774,14 +740,12 @@ function StartSprintModal({ onClose, onSprintCreated }) {
                     }
                     const linkData = await linkRes.json();
                     const linkedId = linkData?.data?.questionnaire?.id || questionnaireId;
-                    const sprint = await createTempSprint({ questionnaireId: linkedId, formData });
-                    onSprintCreated(sprint);
+                    await createTempSprintRTK(linkedId);
                 } catch (err) {
                     setErrors({ submit: 'Failed to start sprint. Please try again.' });
                 }
             } else if (questionnaireId) {
-                const sprint = await createTempSprint({ questionnaireId, formData });
-                onSprintCreated(sprint);
+                await createTempSprintRTK(questionnaireId);
             }
             setIsSubmitting(false);
             onClose();
