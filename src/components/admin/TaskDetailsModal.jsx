@@ -18,6 +18,7 @@ export default function TaskDetailsModal({
     onDeleteTask,
     currentColumnId,
     admins = [],
+    isStartupUser = false,
 }) {
     const [selectedColumn, setSelectedColumn] = useState(currentColumnId || (columns && columns[0]?._id));
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -58,8 +59,24 @@ export default function TaskDetailsModal({
 
                 {/* Edit/Delete Buttons */}
                 <div className={styles.actionsHeader}>
-                    <button className={styles.buttonSecondary} onClick={handleEdit}>Edit</button>
-                    <button className={styles.buttonDelete} onClick={() => setShowDeleteConfirm(true)}>Delete</button>
+                    <button
+                        className={styles.buttonSecondary}
+                        onClick={handleEdit}
+                        disabled={isStartupUser && task.createdByModel === "Admin"}
+                        title={isStartupUser && task.createdByModel === "Admin" ? "You cannot edit tasks created by the admin." : ""}
+                        style={isStartupUser && task.createdByModel === "Admin" ? { opacity: 0.5, cursor: "not-allowed" } : {}}
+                    >
+                        Edit
+                    </button>
+                    <button
+                        className={styles.buttonDelete}
+                        onClick={() => setShowDeleteConfirm(true)}
+                        disabled={isStartupUser && task.createdByModel === "Admin"}
+                        title={isStartupUser && task.createdByModel === "Admin" ? "You cannot delete tasks created by the admin." : ""}
+                        style={isStartupUser && task.createdByModel === "Admin" ? { opacity: 0.5, cursor: "not-allowed" } : {}}
+                    >
+                        Delete
+                    </button>
                 </div>
 
                 <div className={styles.detailsContainer}>

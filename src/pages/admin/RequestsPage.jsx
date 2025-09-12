@@ -12,6 +12,7 @@ const getDisplayStatus = (status) => {
   switch (status) {
     case "submitted": return "Submitted";
     case "meeting_scheduled": return "Meeting Scheduled";
+    case "proposal_created": return "Proposal Created";
     case "sprint_created": return "Sprint Created";
     case "available": return "Available";
     case "package_selected": return "Package Selected";
@@ -29,6 +30,7 @@ const getStatusColor = (status) => {
   switch (status) {
     case "submitted": return { bg: "#dbeafe", text: "#1d4ed8" }; // blue
     case "meeting_scheduled": return { bg: "#fce7f3", text: "#be185d" }; // pink
+    case "proposal_created": return { bg: "#e9d5ff", text: "#9333ea" }; // purple
     case "sprint_created": return { bg: "#e9d5ff", text: "#9333ea" }; // purple
     case "available": return { bg: "#cffafe", text: "#0891b2" }; // cyan
     case "package_selected": return { bg: "#ede9fe", text: "#7c3aed" }; // indigo

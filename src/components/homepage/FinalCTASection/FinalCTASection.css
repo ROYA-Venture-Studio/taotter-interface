@@ -1,0 +1,206 @@
+.cta-text.simple {
+  text-align: left;
+}
+
+.final-cta-section.simple {
+  position: relative !important;
+  z-index: 2 !important;
+  max-width: 100vw;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.final-cta-container.simple {
+  max-width: 1440px;
+  padding: 0 100px;
+  margin-left: 100px !important;
+  margin-right: 100px !important;
+}
+.cta-text{
+    z-index: 2;
+}
+.cta-content.simple {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 26px;
+  align-items: center;
+}
+
+.phone-image-simple {
+  width: 100%;
+  max-width: 100vw;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  z-index: 2;
+}
+
+@media (max-width: 1200px) {
+  .final-cta-container.simple {
+    margin-left: 48px;
+    margin-right: 48px;
+  }
+  .phone-image-simple {
+    width: 280px;
+    height: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .final-cta-container.simple {
+    margin-left: 24px;
+    margin-right: 24px;
+  }
+  .cta-content.simple {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    text-align: center;
+  }
+  .phone-image-simple {
+    width: 180px;
+    height: auto;
+    margin: 0 auto;
+  }
+}
+
+/* Enhanced Responsive Fixes - Appended */
+/* Override inline margin */
+.phone-image-simple {
+  margin-left: 0 !important;
+}
+
+/* Responsive container */
+@media (max-width: 1440px) {
+  .final-cta-container.simple {
+    margin-left: clamp(1rem, 5vw, 6.25rem);
+    margin-right: clamp(1rem, 5vw, 6.25rem);
+  }
+}
+
+/* Enhanced phone image scaling */
+.phone-image-simple {
+  width: clamp(180px, 35vw, 463px) !important;
+  height: auto !important;
+}
+
+/* --- Mobile-specific styles for FinalCTASection --- */
+@media (max-width: 768px) {
+  .final-cta-section.simple {
+    margin-left: 16px;
+    margin-right: 16px;
+    padding: 0;
+    text-align: center;
+  }
+  .final-cta-container.simple {
+    margin-left: 16px !important;
+    margin-right: 16px !important;
+    padding: 0;
+    text-align: center;
+  }
+  .cta-content-mobile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    text-align: center;
+  }
+  .cta-text-mobile {
+    width: 100%;
+    text-align: center;
+    /* margin-left: 16px;
+    margin-right: 16px; */
+    padding: 0;
+  }
+  .cta-circle-mobile-wrapper {
+    position: relative;
+    width: 100%;
+    height: 0;
+  }
+  .final-cta-title-mobile {
+    font-size: 30px;
+    font-weight: 400;
+    color: #fff;
+    line-height: 1.15;
+    margin-bottom: 0;
+    text-align: center;
+    width: 100%;
+  }
+  .final-cta-title-mobile span {
+    font-weight: 600;
+    font-size: 30px;
+  }
+  .cta-circle-mobile {
+    position: absolute;
+    left: calc(50% - 40px);
+    top: -32px;
+    width: 56px;
+    height: 56px;
+    z-index: 1;
+  }
+  .final-cta-buttons-mobile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    width: 100%;
+  }
+  .cta-primary-mobile,
+  .cta-secondary-mobile {
+    width: 257px;
+    height: 56px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .cta-secondary-mobile {
+    font-size: 24px;
+    font-weight: 400;
+  }
+  .cta-primary-mobile {
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 3.75rem;
+    background: var(--gradient-primary);
+    color: var(--text-primary);
+    font-size: 1.5rem;
+    font-weight: 400;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    min-width: 257px;
+    min-height: 56px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-family: inherit;
+    letter-spacing: 0.02em;
+    outline: none;
+  }
+  .cta-primary-mobile:hover {
+    transform: translateY(-2px);
+  }
+  .cta-spacing-43 {
+    height: 43px;
+    width: 100%;
+    display: block;
+  }
+  .cta-spacing-24 {
+    height: 24px;
+    width: 100%;
+    display: block;
+  }
+.phone-image-mobile {
+    width: 100%;
+    max-width: 100vw;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    border: none;
+    background: none;
+    margin: 0 auto;
+    align-self: center;
+  }
+}

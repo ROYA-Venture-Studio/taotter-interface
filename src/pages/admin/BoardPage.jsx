@@ -6,6 +6,7 @@ import { useGetBoardBySprintQuery } from "../../store/api/boardsApi";
 import PaymentRequiredModal from "../../components/ui/PaymentRequiredModal";
 import { useParams, useNavigate } from "react-router-dom";
 import TaskModal from "../../components/admin/TaskModal";
+import TaskDetailsModal from "../../components/admin/TaskDetailsModal";
 import { useCreateTaskMutation, useMoveTaskMutation, useDeleteTaskMutation, useEditTaskMutation } from "../../store/api/tasksApi";
 import { useGetAdminUsersQuery } from "../../store/api/adminApi";
 import "./BoardPage.css";
@@ -80,6 +81,7 @@ export default function BoardPage() {
         links: task.links?.length || 0,
         taskType: task.taskType || "General",
         attachments: task.attachments || [],
+        createdByName: task.createdByName || "",
       }))
     }));
   }, [data, filter]);
@@ -311,7 +313,7 @@ export default function BoardPage() {
           ) : (
             <>
               <BoardKanban
-                columns={localColumns}
+                columns={localColumns || []}
                 onMoveTask={handleMoveTask}
                 onEditTask={handleEditTask}
                 onDeleteTask={handleDeleteTask}
@@ -330,6 +332,7 @@ export default function BoardPage() {
                       onMoveTask={null}
                       currentColumnId={selectedTask?.columnId}
                       admins={admins}
+                      isStartupUser={false}
                     />
                   )}
                   {(modalMode === 'edit' || modalMode === 'create') && (

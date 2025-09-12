@@ -1,0 +1,119 @@
+/* Step 1 onboarding page styles, matching SprintStatusPage.css but with ns-step1- prefix */
+
+.ns-step1-split-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  min-height: 100vh;
+  background: #f7f7f7;
+}
+.ns-step1-left {
+  width: 720px;
+  padding: 40px 32px;
+  box-sizing: border-box;
+  background: #fff;
+  border-radius: 16px;
+  margin: 80px 0;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+}
+.ns-step1-form-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: #222;
+}
+.ns-step1-form-subtitle {
+  font-size: 1.1rem;
+  color: #666;
+  margin-bottom: 24px;
+}
+.ns-step1-sprint-options {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  margin-top: 32px;
+}
+.ns-step1-sprint-option {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  background: #fafafa;
+  border: 1px solid #eee;
+  border-radius: 12px;
+  padding: 32px 28px;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.03);
+}
+.ns-step1-sprint-info {
+  flex: 1;
+  color: #222;
+  font-size: 1rem;
+}
+.ns-step1-sprint-number {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: #222;
+}
+.ns-step1-sprint-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: #222;
+}
+.ns-step1-sprint-timeframe,
+.ns-step1-sprint-objective,
+.ns-step1-sprint-hours {
+  margin-bottom: 8px;
+  color: #222;
+}
+.ns-step1-sprint-deliverables {
+  margin-bottom: 8px;
+  color: #222;
+}
+.ns-step1-sprint-action {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  min-width: 220px;
+  margin-left: 32px;
+}
+.ns-step1-sprint-get-started-btn {
+  background: #EB5E28;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 12px 32px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 12px;
+  transition: background 0.2s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+.ns-step1-sprint-get-started-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+ul, li {
+  color: #222;
+}
+@media (max-width: 768px) {
+  .ns-step1-left {
+    width: 100%;
+    padding: 20px;
+    margin: 0;
+    border-radius: 0;
+  }
+  .ns-step1-sprint-option {
+    padding: 16px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .ns-step1-sprint-action {
+    min-width: 100%;
+    align-items: flex-start;
+    margin-left: 0;
+    margin-top: 16px;
+  }
+}

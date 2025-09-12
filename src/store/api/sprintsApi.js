@@ -19,6 +19,14 @@ export const sprintsApi = api.injectEndpoints({
       }),
       providesTags: ["MySprints"],
     }),
+    // Startup: Get sprints by questionnaireId (NEW)
+    getSprintsByQuestionnaire: builder.query({
+      query: (questionnaireId) => ({
+        url: `/sprints/by-questionnaire/${questionnaireId}`,
+        method: "GET"
+      }),
+      providesTags: ["Sprints"],
+    }),
     // Startup: Get sprint by ID
     getSprintById: builder.query({
       query: (id) => `/sprints/${id}`,
@@ -57,6 +65,14 @@ export const sprintsApi = api.injectEndpoints({
         url: `/sprints/startup/${id}/finish`,
         method: "PUT",
         body: { status: "completed" },
+      }),
+      invalidatesTags: ["Sprints", "MySprints", "Sprint"],
+    }),
+    // Startup: Delete sprint (NEW)
+    deleteSprint: builder.mutation({
+      query: (id) => ({
+        url: `/sprints/${id}`,
+        method: "DELETE",
       }),
       invalidatesTags: ["Sprints", "MySprints", "Sprint"],
     }),
@@ -107,9 +123,12 @@ export const {
   useUploadDocumentsMutation,
   useScheduleMeetingMutation,
   useFinishSprintMutation,
+  useGetSprintsByQuestionnaireQuery,
+  useDeleteSprintMutation,
   // Admin exports
   useGetAllSprintsQuery,
   useCreateSprintMutation,
   useUpdateSprintStatusMutation,
   useUpdateSelectedPackagePaymentStatusMutation,
 } = sprintsApi;
+
