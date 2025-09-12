@@ -111,7 +111,9 @@ function App() {
             path="startup/payment-pending"
             element={
               <StartupProtectedRoute>
-                <PaymentPendingPage />
+                <StartupOnboardingGuard>
+                  <PaymentPendingPage />
+                </StartupOnboardingGuard>
               </StartupProtectedRoute>
             }
           />
