@@ -312,3 +312,18 @@
     background: none;
   }
 }
+
+/* Centering logic for screens >1440px - Appended */
+@media (min-width: 1440px) {
+  .process-section {
+    margin: 100px auto;
+    max-width: 1440px;
+    width: 100%;
+  }
+  .process-container {
+    max-width: 1440px;
+    margin: 0 auto !important;
+    padding: 0 100px !important;
+    text-align: center;
+  }
+}

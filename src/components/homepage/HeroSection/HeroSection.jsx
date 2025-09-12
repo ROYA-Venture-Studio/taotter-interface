@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import "./HeroSection.css";
 import boardImg from "./board.png";
 import backgroundImg from "./background.png";
@@ -6,6 +7,7 @@ import milestonesImg from "./milestones.png";
 import sprintprogressImg from "./sprintprogress.png";
 
 export default function HeroSection() {
+  const navigate = useNavigate();
   return (
     <section className="hero-section">
       <div className="hero-container">
@@ -19,7 +21,12 @@ export default function HeroSection() {
             and execution sprints built for fundraising momentum.
           </p>
           <div className="hero-cta">
-            <button className="cta-primary">Start Your Sprint</button>
+<button
+  className="cta-primary"
+  onClick={() => navigate("/mvp/form")}
+>
+  Start Your Sprint
+</button>
             <button className="cta-secondary">
               <svg className="play-icon" width="24" height="24" viewBox="0 0 24 24" fill="none">
                 <path d="M8 5v14l11-7z" fill="currentColor"/>
