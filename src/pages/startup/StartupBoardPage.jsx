@@ -73,7 +73,8 @@ export default function StartupBoardPage() {
             comments: task.comments?.length || 0,
             links: task.links?.length || 0,
             taskType: task.taskType || "General",
-            status: task.status
+            status: task.status,
+            createdByName: task.createdByName || "",
           }))
         };
       });

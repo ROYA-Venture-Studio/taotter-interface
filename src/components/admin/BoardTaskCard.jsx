@@ -91,6 +91,19 @@ export default function BoardTaskCard({
           );
         })()}
       </div>
+{task.createdByName && (
+  <div
+    className="board-task-card__createdby"
+    style={{
+      marginTop: "8px",
+      fontSize: "12px",
+      color: "#222",
+      fontWeight: 400
+    }}
+  >
+    Created by <span style={{ fontWeight: 700 }}>{task.createdByName}</span>
+  </div>
+)}
     </div>
   );
 }

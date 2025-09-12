@@ -81,6 +81,7 @@ export default function BoardPage() {
         links: task.links?.length || 0,
         taskType: task.taskType || "General",
         attachments: task.attachments || [],
+        createdByName: task.createdByName || "",
       }))
     }));
   }, [data, filter]);

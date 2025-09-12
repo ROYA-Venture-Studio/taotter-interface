@@ -38,11 +38,10 @@ const StartupOnboardingGuard = ({ children }) => {
     const unpaidSprint = sprintsData?.data?.sprints?.find(
       (s) =>
         s.selectedPackage &&
-        s.status === "package_selected" &&
-        (String(s.selectedPackagePaymentStatus).toLowerCase() !== "paid")
+        String(s.selectedPackagePaymentStatus).toLowerCase() !== "paid"
     );
 
-    // If payment is pending, redirect to payment page
+    // If any unpaid sprint exists, redirect to payment page
     if (unpaidSprint) {
       if (window.location.pathname !== "/startup/payment-pending") {
         navigate("/startup/payment-pending", { replace: true });

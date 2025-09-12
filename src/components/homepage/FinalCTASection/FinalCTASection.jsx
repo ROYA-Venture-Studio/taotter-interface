@@ -20,11 +20,11 @@ export default function FinalCTASectionSimple() {
           <div className="cta-content simple">
             <div className="cta-text">
               <div className="cta-icon-wrapper">
-<img
+{/* <img
   src={circleImg}
   alt="Circle highlight"
   className="cta-circle-desktop"
-/>
+/> */}
               </div>
               <h2 className="final-cta-title">
                 Ready to go from <span className="title-bold">idea</span><br />
@@ -54,11 +54,11 @@ export default function FinalCTASectionSimple() {
           <div className="cta-content-mobile">
 <div className="cta-text-mobile">
 <div className="cta-circle-mobile-wrapper">
-<img
+{/* <img
   src={circleImg}
   alt="Circle highlight"
   className="cta-circle-mobile"
-/>
+/> */}
               </div>
 <h2 className="final-cta-title-mobile">
   Ready to go from <span>idea</span>

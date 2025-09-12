@@ -10,9 +10,9 @@
 
 .founders-container {
   max-width: 1440px;
-  margin-left: 100px !important;
-  margin-right: 100px !important;
-  margin-top: 100px !important;
+  /* margin-left: 100px !important;
+  margin-right: 100px !important; */
+  /* margin-top: 100px !important; */
   padding: 0;
   text-align: center;
 }

@@ -9,6 +9,9 @@ import {
   SprintOnboardingStep2, 
   StartupChatPage
 } from './pages'
+import NewSprintOnboardingStep1 from './pages/startup/NewSprintOnboardingStep1.jsx'
+import NewSprintOnboardingStep2 from './pages/startup/NewSprintOnboardingStep2.jsx'
+import NewSprintOnboardingStep3 from './pages/startup/NewSprintOnboardingStep3.jsx'
 import StartupBoardPage from './pages/startup/StartupBoardPage'
 import DashboardLayout from './layouts/DashboardLayout'
 import AdminLayout from './layouts/AdminLayout'
@@ -73,6 +76,32 @@ function App() {
             element={
               <StartupProtectedRoute>
                 <SprintOnboardingStep2 />
+              </StartupProtectedRoute>
+            }
+          />
+
+          {/* NEW SPRINT ONBOARDING ROUTES */}
+          <Route
+            path="new-sprint/onboarding/:questionnaireId/step1"
+            element={
+              <StartupProtectedRoute>
+                <NewSprintOnboardingStep1 />
+              </StartupProtectedRoute>
+            }
+          />
+          <Route
+            path="new-sprint/onboarding/:questionnaireId/step2/:sprintId"
+            element={
+              <StartupProtectedRoute>
+                <NewSprintOnboardingStep2 />
+              </StartupProtectedRoute>
+            }
+          />
+          <Route
+            path="new-sprint/onboarding/:questionnaireId/step3/:sprintId"
+            element={
+              <StartupProtectedRoute>
+                <NewSprintOnboardingStep3 />
               </StartupProtectedRoute>
             }
           />

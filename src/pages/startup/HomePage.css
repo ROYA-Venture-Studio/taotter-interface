@@ -2717,13 +2717,13 @@ body {
 
 /* Ensure background images span full viewport */
 @media (min-width: 769px) {
-  .homepage-bg-image-1 { top: 180vh !important; left: -10vw !important; transform: translateY(-10vh) !important; }
-  .homepage-bg-image-2 { top: 225vh !important; left: 100vw !important; transform: translate(-50vw, -10vh) !important; }
-  .homepage-bg-image-3 { top: 340vh !important; left: -15vw !important; transform: translateY(-20vh) !important; }
-  .homepage-bg-image-4 { top: 490vh !important; left: 30vw !important; transform: translateY(-40vh) !important; }
-  .homepage-bg-image-5 { top: 500vh !important; left: 40vw !important; transform: translateY(-40vh) !important; }
-  .homepage-bg-image-6 { top: 710vh !important; left: 0vw !important; }
-  .homepage-bg-image-7 { top: 730vh !important; left: 100vw !important; transform: translateX(-50vw) !important; }
+  .homepage-bg-image-1 { top: 190vh !important; left: -10vw !important; transform: translateY(-10vh) !important; }
+  .homepage-bg-image-2 { top: 235vh !important; left: 100vw !important; transform: translate(-50vw, -10vh) !important; }
+  .homepage-bg-image-3 { top: 370vh !important; left: -15vw !important; transform: translateY(-20vh) !important; }
+  .homepage-bg-image-4 { top: 520vh !important; left: 30vw !important; transform: translateY(-40vh) !important; }
+  .homepage-bg-image-5 { top: 530vh !important; left: 40vw !important; transform: translateY(-40vh) !important; }
+  .homepage-bg-image-6 { top: 760vh !important; left: 0vw !important; }
+  .homepage-bg-image-7 { top: 790vh !important; left: 100vw !important; transform: translateX(-50vw) !important; }
 
   .homepage-bg-image-1 { width: 1025px; }
   .homepage-bg-image-2 { width: 700px; }

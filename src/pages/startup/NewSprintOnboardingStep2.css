@@ -1,0 +1,121 @@
+/* Styles copied from SprintOnboardingStep2.css, renamed for ns-step2- */
+
+.ns-step2-split-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  min-height: 100vh;
+  background: #f7f7f7;
+}
+.ns-step2-left {
+  width: 720px;
+  padding: 40px 32px;
+  box-sizing: border-box;
+  background: #fff;
+  border-radius: 16px;
+  margin: 80px 0;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+}
+.ns-step2-form-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: #222;
+}
+.ns-step2-form-subtitle {
+  font-size: 1.1rem;
+  color: #666;
+  margin-bottom: 24px;
+}
+.ns-step2-credit-tiers {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-top: 24px;
+}
+.ns-step2-credit-tier-option {
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid #eee;
+  background: #fafafa;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.ns-step2-tier-details {
+  flex: 1;
+}
+.ns-step2-tier-info {
+  margin-bottom: 8px;
+}
+.ns-step2-tier-header {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.ns-step2-tier-name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #222;
+}
+.ns-step2-tier-description {
+  font-size: 1rem;
+  color: #666;
+  margin-top: 2px;
+}
+.ns-step2-tier-action {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+.ns-step2-tier-select-btn {
+  background: #EB5E28;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 28px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  margin-top: 12px;
+  transition: background 0.2s;
+}
+.ns-step2-tier-select-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+.ns-step2-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 16px;
+}
+.ns-step2-label {
+  font-size: 1rem;
+  color: #222;
+  margin-bottom: 4px;
+}
+.ns-step2-input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #e6e6e6;
+  margin-top: 4px;
+  font-size: 1rem;
+  color: #222;
+  background: #fff;
+}
+@media (max-width: 768px) {
+  .ns-step2-left {
+    width: 100%;
+    padding: 20px;
+    margin: 0;
+    border-radius: 0;
+  }
+  .ns-step2-credit-tier-option {
+    padding: 14px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

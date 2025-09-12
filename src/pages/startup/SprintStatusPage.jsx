@@ -108,7 +108,11 @@ const SprintStatusPage = () => {
     if (calendlyWindow) {
       calendlyWindow.focus()
     }
-    alert('Please complete your scheduling in the new window/tab. Once you have scheduled your meeting, return here. You will not be able to schedule again.');
+      alert(`Hi ${userData?.data?.user?.profile?.founderFirstName || "there"},
+
+Please finish scheduling your meeting in the new window or tab. Once booked, return here to continue.
+
+You can only schedule once, so pick the time that works best. We’re excited to get you started!`);
     // Optionally, you could POST to /api/sprints/:id/schedule-meeting here if you have the sprintId
     if (pendingSprint && !meetingAlreadyScheduled) {
       setIsSubmitting(true)
@@ -183,7 +187,11 @@ const SprintStatusPage = () => {
       if (calendlyWindow) {
         calendlyWindow.focus()
       }
-      alert('Please complete your scheduling in the new window/tab. Once you have scheduled your meeting, return here. You will not be able to schedule again.');
+      alert(`Hi ${userData?.data?.user?.profile?.founderFirstName || "there"},
+
+Please finish scheduling your meeting in the new window or tab. Once booked, return here to continue.
+
+You can only schedule once, so pick the time that works best. We’re excited to get you started!`);
       if (questionnaireId && !meetingAlreadyScheduled) {
         setIsSubmitting(true)
         try {
