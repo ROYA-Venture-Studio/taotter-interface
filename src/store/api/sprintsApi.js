@@ -3,6 +3,14 @@ import { api } from "./api";
 // Both startup and admin endpoints for sprints
 export const sprintsApi = api.injectEndpoints({
   endpoints: (builder) => ({
+    // Startup: Get proposals by questionnaireId
+    getProposalsByQuestionnaire: builder.query({
+      query: (questionnaireId) => ({
+        url: `/sprints/questionnaire/${questionnaireId}/proposals`,
+        method: "GET"
+      }),
+      providesTags: ["Proposals"],
+    }),
     // Startup: Get available sprints
     getSprints: builder.query({
       query: (params) => ({
@@ -76,6 +84,15 @@ export const sprintsApi = api.injectEndpoints({
       }),
       invalidatesTags: ["Sprints", "MySprints", "Sprint"],
     }),
+    // Startup: Create temp sprint (NEW)
+    createTempSprint: builder.mutation({
+      query: ({ questionnaireId, name, description, type, estimatedDuration }) => ({
+        url: "/sprints/startup/create-temp",
+        method: "POST",
+        body: { questionnaireId, name, description, type, estimatedDuration },
+      }),
+      invalidatesTags: ["MySprints"],
+    }),
     // Admin: Get all sprints
     getAllSprints: builder.query({
       query: (params) => ({
@@ -115,6 +132,7 @@ export const sprintsApi = api.injectEndpoints({
 });
 
 export const {
+  useGetProposalsByQuestionnaireQuery,
   // Startup exports
   useGetSprintsQuery,
   useGetMySprintsQuery,
@@ -125,10 +143,10 @@ export const {
   useFinishSprintMutation,
   useGetSprintsByQuestionnaireQuery,
   useDeleteSprintMutation,
+  useCreateTempSprintMutation,
   // Admin exports
   useGetAllSprintsQuery,
   useCreateSprintMutation,
   useUpdateSprintStatusMutation,
   useUpdateSelectedPackagePaymentStatusMutation,
 } = sprintsApi;
-
