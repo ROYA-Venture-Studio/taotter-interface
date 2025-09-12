@@ -1,22 +1,14 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useGetSprintsQuery } from "../../store/api/sprintsApi";
+import { useGetMySprintsQuery } from "../../store/api/sprintsApi";
 import "./PaymentPendingPage.css";
 
 const PaymentPendingPage = () => {
   const navigate = useNavigate();
-  const { data, isLoading, error } = useGetSprintsQuery({}, { pollingInterval: 120000 });
+  const { data, isLoading, error } = useGetMySprintsQuery();
 
-  useEffect(() => {
-    if (!isLoading && data && Array.isArray(data.data.sprints)) {
-      const paidSprint = data.data.sprints?.find(
-        sprint => sprint.selectedPackagePaymentStatus === "paid"
-      );
-      if (paidSprint) {
-        navigate("/startup/dashboard", { replace: true });
-      }
-    }
-  }, [isLoading, data, navigate]);
+  // Remove the automatic redirect logic - let StartupOnboardingGuard handle navigation
+  // This prevents the circular navigation issue
 
   if (isLoading) {
     return (

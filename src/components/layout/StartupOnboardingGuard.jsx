@@ -32,7 +32,9 @@ const StartupOnboardingGuard = ({ children }) => {
   const { data: sprintsData, isLoading } = useGetMySprintsQuery();
 
   useEffect(() => {
-    if (!user || !user.onboarding) return;
+    if (!user || !user.onboarding || isLoading) return;
+
+    const currentPath = window.location.pathname;
 
     // Check for unpaid sprints with selected packages
     const unpaidSprint = sprintsData?.data?.sprints?.find(
@@ -41,11 +43,17 @@ const StartupOnboardingGuard = ({ children }) => {
         String(s.selectedPackagePaymentStatus).toLowerCase() !== "paid"
     );
 
-    // If any unpaid sprint exists, redirect to payment page
+    // If any unpaid sprint exists, redirect to payment page (but not if already there)
     if (unpaidSprint) {
-      if (window.location.pathname !== "/startup/payment-pending") {
+      if (currentPath !== "/startup/payment-pending") {
         navigate("/startup/payment-pending", { replace: true });
       }
+      return;
+    }
+
+    // If we're on payment pending page but no unpaid sprints, go to dashboard
+    if (currentPath === "/startup/payment-pending") {
+      navigate("/startup/dashboard", { replace: true });
       return;
     }
 
@@ -57,7 +65,7 @@ const StartupOnboardingGuard = ({ children }) => {
       "/startup/chat",
       "/startup/board"
     ];
-    const isAllowedRoute = allowedRoutes.some(route => window.location.pathname.startsWith(route));
+    const isAllowedRoute = allowedRoutes.some(route => currentPath.startsWith(route));
 
     if (
       ["sprint_selection", "document_upload", "meeting_scheduling"].includes(onboardingStep) &&
@@ -69,7 +77,7 @@ const StartupOnboardingGuard = ({ children }) => {
 
     // If onboarding is complete and payment is done, allow navigation
     // No redirect needed
-  }, [user, navigate, sprintsData]);
+  }, [user, navigate, sprintsData, isLoading]);
 
   // Show loading spinner while fetching sprints or user not loaded
   if (!user || !user.onboarding || isLoading) {
