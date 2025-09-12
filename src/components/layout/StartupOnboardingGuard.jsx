@@ -36,9 +36,10 @@ const StartupOnboardingGuard = ({ children }) => {
 
     const currentPath = window.location.pathname;
 
-    // Check for unpaid sprints with selected packages
+    // Check for unpaid sprints with selected packages (only active sprints)
     const unpaidSprint = sprintsData?.data?.sprints?.find(
       (s) =>
+        s.status !== "inactive" && // Only check active sprints
         s.selectedPackage &&
         String(s.selectedPackagePaymentStatus).toLowerCase() !== "paid"
     );
