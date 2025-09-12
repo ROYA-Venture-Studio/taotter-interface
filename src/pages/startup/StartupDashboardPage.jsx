@@ -564,7 +564,7 @@ const StartupDashboardPage = () => {
     );
 }
 
-import { useCreateQuestionnaireMutation } from '../../store/api/questionnairesApi';
+import { useCreateQuestionnaireMutation, useLinkQuestionnaireMutation } from '../../store/api/questionnairesApi';
 
 import { useCreateTempSprintMutation } from '../../store/api/sprintsApi';
 
@@ -661,6 +661,7 @@ function StartSprintModal({ onClose, onSprintCreated }) {
     // API mutation
     const [createQuestionnaire] = useCreateQuestionnaireMutation();
     const [createTempSprint] = useCreateTempSprintMutation();
+    const [linkQuestionnaire] = useLinkQuestionnaireMutation();
 
     // Form submission
     const handleSubmit = async () => {
@@ -725,21 +726,9 @@ function StartSprintModal({ onClose, onSprintCreated }) {
             };
 
             if (temporaryId) {
-                const token = localStorage.getItem('token');
                 try {
-                    const linkRes = await fetch('/api/questionnaires/link', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            ...(token ? { 'Authorization': `Bearer ${token}` } : {})
-                        },
-                        body: JSON.stringify({ temporaryId })
-                    });
-                    if (!linkRes.ok) {
-                        throw new Error('Failed to link questionnaire');
-                    }
-                    const linkData = await linkRes.json();
-                    const linkedId = linkData?.data?.questionnaire?.id || questionnaireId;
+                    const linkResponse = await linkQuestionnaire(temporaryId).unwrap();
+                    const linkedId = linkResponse?.data?.questionnaire?.id || questionnaireId;
                     await createTempSprintRTK(linkedId);
                 } catch (err) {
                     setErrors({ submit: 'Failed to start sprint. Please try again.' });
