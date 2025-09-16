@@ -1,3 +1,43 @@
+.cta-idea-word {
+  position: relative;
+  z-index: 3;
+  display: inline-block;
+}
+
+.cta-circle-desktop {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%) scale(0.7);
+  width: 180px;
+  height: 200px;
+  max-width: none;
+  max-height: none;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0;
+  transition: none;
+}
+
+.cta-circle-desktop.animate {
+  animation: circleAppear 1.5s cubic-bezier(.28,.84,.42,1) forwards;
+  animation-delay: 0.3s;
+}
+
+@keyframes circleAppear {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.7) rotate(-15deg);
+  }
+  50% {
+    opacity: 0.8;
+    transform: translate(-50%, -50%) scale(1.1) rotate(5deg);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1) rotate(0deg);
+  }
+}
 .cta-text.simple {
   text-align: left;
 }
@@ -9,6 +49,40 @@
   max-width: 100vw;
   width: 100%;
   box-sizing: border-box;
+  overflow: hidden;
+}
+
+/* Background images for FinalCTASection */
+.final-cta-background-images {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.final-cta-bg-image {
+  position: absolute;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.final-cta-bg-6 {
+  width: 800px;
+  bottom: 5%;
+  left: 0%;
+  opacity: 0.7;
+}
+
+.final-cta-bg-7 {
+  width: 700px;
+  bottom: -15%;
+  right: 0%;
+  opacity: 0.7;
 }
 
 .final-cta-container.simple {
@@ -16,6 +90,8 @@
   padding: 0 100px;
   margin-left: 100px !important;
   margin-right: 100px !important;
+  position: relative;
+  z-index: 2;
 }
 .cta-text{
   z-index: 2;
@@ -34,6 +110,12 @@
   object-fit: contain;
   display: block;
   z-index: 2;
+  opacity: 0;
+  transform: translateX(80px);
+  transition: none;
+}
+.phone-image-simple.animate {
+  animation: fadeInRight 1.2s cubic-bezier(.28,.84,.42,1) 0.5s forwards;
 }
 
 @media (max-width: 1200px) {
@@ -86,6 +168,18 @@
 
 /* --- Mobile-specific styles for FinalCTASection --- */
 @media (max-width: 768px) {
+  /* Background images mobile positioning */
+  .final-cta-bg-6 {
+    width: 380px;
+    top: -5%;
+    left: -30%;
+  }
+  
+  .final-cta-bg-7 {
+    width: 480px;
+    bottom: -10%;
+    right: 10%;
+  }
   .final-cta-section.simple {
     margin-left: 16px;
     margin-right: 16px;
@@ -203,6 +297,40 @@
     background: none;
     margin: 0 auto;
     align-self: center;
+    opacity: 0;
+    transform: translateX(80px);
+    transition: none;
+  }
+  
+  .phone-image-mobile.animate {
+    animation: fadeInRight 1.2s cubic-bezier(.28,.84,.42,1) 0.5s forwards;
+  }
+  
+  /* Mobile circle animation */
+  .cta-idea-word-mobile {
+    position: relative;
+    z-index: 3;
+    display: inline-block;
+  }
+  
+  .cta-circle-mobile {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) scale(0.7);
+    width: 80px;
+    height: 140px;
+    max-width: none;
+    max-height: none;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0;
+    transition: none;
+  }
+  
+  .cta-circle-mobile.animate {
+    animation: circleAppear 1.5s cubic-bezier(.28,.84,.42,1) forwards;
+    animation-delay: 0.3s;
   }
 }
 /* Centering logic for screens >1440px - Revised */
@@ -227,5 +355,16 @@
   }
   .cta-text.simple {
     text-align: center;
+  }
+}
+
+@keyframes fadeInRight {
+  0% {
+    opacity: 0;
+    transform: translateX(80px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
   }
 }

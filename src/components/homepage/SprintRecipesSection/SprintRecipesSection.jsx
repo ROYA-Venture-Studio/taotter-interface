@@ -1,14 +1,44 @@
-import React from "react";
+import React, { useRef, useEffect, useState } from "react";
 import "./SprintRecipesSection.css";
 import recipesImg from "./recipes.png";
 import recipesMobileImg from "./recipes-mobile.png";
+import bg3 from "../../../assets/images/background/3.png";
 
 export default function SprintRecipesSection() {
   // Use window.innerWidth for SSR-safe mobile detection
   const isMobile = typeof window !== "undefined" && window.innerWidth <= 768;
 
+  // Fade-in animation logic
+  const sectionRef = useRef(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        console.log('SprintRecipes intersection:', entry.isIntersecting);
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          console.log('SprintRecipes animation triggered');
+        }
+      },
+      { threshold: 0.1 }
+    );
+    
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+    
+    return () => observer.disconnect();
+  }, []);
+
+  console.log('SprintRecipes isVisible:', isVisible);
+
   return (
-    <section className="sprint-recipes-section">
+    <section ref={sectionRef} className="sprint-recipes-section">
+      {/* Background images */}
+      <div className="sprint-recipes-background-images">
+        <img src={bg3} alt="" className="sprint-recipes-bg-image sprint-recipes-bg-3" />
+      </div>
       <div className="sprint-recipes-container">
         {isMobile ? (
           <>
@@ -23,7 +53,7 @@ export default function SprintRecipesSection() {
               <img
                 src={recipesMobileImg}
                 alt="Sprint Recipes Mobile"
-                className="recipes-image recipes-image-mobile"
+                className={`recipes-image recipes-image-mobile${isVisible ? " fade-in" : ""}`}
                 width={365}
                 height={792}
               />
@@ -47,7 +77,7 @@ export default function SprintRecipesSection() {
               <img
                 src={recipesImg}
                 alt="Sprint Recipes"
-                className="recipes-image"
+                className={`recipes-image${isVisible ? " fade-in" : ""}`}
               />
             </div>
             <div className="platform-statement">

@@ -1,7 +1,10 @@
 import React from "react";
 import "./FoundersSection.css";
 import laptopImg from "./laptop.png";
-import foundertypesImg from "./foundertypes.png";
+import testingImg from "./testing.png";
+import validatingImg from "./validating.png";
+import buildingImg from "./building.png";
+import lookingImg from "./looking.png";
 import tickIcon from "./tick.png";
 import megaphoneIcon from "./megaphone.png";
 
@@ -33,16 +36,23 @@ export default function FoundersSection() {
                 src={laptopImg}
                 alt="LeanSprintr Dashboard on Laptop"
                 className="laptop-image"
-                width={660}
-                height={660}
+                width={580}
+                height={580}
               />
-              <img
-                src={foundertypesImg}
-                alt="Founder Types"
-                className="foundertypes-image"
-                width={525}
-                height={514}
-              />
+              <div className="founder-types-grid">
+                <div className="founder-type-card">
+                  <img src={testingImg} alt="Testing Founder" />
+                </div>
+                <div className="founder-type-card">
+                  <img src={validatingImg} alt="Validating Founder" />
+                </div>
+                <div className="founder-type-card">
+                  <img src={buildingImg} alt="Building Founder" />
+                </div>
+                <div className="founder-type-card">
+                  <img src={lookingImg} alt="Looking Founder" />
+                </div>
+              </div>
             </div>
           </>
         ) : (
@@ -73,19 +83,25 @@ export default function FoundersSection() {
                 src={laptopImg}
                 alt="LeanSprintr Dashboard on Laptop"
                 className="laptop-image-mobile"
-                width={378}
-                height={378}
-                style={{ width: "378px", height: "378px", objectFit: "contain" }}
+                width={300}
+                height={300}
+                style={{ width: "300px", height: "300px", objectFit: "contain" }}
               />
               <div style={{ height: "48px" }} />
-              <img
-                src={foundertypesImg}
-                alt="Founder Types"
-                className="foundertypes-image-mobile"
-                width={410}
-                height={401}
-                style={{ width: "410px", height: "401px", objectFit: "contain" }}
-              />
+              <div className="founder-types-grid">
+                <div className="founder-type-card">
+                  <img src={testingImg} alt="Testing Founder" />
+                </div>
+                <div className="founder-type-card">
+                  <img src={validatingImg} alt="Validating Founder" />
+                </div>
+                <div className="founder-type-card">
+                  <img src={buildingImg} alt="Building Founder" />
+                </div>
+                <div className="founder-type-card">
+                  <img src={lookingImg} alt="Looking Founder" />
+                </div>
+              </div>
             </div>
           </div>
         )}

@@ -13,7 +13,7 @@ export default function AISolutionSection() {
         </h2>
         {/* Images row, 48px below title */}
         <div className="solution-images-row">
-          <img src={puzzleImg} alt="Puzzle" className="solution-image" />
+          <img src={puzzleImg} alt="Puzzle" className="solution-image bounce" />
           <img src={aiImg} alt="AI" className="solution-image" />
         </div>
       </div>
