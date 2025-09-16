@@ -7,7 +7,7 @@
   width: 100%;
   text-align: center;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
 }
 
 /* Background images for ProcessSection */
@@ -45,10 +45,11 @@
 
 .process-container {
   max-width: 1440px;
-  padding: 0 !important;
+  padding: 60px 0 !important;
   text-align: center;
   position: relative;
   z-index: 2;
+  min-height: 680px;
 }
 
 /* Hide mobile-specific elements on desktop by default */
@@ -78,8 +79,9 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  margin-top: 100px;
   gap: 48px;
+  min-height: 550px;
+  padding: 35px 0;
 }
 
 .process-card-img {
