@@ -138,6 +138,11 @@
   font-weight: 700;
   line-height: 1.2;
   margin-bottom: 3rem;
+  color: var(--color-text-inverse);
+}
+
+.solution-title .title-highlight {
+  color: var(--color-primary);
 }
 
 /* Images row below title */
@@ -222,7 +227,7 @@
 .puzzle-piece {
   width: 120px;
   height: 120px;
-  background: var(--card-bg);
+  background: var(--color-bg-primary);
   border-radius: 1.5rem;
   display: flex;
   align-items: center;
@@ -230,13 +235,13 @@
   box-shadow: 0 2px 16px rgba(0,0,0,0.08);
   font-size: 1.5rem;
   font-weight: 700;
-  color: var(--text-primary);
+  color: var(--color-text-primary);
   position: relative;
 }
 
 .puzzle-label {
   font-size: 1.25rem;
-  color: var(--accent-color);
+  color: var(--color-primary);
   font-weight: 700;
 }
 
@@ -266,7 +271,7 @@
 .ai-description {
   font-size: 1.5rem;
   font-weight: 400;
-  color: var(--text-primary);
+  color: var(--color-text-primary);
   margin: 0;
 }
 
@@ -287,19 +292,19 @@
   box-shadow: 0 2px 16px rgba(0,0,0,0.08);
   font-size: 1.25rem;
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--color-text-primary);
 }
 
 .feature-icon {
   width: 2rem;
   height: 2rem;
-  color: var(--accent-color);
+  color: var(--color-primary);
 }
 
 .built-to-launch {
   font-size: 1.5rem;
   font-weight: 700;
-  color: var(--accent-color);
+  color: var(--color-primary);
   margin-top: 1rem;
 }
 
