@@ -5,6 +5,33 @@
   max-width: 100vw;
   width: 100%;
   box-sizing: border-box;
+  overflow: hidden;
+}
+
+/* Background images for SprintRecipesSection */
+.sprint-recipes-background-images {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.sprint-recipes-bg-image {
+  position: absolute;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.sprint-recipes-bg-3 {
+  width: 700px;
+  top: 38%;
+  left: -15%;
+  opacity: 1;
 }
 
 
@@ -82,6 +109,31 @@
     padding: 0 !important;
     margin: 0 !important;
   }
+/* Fade-in animation for recipes image (applies to all screen sizes) */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.recipes-image,
+.recipes-image-mobile {
+  opacity: 0 !important;
+  transform: translateY(40px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.recipes-image.fade-in,
+.recipes-image-mobile.fade-in {
+  opacity: 1 !important;
+  transform: translateY(0);
+  animation: fadeInUp 0.8s ease forwards;
+}
 }
 
 @media (max-width: 1200px) {
@@ -96,6 +148,12 @@
     margin-left: 16px;
     margin-right: 16px;
   }
+  
+  .sprint-recipes-bg-3 {
+    width: 180px;
+    top: 21.5%;
+    left: 22%;
+  }
 }
 
 /* (rest of file unchanged) */
@@ -107,6 +165,8 @@
   text-align: center;
   margin-bottom: 3rem;
   color: var(--text-primary);
+  position: relative;
+  z-index: 2;
 }
 
 /* Recipes image row and image */

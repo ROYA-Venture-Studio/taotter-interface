@@ -1,3 +1,15 @@
+/* FADE IN ANIMATIONS */
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .hero-section {
   margin-top: 100px;
   padding-bottom: 4rem;
@@ -31,6 +43,7 @@
   font-weight: 600;
   line-height: 1.2;
   margin: 0;
+  animation: fadeInUp 0.8s ease-out 0.2s both;
 }
 
 .title-highlight {
@@ -44,6 +57,7 @@
   line-height: 1.5;
   color: var(--text-primary);
   margin: 24px 0 0 0; /* was inline */
+  animation: fadeInUp 0.8s ease-out 0.4s both;
 }
 
 .hero-cta {
@@ -183,7 +197,7 @@
     text-align: center;
   }
   .hero-title {
-    font-size: 31px;
+    font-size: 28px !important;
     font-weight: 500;
     margin-bottom: 12px;
   }
@@ -210,12 +224,11 @@
     position: static !important;
     display: block;
     margin: 0 16px 10px 16px;
-    width: clamp(500px, 60vw, 1200px);
-    bottom: unset;
-    right: unset;
-    left: unset;
+    width: calc(100vw - 32px);
+    max-width: 600px;
     opacity: 1;
     z-index: 20;
+    box-sizing: border-box;
   }
   .board-image-container {
     justify-content: center;
