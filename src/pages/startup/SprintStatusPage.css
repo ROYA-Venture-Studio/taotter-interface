@@ -56,7 +56,7 @@
 .sprint-status-right {
   flex: 0 0 594px;
   min-width: 300px;
-  background: #F9FAFB;
+  background: #f9fafb;
   display: flex;
   align-items: stretch;
   justify-content: center;
@@ -77,20 +77,189 @@
   width: 100%;
   height: 100%;
   min-height: 100vh;
-  background: #F9FAFB;
+  background: #f9fafb;
   display: flex;
   align-items: center;
   justify-content: center;
   color: #667085;
-  font-family: 'Aspekta', sans-serif;
+  font-family: "Aspekta", sans-serif;
 }
 
-/* Full-screen "Hang tight" background styling */
+/* New Hang Tight Page Design */
+.hang-tight-page {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  background-image: url("../../assets/images/form.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.hang-tight-page::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.76);
+  z-index: 1;
+}
+
+/* Header */
+.hang-tight-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  position: relative;
+  z-index: 10;
+}
+
+.hang-tight-logo .logo-image {
+  height: 32px;
+  width: auto;
+}
+
+.hang-tight-back-btn {
+  background: #3a3f47;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s;
+  font-family: "Aspekta", sans-serif;
+}
+
+.hang-tight-back-btn:hover {
+  background: #4a4f57;
+}
+
+/* Main Content */
+.hang-tight-main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 40px;
+  position: relative;
+  z-index: 10;
+}
+
+.hang-tight-modal {
+  background: rgba(40, 44, 52, 0.95);
+  border-radius: 12px;
+  padding: 60px 50px;
+  max-width: 800px;
+  width: 100%;
+  text-align: center;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.hang-tight-title {
+  font-size: 36px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 16px 0;
+  font-family: "Aspekta", sans-serif;
+  line-height: 1.2;
+}
+
+.hang-tight-subtitle {
+  font-size: 18px;
+  font-weight: 400;
+  color: #ffffff;
+  margin: 0 0 40px 0;
+  font-family: "Aspekta", sans-serif;
+}
+
+.hang-tight-cta {
+  text-align: left;
+}
+
+.hang-tight-cta-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0 0 12px 0;
+  font-family: "Aspekta", sans-serif;
+}
+
+.hang-tight-cta-description {
+  font-size: 16px;
+  font-weight: 400;
+  color: #ffffff;
+  margin: 0 0 32px 0;
+  font-family: "Aspekta", sans-serif;
+  line-height: 1.5;
+}
+
+.hang-tight-schedule-btn {
+  width: 100%;
+  height: 48px;
+  background: #eb5e28;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: "Aspekta", sans-serif;
+  transition: background 0.15s;
+}
+
+.hang-tight-schedule-btn:hover:not(:disabled) {
+  background: #c94d1e;
+}
+
+.hang-tight-schedule-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Footer */
+.hang-tight-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  position: relative;
+  z-index: 10;
+}
+
+.hang-tight-footer-left,
+.hang-tight-footer-right {
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 400;
+  font-family: "Aspekta", sans-serif;
+}
+
+.hang-tight-terms-link {
+  color: #ffffff;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.hang-tight-terms-link:hover {
+  opacity: 0.8;
+  text-decoration: underline;
+}
+
+/* Full-screen "Hang tight" background styling - Legacy */
 .hang-tight-fullscreen {
   position: relative;
   width: 100vw;
   height: 100vh;
-  background-image: url('../../assets/images/hang.png');
+  background-image: url("../../assets/images/hang.png");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -117,7 +286,7 @@
   font-weight: 700;
   color: #fff;
   margin: 0 0 16px 0;
-  font-family: 'Aspekta', sans-serif;
+  font-family: "Aspekta", sans-serif;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
@@ -126,7 +295,7 @@
   font-weight: 400;
   color: #fff;
   margin: 0;
-  font-family: 'Aspekta', sans-serif;
+  font-family: "Aspekta", sans-serif;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
@@ -137,7 +306,7 @@
   text-align: left;
   color: #252525;
   margin-bottom: 12px;
-  font-family: 'Aspekta', sans-serif;
+  font-family: "Aspekta", sans-serif;
   width: 100%;
 }
 
@@ -146,7 +315,7 @@
   font-weight: 400;
   color: #667085;
   margin-bottom: 32px;
-  font-family: 'Aspekta', sans-serif;
+  font-family: "Aspekta", sans-serif;
   width: 100%;
 }
 
@@ -161,7 +330,7 @@
 }
 
 .sprint-option {
-  border: 1px solid #D0D5DD;
+  border: 1px solid #d0d5dd;
   border-radius: 8px;
   padding: 24px;
   width: 100%;
@@ -175,7 +344,7 @@
 
 .sprint-option:hover {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  border-color: #EB5E28;
+  border-color: #eb5e28;
 }
 
 .sprint-info {
@@ -188,7 +357,7 @@
 
 .sprint-project-name {
   color: #252525;
-  font-family: 'Aspekta', sans-serif;
+  font-family: "Aspekta", sans-serif;
   font-size: 18px;
   font-weight: 600;
   line-height: 24px;
@@ -196,8 +365,8 @@
 }
 
 .sprint-number {
-  color: #EB5E28;
-  font-family: 'Aspekta', sans-serif;
+  color: #eb5e28;
+  font-family: "Aspekta", sans-serif;
   font-size: 16px;
   font-weight: 700;
   line-height: 24px;
@@ -205,7 +374,7 @@
 
 .sprint-title {
   color: #252525;
-  font-family: 'Aspekta', sans-serif;
+  font-family: "Aspekta", sans-serif;
   font-size: 20px;
   font-weight: 600;
   line-height: 28px;
@@ -213,7 +382,7 @@
 
 .sprint-timeframe {
   color: #667085;
-  font-family: 'Aspekta', sans-serif;
+  font-family: "Aspekta", sans-serif;
   font-size: 14px;
   font-weight: 500;
   line-height: 20px;
@@ -221,7 +390,7 @@
 
 .sprint-objective {
   color: #252525;
-  font-family: 'Aspekta', sans-serif;
+  font-family: "Aspekta", sans-serif;
   font-size: 14px;
   font-weight: 400;
   line-height: 20px;
@@ -229,7 +398,7 @@
 
 .sprint-deliverables {
   color: #252525;
-  font-family: 'Aspekta', sans-serif;
+  font-family: "Aspekta", sans-serif;
   font-size: 14px;
   font-weight: 400;
   line-height: 20px;
@@ -240,8 +409,8 @@
 }
 
 .sprint-hours {
-  color: #EB5E28;
-  font-family: 'Aspekta', sans-serif;
+  color: #eb5e28;
+  font-family: "Aspekta", sans-serif;
   font-size: 14px;
   font-weight: 600;
   line-height: 20px;
@@ -257,10 +426,10 @@
 
 .sprint-get-started-btn {
   background: none;
-  color: #EB5E28;
+  color: #eb5e28;
   border: none;
   padding: 0;
-  font-family: 'Aspekta', sans-serif;
+  font-family: "Aspekta", sans-serif;
   font-size: 18px;
   font-weight: 600;
   cursor: pointer;
@@ -274,7 +443,7 @@
 } */
 
 .sprint-get-started-btn:disabled {
-  color: #9CA3AF;
+  color: #9ca3af;
   cursor: not-allowed;
 }
 
@@ -287,7 +456,7 @@
 }
 
 .sprint-navigation-buttons .sprint-get-started-btn {
-  background: #EB5E28;
+  background: #eb5e28;
   color: #fff;
   border: none;
   border-radius: 8px;
@@ -311,7 +480,8 @@
     width: 100vw;
     min-height: 100vh;
   }
-  .sprint-status-left, .sprint-status-right {
+  .sprint-status-left,
+  .sprint-status-right {
     width: 100vw;
     min-width: 0;
     border-radius: 0;
@@ -337,7 +507,8 @@
 }
 
 @media (max-width: 900px) {
-  .sprint-status-left, .sprint-status-right {
+  .sprint-status-left,
+  .sprint-status-right {
     padding: 24px 4vw;
   }
   .sprint-status-form-title {
@@ -380,7 +551,7 @@
   .sprint-status-mobile-header {
     width: 100%;
     height: 220px;
-    background: #EB5E28;
+    background: #eb5e28;
     border-radius: 18px 18px 0 0;
     display: flex;
     flex-direction: column;
@@ -399,7 +570,7 @@
     margin: 0;
     padding: 0;
     letter-spacing: -1px;
-    font-family: 'Aspekta', sans-serif;
+    font-family: "Aspekta", sans-serif;
   }
 
   .sprint-status-mobile-container {
@@ -407,7 +578,7 @@
     border-radius: 0 0 18px 18px;
     padding: 24px;
     margin: 0 auto;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
     max-width: 100%;
     position: relative;
   }
@@ -419,7 +590,7 @@
     line-height: 1.2;
     margin: 0 0 24px 0;
     text-align: center;
-    font-family: 'Aspekta', sans-serif;
+    font-family: "Aspekta", sans-serif;
   }
 
   .sprint-options {
@@ -443,6 +614,70 @@
   
   .hang-tight-fullscreen {
     display: none;
+  }
+
+  /* Mobile Hang Tight Page */
+  .hang-tight-page {
+    padding: 0;
+  }
+
+  .hang-tight-header {
+    padding: 16px 20px;
+  }
+
+  .hang-tight-logo .logo-image {
+    height: 28px;
+  }
+
+  .hang-tight-back-btn {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+
+  .hang-tight-main {
+    padding: 20px;
+  }
+
+  .hang-tight-modal {
+    padding: 32px 24px;
+    max-width: 100%;
+  }
+
+  .hang-tight-title {
+    font-size: 28px;
+    margin-bottom: 12px;
+  }
+
+  .hang-tight-subtitle {
+    font-size: 16px;
+    margin-bottom: 32px;
+  }
+
+  .hang-tight-cta-title {
+    font-size: 18px;
+    margin-bottom: 8px;
+  }
+
+  .hang-tight-cta-description {
+    font-size: 14px;
+    margin-bottom: 24px;
+  }
+
+  .hang-tight-schedule-btn {
+    height: 44px;
+    font-size: 14px;
+  }
+
+  .hang-tight-footer {
+    padding: 16px 20px;
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+  }
+
+  .hang-tight-footer-left,
+  .hang-tight-footer-right {
+    font-size: 12px;
   }
 
   /* Calendly info text black and centered on mobile */
@@ -492,7 +727,7 @@
 
 /* Focus States */
 .sprint-get-started-btn:focus-visible {
-  outline: 2px solid #EB5E28;
+  outline: 2px solid #eb5e28;
   outline-offset: 2px;
   border-radius: 4px;
 }

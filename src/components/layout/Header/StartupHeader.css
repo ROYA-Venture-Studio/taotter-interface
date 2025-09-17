@@ -2,65 +2,97 @@
 
 .startup-header {
   width: 100%;
-  background: #fff;
+  background: #2C2E33;
+  border-bottom: 1px solid #FFFFFF33;
   display: flex;
   align-items: center;
-  justify-content: center;
-  height: 64px;
+  justify-content: space-between;
+  height: auto;
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   font-family: 'Outfit', sans-serif;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  padding: 24px;
   z-index: 1000;
 }
 
+/* Add spacing for content below fixed header */
+/* .startup-header + * {
+  margin-top: 130px;
+} */
+
+body {
+  padding-top: 80px; /* Header height (~98px) + 32px margin */
+} 
+/* Reset standalone pages specifically */
+.leansprint-homepage,
+.mvp-form-page,
+.signup-page,
+.login-page,
+.sprint-status-page,
+.sprint-onboarding-step1,
+.sprint-onboarding-step2 {
+  padding-top: 0 !important;
+}
+
+/* Alternative: Add this class to main content containers */
+.startup-content-with-header {
+  margin-top: 130px;
+}
+
 .startup-header__menu-btn {
-  position: absolute;
-  left: 24px;
   background: none;
   border: none;
-  padding: 8px;
+  padding: 0;
   cursor: pointer;
   display: flex;
   align-items: center;
-  z-index: 101;
+  width: 48px;
+  height: 48px;
 }
 
-.startup-header__menu-icon {
-  width: 32px;
-  height: 32px;
+.startup-header__menu-btn svg {
+  width: 48px;
+  height: 48px;
 }
 
-.startup-header__logo-center {
-  margin: 0 auto;
+.startup-header__user-info {
   display: flex;
   align-items: center;
-  justify-content: center;
-  height: 100%;
+  gap: 16px;
 }
 
-.startup-header__logo-img {
-  height: 40px;
-  max-width: 180px;
-  object-fit: contain;
+.startup-header__user-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #d3d3d3;
+}
+
+.startup-header__username {
+  color: #FFFFFF;
+  font-family: 'Outfit', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
 }
 
 .startup-sidebar {
   position: fixed;
   top: 0;
-  left: -100%;
-  width: 260px;
+  left: -320px;
+  width: 320px;
   height: 100vh;
-  background: #fff;
-  box-shadow: 2px 0 16px rgba(0,0,0,0.08);
+  background: #2C2E33;
+  border-top-right-radius: 12px;
+  border-bottom-right-radius: 12px;
   transition: left 0.25s cubic-bezier(.4,0,.2,1);
-  z-index: 2000;
+  z-index: 3000;
   display: flex;
   flex-direction: column;
   font-family: 'Outfit', sans-serif;
-  padding: 0 0 24px 0;
+  padding: 50px;
   pointer-events: none;
 }
 
@@ -88,54 +120,111 @@
   background: none;
   border: none;
   font-size: 2rem;
-  color: #344054;
+  color: #FFFFFF;
   align-self: flex-end;
-  margin: 16px 16px 0 0;
+  margin: -25px -25px 0 0;
   cursor: pointer;
 }
 
+.startup-sidebar__logo {
+  margin-bottom: 74px;
+}
+
+.startup-sidebar__logo-img {
+  width: 200px;
+  height: 58.4px;
+  object-fit: contain;
+}
+
 .startup-sidebar__section {
-  margin: 32px 0 0 0;
-  padding: 0 24px;
+  margin: 0 0 32px 0;
 }
 
 .startup-sidebar__subtitle {
   font-size: 13px;
   font-weight: 600;
-  color: #98a2b3;
+  color: #ADADAD;
   margin-bottom: 12px;
   letter-spacing: 1px;
   text-transform: uppercase;
 }
 
 .startup-sidebar__link {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 12px;
   font-size: 18px;
-  color: #344054;
+  color: #FFFFFF;
   text-decoration: none;
   margin-bottom: 16px;
   font-weight: 400;
-  transition: color 0.18s;
+  transition: all 0.18s;
   font-family: 'Outfit', sans-serif;
+  padding: 12px 16px;
+  border-radius: 8px;
 }
 
 .startup-sidebar__link:hover {
-  color: #087fc0;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.startup-sidebar__link.active {
+  background: linear-gradient(135deg, #883F2B 0%, #4D444C 50%, #14496B 100%);
+}
+
+.startup-sidebar__link svg {
+  width: 24px;
+  height: 24px;
+  color: #FFFFFF;
 }
 
 .startup-sidebar__logout-btn {
-  color: #000 !important;
+  color: #FFFFFF !important;
 }
 
 @media (max-width: 600px) {
-  .startup-header__logo-img {
-    height: 32px;
-    max-width: 120px;
+  .startup-header {
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: row; /* Force horizontal layout */
   }
-  .startup-header__menu-icon {
-    width: 28px;
-    height: 28px;
+
+  .startup-header__menu-btn {
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0; /* Prevent shrinking */
   }
+
+  .startup-header__menu-btn svg {
+    width: 48px;
+    height: 48px;
+  }
+
+  .startup-header__user-info {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-shrink: 0; /* Prevent shrinking */
+  }
+
+  .startup-header__user-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: #d3d3d3;
+  }
+
+  .startup-header__username {
+    color: #FFFFFF;
+    font-family: 'Outfit', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    white-space: nowrap; /* Prevent text wrapping */
+  }
+
   .startup-sidebar {
     width: 80vw;
     min-width: 180px;

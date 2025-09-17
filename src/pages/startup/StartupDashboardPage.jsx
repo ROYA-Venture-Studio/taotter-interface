@@ -497,25 +497,47 @@ const StartupDashboardPage = () => {
         refetch();
     };
 
+    // Filter sprints by status
+    const ongoingSprints = localSprints.filter(sprint => sprint.status !== 'completed');
+
     return (
         <div className="dashboard-page">
-            <div className="dashboard-top-section">
-                <h1 className="dashboard-hero-title">Track Your Sprint</h1>
-            </div>
+            <h1 className="track-sprint-title">Track Your Sprint</h1>
 
-            <div className="dashboard-cards-container">
-                {isLoading && <div>Loading sprints...</div>}
-                {error && <div style={{ color: 'red' }}>Failed to load sprints.</div>}
-                {!isLoading && localSprints.length === 0 && (
-                    <div>No active sprints found.</div>
-                )}
-                {localSprints.map((sprint) => (
-                    <SprintCard
-                        key={sprint.id}
-                        sprint={sprint}
-                        onNoBoardClick={() => setShowNoBoardModal(true)}
-                    />
-                ))}
+            <div className="dashboard-columns-container">
+                <div className="dashboard-column">
+                    <h2 className="column-title">Ongoing</h2>
+                    <div className="dashboard-cards-container">
+                        {isLoading && <div style={{ color: 'white' }}>Loading sprints...</div>}
+                        {error && <div style={{ color: 'red' }}>Failed to load sprints.</div>}
+                        {!isLoading && ongoingSprints.length === 0 && (
+                            <div style={{ color: 'white' }}>No ongoing sprints found.</div>
+                        )}
+                        {ongoingSprints.map((sprint) => (
+                            <SprintCard
+                                key={sprint.id}
+                                sprint={sprint}
+                                onNoBoardClick={() => setShowNoBoardModal(true)}
+                            />
+                        ))}
+                    </div>
+                </div>
+
+                <div className="dashboard-column">
+                    <h2 className="column-title">Completed</h2>
+                    <div className="dashboard-cards-container">
+                        {!isLoading && completedSprints.length === 0 && (
+                            <div style={{ color: 'white' }}>No completed sprints found.</div>
+                        )}
+                        {completedSprints.map((sprint) => (
+                            <SprintCard
+                                key={sprint.id}
+                                sprint={sprint}
+                                onNoBoardClick={() => setShowNoBoardModal(true)}
+                            />
+                        ))}
+                    </div>
+                </div>
             </div>
             {/* Start New Sprint Button */}
             {completedSprints.length > 0 && (
