@@ -135,9 +135,10 @@ const SprintOnboardingStep1 = () => {
         {isMobile ? (
           <>
             <div className="sprint-onboarding-mobile-header">
-              <div className="sprint-onboarding-mobile-header-title">
-                Start Your Sprint
-              </div>
+              <img src={leanSprintLogo} alt="LeanSprint" className="sprint-onboarding-mobile-logo" />
+              <button className="sprint-onboarding-mobile-back-btn" onClick={() => navigate("/")}>
+                Back to home
+              </button>
             </div>
             <div className="sprint-onboarding-mobile-container">
               <div className="sprint-onboarding-mobile-title">Error</div>
@@ -148,6 +149,18 @@ const SprintOnboardingStep1 = () => {
               >
                 Back to Sprint Selection
               </button>
+
+              {/* Mobile Footer */}
+              <div className="sprint-onboarding-form-footer">
+                <div className="sprint-onboarding-form-footer-right">
+                  <a href="/terms" className="sprint-onboarding-terms-link">
+                    Terms of Services
+                  </a>
+                </div>
+                <div className="sprint-onboarding-form-footer-left">
+                  © Leansprintr 2025. All Rights Reserved
+                </div>
+              </div>
             </div>
           </>
         ) : (
@@ -185,18 +198,20 @@ const SprintOnboardingStep1 = () => {
       {isMobile ? (
         <>
           <div className="sprint-onboarding-mobile-header">
-            <div className="sprint-onboarding-mobile-header-title">
-              Start Your Sprint
-            </div>
+            <img src={leanSprintLogo} alt="LeanSprint" className="sprint-onboarding-mobile-logo" />
+            <button className="sprint-onboarding-mobile-back-btn" onClick={() => navigate("/")}>
+              Back to home
+            </button>
           </div>
+
           <div className="sprint-onboarding-mobile-container">
             <div className="sprint-onboarding-mobile-title">
               Your Startup Material
             </div>
-            <p>
+            <div className="sprint-onboarding-mobile-subtitle">
               To begin efficiently, we kindly request access to the following
-              (all fields are optional):
-            </p>
+              (all fields are optional)
+            </div>
 
             <form className="sprint-onboarding-form">
               {/* Brand Guidelines Upload */}
@@ -326,6 +341,18 @@ const SprintOnboardingStep1 = () => {
               >
                 {isSubmitting ? "Saving..." : "Next"}
               </Button>
+            </div>
+
+            {/* Mobile Footer */}
+            <div className="sprint-onboarding-form-footer">
+              <div className="sprint-onboarding-form-footer-right">
+                <a href="/terms" className="sprint-onboarding-terms-link">
+                  Terms of Services
+                </a>
+              </div>
+              <div className="sprint-onboarding-form-footer-left">
+                © Leansprintr 2025. All Rights Reserved
+              </div>
             </div>
           </div>
         </>

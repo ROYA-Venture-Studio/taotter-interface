@@ -329,7 +329,7 @@ export default function BoardPage() {
                       columns={boardColumns}
                       onEditTask={handleEditTask}
                       onDeleteTask={handleDeleteTask}
-                      onMoveTask={null}
+                      onMoveTask={handleMoveTask}
                       currentColumnId={selectedTask?.columnId}
                       admins={admins}
                       isStartupUser={false}

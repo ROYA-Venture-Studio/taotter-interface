@@ -360,7 +360,7 @@ export default function StartupBoardPage() {
                       columns={boardColumns}
                       onEditTask={handleEditTask}
                       onDeleteTask={handleDeleteTask}
-                      onMoveTask={null}
+                      onMoveTask={handleMoveTask}
                       currentColumnId={selectedTask?.columnId}
                       admins={[]}
                       isStartupUser={true}

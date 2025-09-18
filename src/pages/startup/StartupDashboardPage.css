@@ -484,15 +484,14 @@
     background: #2C2E33;
     border-radius: 20px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-    padding: 20px 16px 16px 16px;
+    padding: 24px;
     width: 585px;
-    height: 330px;
+    max-width: 90vw;
     text-align: center;
     font-family: 'Outfit', sans-serif;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
 }
 
 .dashboard-modal h2 {
@@ -505,7 +504,7 @@
 .dashboard-modal-subtitle {
     font-size: 1.1rem;
     color: white;
-    margin-bottom: 32px;
+    margin-bottom: 24px;
 }
 
 .dashboard-modal-actions {
@@ -562,12 +561,38 @@
     border-color: #E04527;
 }
 
+/* Modal form input placeholder styling */
+.dashboard-modal input::placeholder,
+.dashboard-modal textarea::placeholder,
+.dashboard-modal select::placeholder {
+    color: #ADADAD !important;
+}
+
+.dashboard-modal input::-webkit-input-placeholder,
+.dashboard-modal textarea::-webkit-input-placeholder,
+.dashboard-modal select::-webkit-input-placeholder {
+    color: #ADADAD !important;
+}
+
+.dashboard-modal input::-moz-placeholder,
+.dashboard-modal textarea::-moz-placeholder,
+.dashboard-modal select::-moz-placeholder {
+    color: #ADADAD !important;
+    opacity: 1;
+}
+
+.dashboard-modal input:-ms-input-placeholder,
+.dashboard-modal textarea:-ms-input-placeholder,
+.dashboard-modal select:-ms-input-placeholder {
+    color: #ADADAD !important;
+}
+
 @media (max-width: 480px) {
     .dashboard-modal {
-        padding: 12px 10px;
+        padding: 20px 16px;
         width: 320px;
-        height: 250px;
         max-width: 90vw;
+        margin: 8px;
     }
     .dashboard-modal h2 {
         font-size: 1.3rem;
@@ -575,7 +600,7 @@
     }
     .dashboard-modal-subtitle {
         font-size: 1rem;
-        margin-bottom: 24px;
+        margin-bottom: 20px;
     }
     .dashboard-modal-btn {
         font-size: 1rem;
