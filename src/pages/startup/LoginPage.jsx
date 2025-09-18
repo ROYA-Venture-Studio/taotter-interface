@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Icon } from "../../components/ui";
-import authImage from "../../assets/images/login.png";
+import authImage from "../../assets/images/form.png";
 import leanSprintLogo from "../../assets/logo/LeanSprintNewLogo.png";
 import "./LoginPage.css";
 import { useStartupLoginMutation } from "../../store/api/authApi";
@@ -268,6 +268,12 @@ const LoginPage = () => {
                 Sign up
               </a>
             </div>
+
+            {/* Footer */}
+            <div className="login-form-footer">
+              <div className="login-form-footer-left">© Leansprintr 2025. All Rights Reserved</div>
+              <div className="login-form-footer-right">Terms of Services</div>
+            </div>
           </div>
         </>
       ) : (
@@ -411,6 +417,12 @@ const LoginPage = () => {
               <a href="/signup" className="signup-link">
                 Sign up
               </a>
+            </div>
+
+            {/* Footer */}
+            <div className="login-form-footer">
+              <div className="login-form-footer-left">© Leansprintr 2025. All Rights Reserved</div>
+              <div className="login-form-footer-right">Terms of Services</div>
             </div>
           </div>
 

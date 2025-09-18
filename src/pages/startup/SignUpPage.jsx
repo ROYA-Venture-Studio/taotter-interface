@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Icon } from "../../components/ui";
-import signupImage from "../../assets/images/auth2.png";
+import signupImage from "../../assets/images/form.png";
 import leanSprintLogo from "../../assets/logo/LeanSprintNewLogo.png";
 import "./SignUpPage.css";
 import { useStartupRegisterMutation } from "../../store/api/authApi";
@@ -392,6 +392,12 @@ const SignUpPage = () => {
                 {isSubmitting ? "Signing up..." : "Sign up"}
               </button>
             </form>
+
+            {/* Footer */}
+            <div className="signup-form-footer">
+              <div className="signup-form-footer-left">© Leansprintr 2025. All Rights Reserved</div>
+              <div className="signup-form-footer-right">Terms of Services</div>
+            </div>
           </div>
         </>
       ) : (
@@ -605,6 +611,12 @@ const SignUpPage = () => {
                 {isSubmitting ? "Signing up..." : "Sign up"}
               </button>
             </form>
+
+            {/* Footer */}
+            <div className="signup-form-footer">
+              <div className="signup-form-footer-left">© Leansprintr 2025. All Rights Reserved</div>
+              <div className="signup-form-footer-right">Terms of Services</div>
+            </div>
           </div>
           <div className="signup-right">
             <img

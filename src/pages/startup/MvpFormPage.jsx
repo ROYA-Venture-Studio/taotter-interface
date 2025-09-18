@@ -184,6 +184,10 @@ const MvpFormPage = () => {
     }
   };
 
+  const handleBackToHome = () => {
+    navigate('/');
+  };
+
   // Form submission
   const handleSubmit = async () => {
     if (!validateStep3()) return;
@@ -255,7 +259,7 @@ const MvpFormPage = () => {
               alt="LeanSprint Logo"
               className="mvp-mobile-logo"
             />
-            <button className="mvp-mobile-back-btn">Back to home</button>
+            <button className="mvp-mobile-back-btn" onClick={handleBackToHome}>Back to home</button>
           </div>
 
           <div className="mvp-mobile-container">
@@ -569,6 +573,12 @@ const MvpFormPage = () => {
                 </div>
               </>
             )}
+            
+            {/* Footer */}
+            <div className="mvp-form-footer">
+              <div className="mvp-form-footer-left">© Leansprintr 2025. All Rights Reserved</div>
+              <div className="mvp-form-footer-right">Terms of Services</div>
+            </div>
           </div>
         </>
       ) : (
@@ -582,7 +592,7 @@ const MvpFormPage = () => {
                 alt="LeanSprint Logo"
                 className="mvp-desktop-logo"
               />
-              <button className="mvp-desktop-back-btn">Back to home</button>
+              <button className="mvp-desktop-back-btn" onClick={handleBackToHome}>Back to home</button>
             </div>
 
             <div className="mvp-form-title">
@@ -754,7 +764,7 @@ const MvpFormPage = () => {
                   disabled={isSubmitting}
                   style={{ background: "#EB5E28" }}
                 >
-                  Next
+                  Continue
                 </button>
               </>
             )}
@@ -879,6 +889,12 @@ const MvpFormPage = () => {
                 </div>
               </>
             )}
+            
+            {/* Footer */}
+            <div className="mvp-form-footer">
+              <div className="mvp-form-footer-left">© Leansprintr 2025. All Rights Reserved</div>
+              <div className="mvp-form-footer-right">Terms of Services</div>
+            </div>
           </div>
           {/* Right: Image */}
           <div className="mvp-form-right">

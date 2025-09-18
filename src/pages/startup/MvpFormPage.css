@@ -47,6 +47,8 @@
   box-sizing: border-box;
   position: relative;
   overflow: hidden;
+  min-height: 100vh;
+  justify-content: space-between;
 }
 
 /* Desktop Header */
@@ -82,36 +84,30 @@
 .mvp-form-left::before {
   content: "";
   position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 400px;
-  height: 400px;
-  background: radial-gradient(
-    circle,
-    rgba(255, 140, 0, 0.08) 0%,
-    rgba(255, 140, 0, 0.04) 30%,
-    rgba(255, 140, 0, 0.02) 50%,
-    transparent 70%
-  );
-  z-index: 1;
+  bottom: -10%;
+  left: -20%;
+  width: 600px;
+  height: 600px;
+  background-image: url('../../assets/images/background/1.png');
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: bottom left;
+  z-index: 0;
   pointer-events: none;
 }
 
 .mvp-form-left::after {
   content: "";
   position: absolute;
-  top: 0;
-  right: 0;
-  width: 400px;
-  height: 400px;
-  background: radial-gradient(
-    circle,
-    rgba(64, 224, 208, 0.08) 0%,
-    rgba(64, 224, 208, 0.04) 30%,
-    rgba(64, 224, 208, 0.02) 50%,
-    transparent 70%
-  );
-  z-index: 1;
+  top: 10%;
+  right: -60%;
+  width: 600px;
+  height: 600px;
+  background-image: url('../../assets/images/background/2.png');
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: top right;
+  z-index: 0;
   pointer-events: none;
 }
 
@@ -122,6 +118,8 @@
   color: #ffffff;
   margin-bottom: 40px;
   width: 100%;
+  position: relative;
+  z-index: 2;
 }
 
 .mvp-form-progress-bar {
@@ -132,6 +130,8 @@
   align-items: center;
   justify-content: flex-start;
   margin: 0 0 40px 0;
+  position: relative;
+  z-index: 2;
 }
 
 .mvp-form-progress-step {
@@ -174,6 +174,8 @@
   gap: 48px;
   width: 100%;
   margin-bottom: 31px;
+  position: relative;
+  z-index: 2;
 }
 
 .mvp-form-col {
@@ -227,6 +229,8 @@ select.mvp-form-input {
   margin-bottom: 31px;
   display: flex;
   flex-direction: column;
+  position: relative;
+  z-index: 2;
 }
 
 .mvp-form-keygoals-input {
@@ -253,6 +257,8 @@ select.mvp-form-input {
   margin-bottom: 33px;
   display: flex;
   flex-direction: column;
+  position: relative;
+  z-index: 2;
 }
 
 .mvp-form-radio-label {
@@ -265,14 +271,14 @@ select.mvp-form-input {
 .mvp-form-radio-options {
   display: flex;
   flex-direction: row;
-  gap: 32px;
+  gap: 16px;
   align-items: center;
 }
 
 .mvp-form-radio-btn {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 }
 
 .mvp-form-radio-btn input[type="radio"] {
@@ -282,24 +288,27 @@ select.mvp-form-input {
 }
 
 .mvp-form-radio-btn-label {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
   color: #ffffff;
+  white-space: nowrap;
 }
 
 .mvp-form-next-btn {
   width: 100%;
-  max-width: 120px;
+  max-width: 100%;
   height: 44px;
   background: #eb5e28;
   color: #fff;
   border: none;
   border-radius: 8px;
-  font-size: 14px;
-  font-weight: 500;
-  margin-top: 33px;
+  font-size: 24px;
+  font-weight: 400;
+  /* margin-top: 33px; */
   cursor: pointer;
   transition: background 0.15s;
+  position: relative;
+  z-index: 2;
 }
 
 .mvp-form-next-btn:hover {
@@ -312,32 +321,34 @@ select.mvp-form-input {
   gap: 24px;
   margin-top: 31px;
   width: 100%;
+  position: relative;
+  z-index: 2;
 }
 
 .mvp-form-btn-back {
-  width: 100%;
-  max-width: 80px;
-  height: 44px;
-  background: #3a3f47;
-  color: #ffffff;
-  border: 1px solid #3a3f47;
+  width: 242px;
+  max-width: 242px;
+  height: 56px;
+  background: #ffffff;
+  color: #000000;
+  border: 1px solid #ffffff;
   border-radius: 8px;
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 24px;
+  font-weight: 400;
   cursor: pointer;
   transition: background 0.15s;
 }
 
 .mvp-form-btn-next {
-  width: 100%;
-  max-width: 80px;
-  height: 44px;
+  width: 242px;
+  max-width: 242px;
+  height: 56px;
   background: #eb5e28;
   color: #fff;
   border: none;
   border-radius: 8px;
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 24px;
+  font-weight: 400;
   cursor: pointer;
   transition: background 0.15s;
 }
@@ -347,15 +358,15 @@ select.mvp-form-input {
 }
 
 .mvp-form-btn-start {
-  width: 100%;
-  max-width: 120px;
-  height: 44px;
+  width: 242px;
+  max-width: 242px;
+  height: 56px;
   background: #eb5e28;
   color: #fff;
   border: none;
   border-radius: 8px;
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 24px;
+  font-weight: 400;
   cursor: pointer;
   transition: background 0.15s;
 }
@@ -597,7 +608,7 @@ select.mvp-form-input {
 
   .mvp-mobile-container {
     background: #282c34;
-    padding: 24px;
+    padding: 24px 24px 120px 24px;
     margin: 0;
     max-width: 100%;
     position: relative;
@@ -612,14 +623,11 @@ select.mvp-form-input {
     left: 0;
     width: 300px;
     height: 300px;
-    background: radial-gradient(
-      circle,
-      rgba(255, 140, 0, 0.08) 0%,
-      rgba(255, 140, 0, 0.04) 30%,
-      rgba(255, 140, 0, 0.02) 50%,
-      transparent 70%
-    );
-    z-index: 1;
+    background-image: url('../../assets/images/background/1.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: bottom left;
+    z-index: 0;
     pointer-events: none;
   }
 
@@ -630,14 +638,11 @@ select.mvp-form-input {
     right: 0;
     width: 300px;
     height: 300px;
-    background: radial-gradient(
-      circle,
-      rgba(64, 224, 208, 0.08) 0%,
-      rgba(64, 224, 208, 0.04) 30%,
-      rgba(64, 224, 208, 0.02) 50%,
-      transparent 70%
-    );
-    z-index: 1;
+    background-image: url('../../assets/images/background/2.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: top right;
+    z-index: 0;
     pointer-events: none;
   }
 
@@ -731,5 +736,68 @@ select.mvp-form-input {
     background-position: right 12px center;
     background-size: 16px;
     padding-right: 40px;
+  }
+
+  /* Mobile button styling */
+  .mvp-form-btn-row {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .mvp-form-btn-back,
+  .mvp-form-btn-next {
+    width: 100% !important;
+    max-width: 408px !important;
+    height: 46px !important;
+  }
+}
+
+/* Footer styling */
+.mvp-form-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  padding-top: 20px;
+  width: 100%;
+  position: relative;
+  z-index: 2;
+}
+
+.mvp-form-footer-left {
+  font-size: 16px;
+  font-weight: 400;
+  color: #ffffff;
+  font-family: 'Outfit', sans-serif;
+}
+
+.mvp-form-footer-right {
+  font-size: 16px;
+  font-weight: 400;
+  color: #ffffff;
+  font-family: 'Outfit', sans-serif;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.mvp-form-footer-right:hover {
+  color: #eb5e28;
+}
+
+/* Mobile footer styling */
+@media (max-width: 768px) {
+  .mvp-form-footer {
+    flex-direction: column-reverse;
+    align-items: center;
+    gap: 8px;
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #282c34;
+    padding: 16px 24px;
+    margin-top: 0;
+    border-top: 1px solid #3a3f47;
   }
 }

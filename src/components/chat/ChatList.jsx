@@ -40,6 +40,14 @@ export default function ChatList({ onChatSelect }) {
         <h2 className="chat-list-title">Chats</h2>
       </div>
       
+      <div className="chat-list-search-container">
+        <input
+          type="text"
+          placeholder="Search"
+          className="chat-list-search-input"
+        />
+      </div>
+      
       <div className="chat-list-items">
         {isLoading && (
           <div className="chat-list-loading">Loading chats...</div>

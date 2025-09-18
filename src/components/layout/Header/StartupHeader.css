@@ -22,9 +22,13 @@
   margin-top: 130px;
 } */
 
-body {
-  padding-top: 80px; /* Header height (~98px) + 32px margin */
-} 
+/* Only apply header spacing to specific pages that need it */
+.dashboard-page,
+.board-page,
+.startup-chat-page {
+  padding-top: 80px !important;
+}
+
 /* Reset standalone pages specifically */
 .leansprint-homepage,
 .mvp-form-page,

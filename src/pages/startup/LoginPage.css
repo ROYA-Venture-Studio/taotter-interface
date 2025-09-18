@@ -35,6 +35,8 @@
   box-sizing: border-box;
   position: relative;
   overflow: hidden;
+  min-height: 100vh;
+  justify-content: space-between;
 }
 
 .login-right {
@@ -77,36 +79,30 @@
 .login-left::before {
   content: "";
   position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 400px;
-  height: 400px;
-  background: radial-gradient(
-    circle,
-    rgba(255, 140, 0, 0.08) 0%,
-    rgba(255, 140, 0, 0.04) 30%,
-    rgba(255, 140, 0, 0.02) 50%,
-    transparent 70%
-  );
-  z-index: 1;
+  bottom: -10%;
+  left: -20%;
+  width: 600px;
+  height: 600px;
+  background-image: url('../../assets/images/background/1.png');
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: bottom left;
+  z-index: 0;
   pointer-events: none;
 }
 
 .login-left::after {
   content: "";
   position: absolute;
-  top: 0;
-  right: 0;
-  width: 400px;
-  height: 400px;
-  background: radial-gradient(
-    circle,
-    rgba(64, 224, 208, 0.08) 0%,
-    rgba(64, 224, 208, 0.04) 30%,
-    rgba(64, 224, 208, 0.02) 50%,
-    transparent 70%
-  );
-  z-index: 1;
+  top: 10%;
+  right: -60%;
+  width: 600px;
+  height: 600px;
+  background-image: url('../../assets/images/background/2.png');
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: top right;
+  z-index: 0;
   pointer-events: none;
 }
 
@@ -283,8 +279,8 @@
   color: #fff;
   border: none;
   border-radius: 8px;
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 24px;
+  font-weight: 400;
   cursor: pointer;
   font-family: "Aspekta", sans-serif;
   transition: background 0.15s;
@@ -527,14 +523,11 @@
     left: 0;
     width: 300px;
     height: 300px;
-    background: radial-gradient(
-      circle,
-      rgba(255, 140, 0, 0.08) 0%,
-      rgba(255, 140, 0, 0.04) 30%,
-      rgba(255, 140, 0, 0.02) 50%,
-      transparent 70%
-    );
-    z-index: 1;
+    background-image: url('../../assets/images/background/1.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: bottom left;
+    z-index: 0;
     pointer-events: none;
   }
 
@@ -545,14 +538,11 @@
     right: 0;
     width: 300px;
     height: 300px;
-    background: radial-gradient(
-      circle,
-      rgba(64, 224, 208, 0.08) 0%,
-      rgba(64, 224, 208, 0.04) 30%,
-      rgba(64, 224, 208, 0.02) 50%,
-      transparent 70%
-    );
-    z-index: 1;
+    background-image: url('../../assets/images/background/2.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: top right;
+    z-index: 0;
     pointer-events: none;
   }
 
@@ -649,4 +639,54 @@
 .signup-link:hover {
   opacity: 0.8;
   text-decoration: underline;
+}
+
+/* Footer styling */
+.login-form-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  padding-top: 20px;
+  width: 100%;
+  position: relative;
+  z-index: 2;
+}
+
+.login-form-footer-left {
+  font-size: 16px;
+  font-weight: 400;
+  color: #ffffff;
+  font-family: 'Outfit', sans-serif;
+}
+
+.login-form-footer-right {
+  font-size: 16px;
+  font-weight: 400;
+  color: #ffffff;
+  font-family: 'Outfit', sans-serif;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.login-form-footer-right:hover {
+  color: #eb5e28;
+}
+
+/* Mobile footer styling */
+@media (max-width: 768px) {
+  .login-form-footer {
+    flex-direction: column-reverse;
+    align-items: center;
+    gap: 8px;
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #282c34;
+    padding: 16px 24px;
+    margin-top: 0;
+    border-top: 1px solid #3a3f47;
+  }
 }

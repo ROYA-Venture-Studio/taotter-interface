@@ -6,7 +6,7 @@ const DashboardLayout = ({ children }) => (
   <div className="dashboard-layout">
     <StartupHeader />
     <main className="dashboard-main-content">{children}</main>
-    <Footer />
+    {/* <Footer /> */}
   </div>
 );
 
