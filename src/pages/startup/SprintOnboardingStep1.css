@@ -3,11 +3,11 @@
 /* Base page styles */
 .sprint-onboarding-page {
   min-height: 100vh;
-  background: #282c34 !important;
+  background: #282c34;
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  padding-top: 50px;
+  padding: 0;
   width: 100vw;
   box-sizing: border-box;
 }
@@ -35,41 +35,37 @@
   box-sizing: border-box;
   position: relative;
   overflow: hidden;
+  min-height: 100vh;
+  justify-content: space-between;
 }
 
 .sprint-onboarding-left::before {
   content: "";
   position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 400px;
-  height: 400px;
-  background: radial-gradient(
-    circle,
-    rgba(255, 140, 0, 0.08) 0%,
-    rgba(255, 140, 0, 0.04) 30%,
-    rgba(255, 140, 0, 0.02) 50%,
-    transparent 70%
-  );
-  z-index: 1;
+  bottom: -10%;
+  left: -20%;
+  width: 600px;
+  height: 600px;
+  background-image: url('../../assets/images/background/1.png');
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: bottom left;
+  z-index: 0;
   pointer-events: none;
 }
 
 .sprint-onboarding-left::after {
   content: "";
   position: absolute;
-  top: 0;
-  right: 0;
-  width: 400px;
-  height: 400px;
-  background: radial-gradient(
-    circle,
-    rgba(64, 224, 208, 0.08) 0%,
-    rgba(64, 224, 208, 0.04) 30%,
-    rgba(64, 224, 208, 0.02) 50%,
-    transparent 70%
-  );
-  z-index: 1;
+  top: 10%;
+  right: -60%;
+  width: 600px;
+  height: 600px;
+  background-image: url('../../assets/images/background/2.png');
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: top right;
+  z-index: 0;
   pointer-events: none;
 }
 
@@ -89,6 +85,8 @@
   align-items: center;
   width: 100%;
   margin-bottom: 40px;
+  position: relative;
+  z-index: 2;
 }
 
 .sprint-onboarding-desktop-logo {
@@ -106,6 +104,7 @@
   font-weight: 500;
   cursor: pointer;
   transition: background 0.15s;
+  font-family: "Aspekta", sans-serif;
 }
 
 .sprint-onboarding-desktop-back-btn:hover {
@@ -328,7 +327,6 @@
   align-items: flex-start;
   gap: 12px;
   width: 100%;
-  margin-top: 32px;
   padding-top: 16px;
   justify-content: space-between;
 }
@@ -351,32 +349,32 @@
 }
 
 .sprint-onboarding-btn-back {
-  width: 100%;
-  max-width: 80px;
-  height: 44px;
-  background: #3a3f47;
-  color: #ffffff;
-  border: 1px solid #3a3f47;
+  width: 255px;
+  max-width: 255px;
+  height: 56px;
+  background: #ffffff;
+  color: #000000;
+  border: 1px solid #ffffff;
   border-radius: 8px;
-  font-size: 14px;
+  font-size: 24px;
   font-weight: 500;
   cursor: pointer;
   transition: background 0.15s;
 }
 
 .sprint-onboarding-btn-back:hover {
-  background: #4a4f57;
+  background: #f0f0f0;
 }
 
 .sprint-onboarding-btn-next {
-  width: 100%;
-  max-width: 80px;
-  height: 44px;
+  width: 255px;
+  max-width: 255px;
+  height: 56px;
   background: #eb5e28;
   color: #fff;
   border: none;
   border-radius: 8px;
-  font-size: 14px;
+  font-size: 24px;
   font-weight: 500;
   cursor: pointer;
   transition: background 0.15s;
@@ -417,20 +415,21 @@
   width: 100%;
   margin-top: auto;
   padding-top: 20px;
-  border-top: 1px solid #555;
   position: relative;
   z-index: 2;
 }
 
 .sprint-onboarding-footer-left {
   color: #ccc;
-  font-size: 12px;
+  font-size: 16px;
+  font-weight: 400;
   font-family: "Aspekta", sans-serif;
 }
 
 .sprint-onboarding-footer-right {
   color: #ccc;
-  font-size: 12px;
+  font-size: 16px;
+  font-weight: 400;
   font-family: "Aspekta", sans-serif;
 }
 

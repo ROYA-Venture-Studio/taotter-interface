@@ -339,7 +339,7 @@ const SprintOnboardingStep1 = () => {
                 className="sprint-onboarding-desktop-logo"
               />
               <button
-                onClick={() => navigate("/sprint/status")}
+                onClick={() => navigate("/")}
                 className="sprint-onboarding-desktop-back-btn"
               >
                 Back to home
