@@ -46,6 +46,14 @@ export default function SidebarChatList({ onClose, isClosing = false }) {
         </button>
       </div>
       
+      <div className={styles.searchContainer}>
+        <input
+          type="text"
+          placeholder="Search"
+          className={styles.searchInput}
+        />
+      </div>
+      
       <div className={styles.chatItems}>
         {isLoading && <div>Loading chats...</div>}
         {error && <div style={{ color: "red" }}>Failed to load chats.</div>}

@@ -1,9 +1,9 @@
-/* SprintOnboardingStep1 - Following SignUpPage Design Pattern */
+/* SprintOnboardingStep1 - Following MvpFormPage Design Pattern */
 
 /* Base page styles */
 .sprint-onboarding-page {
   min-height: 100vh;
-  background: #fff;
+  background: #282c34;
   display: flex;
   justify-content: center;
   align-items: flex-start;
@@ -18,60 +18,170 @@
   flex-direction: row;
   width: 100vw;
   min-height: 100vh;
-  background: #fff;
+  background: #282c34;
   border-radius: 0;
   box-shadow: none;
   overflow: hidden;
 }
 
 .sprint-onboarding-left {
-  flex: 1 1 0;
+  flex: 0 0 50%;
   min-width: 400px;
-  padding: 112px 8vw 40px 8vw;
+  padding: 40px 6vw 77px 8vw;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  background: #fff;
+  background: #282c34 !important;
   box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
+  min-height: 100vh;
+  justify-content: space-between;
+}
+
+.sprint-onboarding-left::before {
+  content: "";
+  position: absolute;
+  bottom: -10%;
+  left: -20%;
+  width: 600px;
+  height: 600px;
+  background-image: url('../../assets/images/background/1.png');
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: bottom left;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.sprint-onboarding-left::after {
+  content: "";
+  position: absolute;
+  top: 10%;
+  right: -60%;
+  width: 600px;
+  height: 600px;
+  background-image: url('../../assets/images/background/2.png');
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: top right;
+  z-index: 0;
+  pointer-events: none;
 }
 
 .sprint-onboarding-right {
-  flex: 0 0 594px;
+  flex: 0 0 50%;
   min-width: 300px;
-  background: #F9FAFB;
-  display: flex;
-  align-items: stretch;
-  justify-content: center;
-  height: auto;
+  background: #f9fafb;
+  position: relative;
   padding: 0;
+  margin: 0;
+}
+
+/* Desktop Header */
+.sprint-onboarding-desktop-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 40px;
+  position: relative;
+  z-index: 2;
+}
+
+.sprint-onboarding-desktop-logo {
+  height: 48px;
+  width: auto;
+}
+
+.sprint-onboarding-desktop-back-btn {
+  background: #3a3f47;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s;
+  font-family: "Aspekta", sans-serif;
+}
+
+.sprint-onboarding-desktop-back-btn:hover {
+  background: #4a4f57;
+}
+
+/* Content Container */
+.sprint-onboarding-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  position: relative;
+  z-index: 2;
 }
 
 .sprint-onboarding-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center;
+  border-radius: 0;
   display: block;
-  max-height: 100vh;
+  position: absolute;
+  top: 0;
+  right: 0;
+  object-position: right;
 }
 
-/* Form styles - Matching SignUpPage */
-.sprint-onboarding-form-title {
+.sprint-onboarding-image-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 60px 40px;
+  box-sizing: border-box;
+}
+
+.sprint-onboarding-image-overlay h2 {
+  color: #ffffff;
   font-size: 36px;
   font-weight: 700;
+  margin: 0 0 16px 0;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.sprint-onboarding-image-overlay p {
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 400;
+  margin: 0;
+  line-height: 1.4;
+  text-align: center;
+}
+
+/* Form styles - Dark Theme */
+.sprint-onboarding-title {
+  font-size: 30px;
+  font-weight: 700;
   text-align: left;
-  color: #252525;
-  margin-bottom: 12px;
-  font-family: 'Aspekta', sans-serif;
+  color: #ffffff;
+  margin-bottom: 40px;
   width: 100%;
 }
 
-.sprint-onboarding-form-subtitle {
+.sprint-onboarding-subtitle {
   font-size: 14px;
   font-weight: 400;
-  color: #667085;
+  color: #ccc;
   margin-bottom: 32px;
-  font-family: 'Aspekta', sans-serif;
   width: 100%;
 }
 
@@ -81,6 +191,8 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
+  position: relative;
+  z-index: 2;
 }
 
 /* Form field styles to match SignUpPage */
@@ -93,9 +205,8 @@
 .field-label {
   font-size: 15px;
   font-weight: 500;
-  color: #252525;
-  margin-bottom: 8px;
-  font-family: 'Aspekta', sans-serif;
+  color: #ffffff;
+  margin-bottom: 16px;
   display: block;
 }
 
@@ -103,13 +214,12 @@
 .sprint-onboarding-form-field textarea {
   width: 100%;
   height: 44px;
-  border: 1px solid #D0D5DD;
+  border: 1px solid #3a3f47;
   border-radius: 8px;
   padding: 0 16px;
   font-size: 16px;
-  font-family: 'Aspekta', sans-serif;
-  color: #252525;
-  background: #fff;
+  color: #ffffff;
+  background: #3a3f47;
   outline: none;
   transition: border 0.2s;
   box-sizing: border-box;
@@ -124,7 +234,7 @@
 
 .sprint-onboarding-form-field input:focus,
 .sprint-onboarding-form-field textarea:focus {
-  border: 1.5px solid #EB5E28;
+  border: 1.5px solid #eb5e28;
 }
 
 /* File Upload */
@@ -138,7 +248,7 @@
 }
 
 .file-upload-button {
-  border: 1px solid #D0D5DD;
+  border: 1px solid #3a3f47;
   border-radius: 8px;
   width: 100%;
   height: 44px;
@@ -149,17 +259,16 @@
   padding: 10px 16px;
   cursor: pointer;
   transition: border-color 0.2s ease;
-  background: #fff;
+  background: #3a3f47;
   box-sizing: border-box;
 }
 
 .file-upload-button:hover {
-  border-color: #EB5E28;
+  border-color: #eb5e28;
 }
 
 .file-upload-button span {
-  color: #252525;
-  font-family: 'Aspekta', sans-serif;
+  color: #ffffff;
   font-size: 16px;
   font-weight: 400;
   line-height: 25.6px;
@@ -181,8 +290,8 @@
 }
 
 .file-selected {
-  color: #EB5E28;
-  font-family: 'Aspekta', sans-serif;
+  color: #eb5e28;
+  font-family: "Aspekta", sans-serif;
   font-size: 14px;
   font-weight: 500;
   margin-top: 8px;
@@ -197,7 +306,7 @@
   font-size: 14px;
   font-weight: 400;
   margin-top: 8px;
-  font-family: 'Aspekta', sans-serif;
+  font-family: "Aspekta", sans-serif;
 }
 
 .submit-error {
@@ -209,16 +318,15 @@
   background: rgba(231, 76, 60, 0.1);
   border-radius: 6px;
   border: 1px solid rgba(231, 76, 60, 0.2);
-  font-family: 'Aspekta', sans-serif;
+  font-family: "Aspekta", sans-serif;
 }
 
 /* Navigation */
-.sprint-onboarding-navigation {
+.sprint-onboarding-btn-row {
   display: flex;
   align-items: flex-start;
   gap: 12px;
   width: 100%;
-  margin-top: 32px;
   padding-top: 16px;
   justify-content: space-between;
 }
@@ -226,7 +334,7 @@
 .nav-button {
   border-radius: 8px;
   padding: 12px 32px;
-  font-family: 'Aspekta', sans-serif;
+  font-family: "Aspekta", sans-serif;
   font-size: 14px;
   font-weight: 500;
   line-height: 20px;
@@ -240,41 +348,54 @@
   border: none;
 }
 
-.back-button {
-  opacity: 0.6;
-  border: 1px solid #D0D5DD;
-  background: transparent;
-  color: #252525;
-  max-width: 114px;
+.sprint-onboarding-btn-back {
+  width: 255px;
+  max-width: 255px;
+  height: 56px;
+  background: #ffffff;
+  color: #000000;
+  border: 1px solid #ffffff;
+  border-radius: 8px;
+  font-size: 24px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s;
 }
 
-.back-button:hover {
-  opacity: 0.8;
+.sprint-onboarding-btn-back:hover {
+  background: #f0f0f0;
 }
 
-.next-button {
-  background: #EB5E28;
-  border: none;
+.sprint-onboarding-btn-next {
+  width: 255px;
+  max-width: 255px;
+  height: 56px;
+  background: #eb5e28;
   color: #fff;
-  max-width: 114px;
+  border: none;
+  border-radius: 8px;
+  font-size: 24px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s;
 }
 
-.next-button:hover:not(:disabled) {
+.sprint-onboarding-btn-next:hover:not(:disabled) {
   background: #c94d1e;
 }
 
-.next-button:disabled {
+.sprint-onboarding-btn-next:disabled {
   opacity: 0.4;
   cursor: not-allowed;
 }
 
 .sprint-get-started-btn {
-  background: #EB5E28;
+  background: #eb5e28;
   color: #fff;
   border: none;
   border-radius: 8px;
   padding: 12px 24px;
-  font-family: 'Aspekta', sans-serif;
+  font-family: "Aspekta", sans-serif;
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
@@ -286,6 +407,42 @@
   background: #c94d1e;
 }
 
+/* Footer */
+.sprint-onboarding-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-top: auto;
+  padding-top: 20px;
+  position: relative;
+  z-index: 2;
+}
+
+.sprint-onboarding-footer-left {
+  color: #ccc;
+  font-size: 16px;
+  font-weight: 400;
+  font-family: "Aspekta", sans-serif;
+}
+
+.sprint-onboarding-footer-right {
+  color: #ccc;
+  font-size: 16px;
+  font-weight: 400;
+  font-family: "Aspekta", sans-serif;
+}
+
+.sprint-onboarding-terms-link {
+  color: #ccc;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.sprint-onboarding-terms-link:hover {
+  color: white;
+}
+
 /* Responsive Design */
 @media (max-width: 1200px) {
   .sprint-onboarding-split-container {
@@ -293,7 +450,8 @@
     width: 100vw;
     min-height: 100vh;
   }
-  .sprint-onboarding-left, .sprint-onboarding-right {
+  .sprint-onboarding-left,
+  .sprint-onboarding-right {
     width: 100vw;
     min-width: 0;
     border-radius: 0;
@@ -311,7 +469,8 @@
 }
 
 @media (max-width: 900px) {
-  .sprint-onboarding-left, .sprint-onboarding-right {
+  .sprint-onboarding-left,
+  .sprint-onboarding-right {
     padding: 24px 4vw;
   }
   .sprint-onboarding-form-title {
@@ -329,67 +488,212 @@
 
 @media (max-width: 768px) {
   .sprint-onboarding-page {
-    padding: 19.5px !important;
-    background: #fff;
+    padding: 0 !important;
+    background: #282c34;
     display: block;
-  }
-  
-  .sprint-onboarding-mobile-header {
-    width: 100%;
-    height: 220px;
-    background: #EB5E28;
-    border-radius: 18px 18px 0 0;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-end;
-    padding: 32px 24px 24px 24px;
-    margin: 0;
-    box-sizing: border-box;
+    min-height: 100vh;
   }
 
-  .sprint-onboarding-mobile-header-title {
-    color: #fff;
-    font-size: 38px;
-    font-weight: 700;
-    line-height: 1.1;
-    margin: 0;
-    padding: 0;
-    letter-spacing: -1px;
-    font-family: 'Aspekta', sans-serif;
+  /* Mobile Header */
+  .sprint-onboarding-mobile-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    background: #282c34;
+    position: relative;
+    z-index: 10;
+  }
+
+  .sprint-onboarding-mobile-logo {
+    height: 28px;
+    width: auto;
+  }
+
+  .sprint-onboarding-mobile-back-btn {
+    background: #3a3f47;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s;
+    font-family: "Aspekta", sans-serif;
+  }
+
+  .sprint-onboarding-mobile-back-btn:hover {
+    background: #4a4f57;
   }
 
   .sprint-onboarding-mobile-container {
-    background: #fff;
-    border-radius: 0 0 18px 18px;
-    padding: 24px;
-    margin: 0 auto;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    background: #282c34;
+    padding: 24px 24px 120px 24px;
+    margin: 0;
     max-width: 100%;
     position: relative;
+    overflow: hidden;
+  }
+
+  /* Mobile glow effects */
+  .sprint-onboarding-mobile-container::before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 300px;
+    height: 300px;
+    background-image: url('../../assets/images/background/1.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: bottom left;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .sprint-onboarding-mobile-container::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 300px;
+    height: 300px;
+    background-image: url('../../assets/images/background/2.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: top right;
+    z-index: 0;
+    pointer-events: none;
   }
 
   .sprint-onboarding-mobile-title {
-    color: #333333;
-    font-size: 24px;
+    color: #ffffff;
+    font-size: 32px;
     font-weight: 700;
     line-height: 1.2;
+    margin: 0 0 12px 0;
+    text-align: left;
+    font-family: "Aspekta", sans-serif;
+    position: relative;
+    z-index: 2;
+  }
+
+  .sprint-onboarding-mobile-subtitle {
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 400;
     margin: 0 0 24px 0;
-    text-align: center;
-    font-family: 'Aspekta', sans-serif;
+    text-align: left;
+    font-family: "Aspekta", sans-serif;
+    position: relative;
+    z-index: 2;
   }
 
   .sprint-onboarding-form {
     gap: 20px;
+    margin-top: 0;
+    max-width: 100%;
+    position: relative;
+    z-index: 2;
   }
 
   .sprint-onboarding-form-field {
     margin-bottom: 0;
   }
 
+  /* Mobile navigation */
+  .sprint-onboarding-navigation {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 24px;
+    width: 100%;
+  }
+
   .nav-button {
-    font-size: 14px;
-    padding: 12px 16px;
+    width: 100%;
+    height: 46px;
+    font-size: 20px;
+    font-weight: 500;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: "Aspekta", sans-serif;
+  }
+
+  .nav-button.back-button,
+  .sprint-onboarding-btn-back {
+    background: #ffffff;
+    color: #121212;
+  }
+
+  .nav-button.next-button,
+  .sprint-onboarding-btn-next {
+    background: #F95738;
+    color: #ffffff;
+  }
+
+  /* Mobile form styling - dark theme */
+  .sprint-onboarding-form-field label,
+  .field-label {
+    color: #ffffff;
+  }
+
+  .sprint-onboarding-form-field input,
+  .sprint-onboarding-form-field textarea {
+    background: #3a3f47;
+    border: 1px solid #3a3f47;
+    color: #ffffff;
+  }
+
+  .file-upload-button {
+    background: #3a3f47;
+    border: 1px solid #3a3f47;
+  }
+
+  .file-upload-button span {
+    color: #ffffff;
+  }
+
+  /* Mobile footer styling */
+  .sprint-onboarding-form-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #282c34;
+    padding: 16px 24px;
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+    border-radius: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .sprint-onboarding-form-footer-left,
+  .sprint-onboarding-form-footer-right {
+    font-size: 16px;
+    font-weight: 400;
+    color: #ffffff;
+    font-family: "Aspekta", sans-serif;
+  }
+
+  .sprint-onboarding-terms-link {
+    color: #ffffff;
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+  }
+
+  .sprint-onboarding-terms-link:hover {
+    opacity: 0.8;
+    text-decoration: underline;
   }
 }
 
@@ -397,23 +701,23 @@
   .sprint-onboarding-page {
     padding: 16px 8px;
   }
-  
+
   .sprint-onboarding-mobile-header {
     padding: 24px 16px;
   }
-  
+
   .sprint-onboarding-mobile-header-title {
     font-size: 32px;
   }
-  
+
   .sprint-onboarding-mobile-container {
     padding: 16px;
   }
-  
+
   .sprint-onboarding-mobile-title {
     font-size: 20px;
   }
-  
+
   .nav-button {
     font-size: 14px;
     padding: 10px 12px;
@@ -424,6 +728,6 @@
 .file-upload-button:focus-visible,
 .nav-button:focus-visible,
 .sprint-get-started-btn:focus-visible {
-  outline: 2px solid #EB5E28;
+  outline: 2px solid #eb5e28;
   outline-offset: 2px;
 }

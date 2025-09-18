@@ -103,14 +103,14 @@ if (hasProposals && sprint.questionnaireId) {
                     <div className="dashboard-card-header">
                         <span className="dashboard-card-subtitle">Sprint Onboarding</span>
                     </div>
-                    <div style={{ margin: "0 0", color: "#222", fontSize: "16px", fontWeight: 500 }}>
+                    <div style={{ margin: "0 0", color: "white", fontSize: "16px", fontWeight: 500 }}>
                         We have received your request and it is currently under review.
                     </div>
-                    <div className="dashboard-card-footer">
+                    <div className="dashboard-card-footer" style={{ flexDirection: 'column', gap: '8px' }}>
                         <button
                             type="button"
                             className="btn-onboarding"
-                            style={{ background: "#EB5E28", color: "#fff", borderRadius: 6, padding: "8px 24px", fontWeight: 500, marginRight: 12 }}
+                            style={{ background: "#EB5E28", color: "#fff", borderRadius: 6, padding: "8px 24px", fontWeight: 500, whiteSpace: 'nowrap' }}
                             onClick={handleProceedOnboarding}
                             disabled={checking || !hasProposals}
                         >
@@ -123,7 +123,7 @@ if (hasProposals && sprint.questionnaireId) {
                         <button
                             type="button"
                             className="btn-onboarding"
-                            style={{ background: "#22c55e", color: "#fff", borderRadius: 6, padding: "8px 24px", fontWeight: 500 }}
+                            style={{ background: "#22c55e", color: "#fff", borderRadius: 6, padding: "8px 24px", fontWeight: 500, whiteSpace: 'nowrap' }}
                             onClick={handleScheduleMeeting}
                         >
                             Schedule Meeting
@@ -497,25 +497,47 @@ const StartupDashboardPage = () => {
         refetch();
     };
 
+    // Filter sprints by status
+    const ongoingSprints = localSprints.filter(sprint => sprint.status !== 'completed');
+
     return (
         <div className="dashboard-page">
-            <div className="dashboard-top-section">
-                <h1 className="dashboard-hero-title">Track Your Sprint</h1>
-            </div>
+            <h1 className="track-sprint-title">Track Your Sprint</h1>
 
-            <div className="dashboard-cards-container">
-                {isLoading && <div>Loading sprints...</div>}
-                {error && <div style={{ color: 'red' }}>Failed to load sprints.</div>}
-                {!isLoading && localSprints.length === 0 && (
-                    <div>No active sprints found.</div>
-                )}
-                {localSprints.map((sprint) => (
-                    <SprintCard
-                        key={sprint.id}
-                        sprint={sprint}
-                        onNoBoardClick={() => setShowNoBoardModal(true)}
-                    />
-                ))}
+            <div className="dashboard-columns-container">
+                <div className="dashboard-column">
+                    <h2 className="column-title">Ongoing</h2>
+                    <div className="dashboard-cards-container">
+                        {isLoading && <div style={{ color: 'white' }}>Loading sprints...</div>}
+                        {error && <div style={{ color: 'red' }}>Failed to load sprints.</div>}
+                        {!isLoading && ongoingSprints.length === 0 && (
+                            <div style={{ color: 'white' }}>No ongoing sprints found.</div>
+                        )}
+                        {ongoingSprints.map((sprint) => (
+                            <SprintCard
+                                key={sprint.id}
+                                sprint={sprint}
+                                onNoBoardClick={() => setShowNoBoardModal(true)}
+                            />
+                        ))}
+                    </div>
+                </div>
+
+                <div className="dashboard-column">
+                    <h2 className="column-title">Completed</h2>
+                    <div className="dashboard-cards-container">
+                        {!isLoading && completedSprints.length === 0 && (
+                            <div style={{ color: 'white' }}>No completed sprints found.</div>
+                        )}
+                        {completedSprints.map((sprint) => (
+                            <SprintCard
+                                key={sprint.id}
+                                sprint={sprint}
+                                onNoBoardClick={() => setShowNoBoardModal(true)}
+                            />
+                        ))}
+                    </div>
+                </div>
             </div>
             {/* Start New Sprint Button */}
             {completedSprints.length > 0 && (
@@ -754,7 +776,7 @@ function StartSprintModal({ onClose, onSprintCreated }) {
 
     return (
         <div className="dashboard-modal-backdrop">
-            <div className="dashboard-modal" style={{ width: "100%", maxWidth: "600px", borderRadius: "16px", padding: "32px" }}>
+            <div className="dashboard-modal" style={{ width: "100%", maxWidth: "600px", borderRadius: "16px", padding: "32px", marginTop: "80px" }}>
                 <h2>Start New Sprint</h2>
 <div style={{ marginTop: 16, width: '100%', boxSizing: 'border-box' }}>
 <div style={{ display: 'flex', gap: 8, marginBottom: 24, width: '100%', boxSizing: 'border-box' }}>
@@ -783,76 +805,80 @@ function StartSprintModal({ onClose, onSprintCreated }) {
                     {currentStep === 1 && (
                         <>
 <div style={{ marginBottom: 20, width: '100%', boxSizing: 'border-box' }}>
-                                <label style={{ color: "#222", textAlign: "left", display: "block" }}>Startup Name</label>
+                                <label style={{ color: "white", textAlign: "left", display: "block" }}>Startup Name</label>
 <input
                                     value={formData.startupName}
                                     onChange={e => updateFormData('startupName', e.target.value)}
                                     placeholder="Enter Name"
                                     style={{
                                         width: '100%',
-                                        border: "1px solid #D0D5DD",
+                                        border: "1px solid #3a3f47",
                                         borderRadius: "8px",
                                         minHeight: "44px",
                                         padding: "0 12px",
                                         fontSize: "16px",
                                         boxSizing: "border-box",
-                                        color: "#222"
+                                        backgroundColor: "#3a3f47",
+                                        color: "#FFFFFF"
                                     }}
                                 />
                                 {errors.startupName && <div style={{ color: 'red', fontSize: 12 }}>{errors.startupName}</div>}
                             </div>
                             <div style={{ marginBottom: 20 }}>
-                                <label style={{ color: "#222", textAlign: "left", display: "block" }}>Task Name</label>
+                                <label style={{ color: "white", textAlign: "left", display: "block" }}>Task Name</label>
 <input
                                     value={formData.taskName}
                                     onChange={e => updateFormData('taskName', e.target.value)}
                                     placeholder="Enter Task Name"
                                     style={{
                                         width: '100%',
-                                        border: "1px solid #D0D5DD",
+                                        border: "1px solid #3a3f47",
                                         borderRadius: "8px",
                                         minHeight: "44px",
                                         padding: "0 12px",
                                         fontSize: "16px",
                                         boxSizing: "border-box",
-                                        color: "#222"
+                                        backgroundColor: "#3a3f47",
+                                        color: "#FFFFFF"
                                     }}
                                 />
                                 {errors.taskName && <div style={{ color: 'red', fontSize: 12 }}>{errors.taskName}</div>}
                             </div>
                             <div style={{ marginBottom: 20 }}>
-                                <label style={{ color: "#222", textAlign: "left", display: "block" }}>Task Description</label>
+                                <label style={{ color: "white", textAlign: "left", display: "block" }}>Task Description</label>
 <input
                                     value={formData.taskDescription}
                                     onChange={e => updateFormData('taskDescription', e.target.value)}
                                     placeholder="Give us a brief of the task (minimum 10 characters)"
                                     style={{
                                         width: '100%',
-                                        border: "1px solid #D0D5DD",
+                                        border: "1px solid #3a3f47",
                                         borderRadius: "8px",
                                         minHeight: "44px",
                                         padding: "0 12px",
                                         fontSize: "16px",
                                         boxSizing: "border-box",
-                                        color: "#222"
+                                        backgroundColor: "#3a3f47",
+                                        color: "#FFFFFF"
                                     }}
                                 />
                                 {errors.taskDescription && <div style={{ color: 'red', fontSize: 12 }}>{errors.taskDescription}</div>}
                             </div>
                             <div style={{ marginBottom: 20 }}>
-                                <label style={{ color: "#222", textAlign: "left", display: "block" }}>Stage</label>
+                                <label style={{ color: "white", textAlign: "left", display: "block" }}>Stage</label>
 <select
                                     value={formData.stage}
                                     onChange={e => updateFormData('stage', e.target.value)}
                                     style={{
                                         width: '100%',
-                                        border: "1px solid #D0D5DD",
+                                        border: "1px solid #3a3f47",
                                         borderRadius: "8px",
                                         minHeight: "44px",
                                         padding: "0 12px",
                                         fontSize: "16px",
                                         boxSizing: "border-box",
-                                        color: "#222"
+                                        backgroundColor: "#3a3f47",
+                                        color: "#FFFFFF"
                                     }}
                                 >
                                     {stageOptions.map(opt => (
@@ -862,7 +888,7 @@ function StartSprintModal({ onClose, onSprintCreated }) {
                                 {errors.stage && <div style={{ color: 'red', fontSize: 12 }}>{errors.stage}</div>}
                             </div>
                             <div style={{ marginBottom: 20 }}>
-                                <label style={{ color: "#222", textAlign: "left", display: "block" }}>Key Goals</label>
+                                <label style={{ color: "white", textAlign: "left", display: "block" }}>Key Goals</label>
 <textarea
                                     value={formData.keyGoals}
                                     onChange={e => updateFormData('keyGoals', e.target.value)}
@@ -870,21 +896,22 @@ function StartSprintModal({ onClose, onSprintCreated }) {
                                     rows={2}
                                     style={{
                                         width: '100%',
-                                        border: "1px solid #D0D5DD",
+                                        border: "1px solid #3a3f47",
                                         borderRadius: "8px",
                                         minHeight: "44px",
                                         padding: "8px 12px",
                                         fontSize: "16px",
                                         boxSizing: "border-box",
-                                        color: "#222"
+                                        backgroundColor: "#3a3f47",
+                                        color: "#FFFFFF"
                                     }}
                                 />
                                 {errors.keyGoals && <div style={{ color: 'red', fontSize: 12 }}>{errors.keyGoals}</div>}
                             </div>
                             <div style={{ marginBottom: 20 }}>
-                                <label style={{ color: "#222", textAlign: "left", display: "block" }}>Time Commitment</label>
+                                <label style={{ color: "white", textAlign: "left", display: "block" }}>Time Commitment</label>
 <div style={{ display: 'flex', gap: 16, width: '100%', boxSizing: 'border-box', justifyContent: 'flex-start' }}>
-<label style={{ color: "#222" }}>
+<label style={{ color: "white" }}>
                                         <input
                                             type="radio"
                                             name="timeCommitment"
@@ -894,7 +921,7 @@ function StartSprintModal({ onClose, onSprintCreated }) {
                                         />
                                         Full-time
                                     </label>
-<label style={{ color: "#222" }}>
+<label style={{ color: "white" }}>
                                         <input
                                             type="radio"
                                             name="timeCommitment"
@@ -912,19 +939,20 @@ function StartSprintModal({ onClose, onSprintCreated }) {
                     {currentStep === 2 && (
                         <>
                             <div style={{ marginBottom: 20 }}>
-                                <label style={{ color: "#222", textAlign: "left", display: "block" }}>Timeline in Mind?</label>
+                                <label style={{ color: "white", textAlign: "left", display: "block" }}>Timeline in Mind?</label>
 <select
                                     value={formData.timeline}
                                     onChange={e => updateFormData('timeline', e.target.value)}
                                     style={{
                                         width: '100%',
-                                        border: "1px solid #D0D5DD",
+                                        border: "1px solid #3a3f47",
                                         borderRadius: "8px",
                                         minHeight: "44px",
                                         padding: "0 12px",
                                         fontSize: "16px",
                                         boxSizing: "border-box",
-                                        color: "#222"
+                                        backgroundColor: "#3a3f47",
+                                        color: "#FFFFFF"
                                     }}
                                 >
                                     {timelineOptions.map(opt => (
@@ -934,20 +962,21 @@ function StartSprintModal({ onClose, onSprintCreated }) {
                                 {errors.timeline && <div style={{ color: 'red', fontSize: 12 }}>{errors.timeline}</div>}
                             </div>
                             <div style={{ marginBottom: 20 }}>
-                                <label style={{ color: "#222", textAlign: "left", display: "block" }}>Budget Range</label>
+                                <label style={{ color: "white", textAlign: "left", display: "block" }}>Budget Range</label>
 <input
                                     value={formData.budgetRange}
                                     onChange={e => updateFormData('budgetRange', e.target.value)}
                                     placeholder="Enter an estimated budget (in QAR)"
                                     style={{
                                         width: '100%',
-                                        border: "1px solid #D0D5DD",
+                                        border: "1px solid #3a3f47",
                                         borderRadius: "8px",
                                         minHeight: "44px",
                                         padding: "0 12px",
                                         fontSize: "16px",
                                         boxSizing: "border-box",
-                                        color: "#222"
+                                        backgroundColor: "#3a3f47",
+                                        color: "#FFFFFF"
                                     }}
                                 />
                                 {errors.budgetRange && <div style={{ color: 'red', fontSize: 12 }}>{errors.budgetRange}</div>}
@@ -958,20 +987,21 @@ function StartSprintModal({ onClose, onSprintCreated }) {
                     {currentStep === 3 && (
                         <>
                             <div style={{ marginBottom: 20 }}>
-                                <label style={{ color: "#222", textAlign: "left", display: "block" }}>Additional Information</label>
+                                <label style={{ color: "white", textAlign: "left", display: "block" }}>Additional Information</label>
 <input
                                     value={formData.customRequest}
                                     onChange={e => updateFormData('customRequest', e.target.value)}
                                     placeholder="Enter any additional information or requirements here."
                                     style={{
                                         width: '100%',
-                                        border: "1px solid #D0D5DD",
+                                        border: "1px solid #3a3f47",
                                         borderRadius: "8px",
                                         minHeight: "44px",
                                         padding: "0 12px",
                                         fontSize: "16px",
                                         boxSizing: "border-box",
-                                        color: "#222"
+                                        backgroundColor: "#3a3f47",
+                                        color: "#FFFFFF"
                                     }}
                                 />
                             </div>

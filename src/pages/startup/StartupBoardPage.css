@@ -1,12 +1,667 @@
-/* Placeholder for StartupBoardPage styles. 
-   You can add custom styles here if needed. 
-   For now, this prevents Vite import errors. */
+/* StartupBoardPage Styles - Dark Theme */
 
+/* Apply background to entire page */
 .dashboard-layout {
   min-height: 100vh;
-  background: linear-gradient(#fff 0%, #ece9e6 100%);
+  background: #2C2E33;
+  position: relative;
+}
+
+/* Background Images - Move to dashboard-layout */
+.dashboard-layout::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('../../assets/images/background/1.png'), url('../../assets/images/background/2.png');
+  background-repeat: no-repeat;
+  /* Desktop positioning */
+  background-position: 
+    top -80% left -70%,
+    bottom right -70%;
+  background-size: auto, auto;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.dashboard-layout > * {
+  position: relative;
+  z-index: 1;
 }
 
 .board-page {
   min-height: 100vh;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  padding: 32px 75px;
+  font-family: 'Outfit', sans-serif;
+  position: relative;
+}
+
+.board-page-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.board-page-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: white !important;
+  font-family: 'Outfit', sans-serif;
+  background: none !important;
+  -webkit-background-clip: initial !important;
+  -webkit-text-fill-color: white !important;
+  background-clip: initial !important;
+}
+
+.board-main-container {
+  background: transparent !important;
+  border-radius: 0;
+  box-shadow: none !important;
+  padding: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* Board Toolbar */
+.board-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  margin-top: 8px;
+  gap: 12px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid #FFFFFF33;
+}
+
+.board-toolbar-tabs {
+  display: flex;
+  align-items: center;
+  gap: 48px;
+  background: transparent !important;
+  border-radius: 0;
+  padding: 0;
+  border: none;
+}
+
+.board-toolbar-tab {
+  border: none;
+  background: transparent !important;
+  color: white !important;
+  font-size: 16px;
+  font-weight: 600;
+  font-family: 'Outfit', sans-serif;
+  padding: 0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  position: relative;
+  width: 169px;
+  height: 50px;
+}
+
+.board-toolbar-tab:hover {
+  color: rgba(255, 255, 255, 0.8) !important;
+  background: transparent !important;
+}
+
+.board-toolbar-tab.active {
+  background: white !important;
+  color: black !important;
+  font-weight: 600;
+}
+
+.board-toolbar-tab.active .filter-count {
+  color: black !important;
+  background: rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Count badges for filters */
+.board-toolbar-tab .filter-count {
+  width: 30px;
+  height: 30px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: 'Outfit', sans-serif;
+}
+
+/* All Tasks filter count */
+.board-toolbar-tab[data-filter="all"] .filter-count {
+  background: #1E262F;
+  color: #FFFFFF;
+}
+
+/* To Do filter count */
+.board-toolbar-tab[data-filter="todo"] .filter-count {
+  background: #1E262F;
+  color: #FFFFFF;
+}
+
+/* In Progress filter count */
+.board-toolbar-tab[data-filter="inprogress"] .filter-count {
+  background: rgba(213, 238, 54, 0.5);
+  color: #D5EE36;
+}
+
+/* Review filter count */
+.board-toolbar-tab[data-filter="review"] .filter-count {
+  background: #FFF0D8;
+  color: #FFA000;
+}
+
+/* Done filter count */
+.board-toolbar-tab[data-filter="done"] .filter-count {
+  background: #B9E968;
+  color: #205702;
+}
+
+/* Create task button */
+.create-task-btn {
+  margin-left: 24px;
+  background: #F95738;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0;
+  width: 190px;
+  height: 56px;
+  font-size: 18px;
+  font-weight: 400;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-family: 'Outfit', sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.create-task-btn:hover {
+  background: #E04527;
+}
+
+.create-task-btn:disabled {
+  background: #666;
+  cursor: not-allowed;
+}
+
+/* Kanban Board Columns - Override BoardKanban styles */
+.board-page .board-kanban {
+  display: flex !important;
+  flex-direction: row !important;
+  gap: 12px;
+  width: 100%;
+  min-height: 480px;
+  margin-top: 24px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+.board-page .board-kanban::-webkit-scrollbar {
+  display: none; /* WebKit browsers */
+}
+
+.board-page .board-kanban-col {
+  background: transparent;
+  border-radius: 0;
+  padding: 16px 12px 12px 12px;
+  flex: 0 0 auto !important;
+  width: 339px;
+  min-width: 339px;
+  max-width: 339px;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  border: none;
+  overflow: hidden;
+}
+
+.board-page .board-kanban-col-header {
+  font-size: 18px;
+  font-weight: 600;
+  color: white;
+  font-family: 'Outfit', sans-serif;
+  margin-bottom: 12px;
+  padding-left: 4px;
+}
+
+.board-page .board-kanban-col-list {
+  flex: 1;
+  min-height: 60px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Task Card Styling - Override BoardTaskCard styles */
+.board-page .board-task-card {
+  background: #3F4351;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  box-shadow: none;
+  margin-bottom: 16px;
+  padding: 16px 18px 12px 18px;
+  transition: box-shadow 0.18s;
+  cursor: pointer;
+  position: relative;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  width: 315px;
+  max-width: 315px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.board-page .board-task-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.board-page .board-task-card__title {
+  font-size: 1.08rem;
+  font-weight: 600;
+  color: white;
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: 'Outfit', sans-serif;
+}
+
+.board-page .board-task-card__desc {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.98rem;
+  margin-bottom: 10px;
+  margin-top: 2px;
+  word-break: break-word;
+  min-height: 18px;
+  font-family: 'Outfit', sans-serif;
+}
+
+.board-page .board-task-card__meta-item {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+  font-family: 'Outfit', sans-serif;
+}
+
+.board-page .board-task-card__pill {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  font-family: 'Outfit', sans-serif;
+}
+
+.board-page .board-task-card__menu-btn {
+  background: none;
+  border: none;
+  padding: 4px 6px;
+  margin-left: 6px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.15s;
+  display: flex;
+  align-items: center;
+  height: 28px;
+}
+
+.board-page .board-task-card__menu-btn:hover,
+.board-page .board-task-card__menu-btn:focus {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.board-page .board-task-card__menu-btn svg {
+  color: white;
+}
+
+/* Created by text styling */
+.board-page .board-task-card__created-by,
+.board-page .board-task-card__assignee,
+.board-page .board-task-card .created-by,
+.board-page .board-task-card [class*="created"],
+.board-page .board-task-card small,
+.board-page .board-task-card span {
+  color: rgba(255, 255, 255, 0.7) !important;
+  font-family: 'Outfit', sans-serif !important;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .board-page {
+    padding: 32px 75px;
+  }
+}
+
+@media (max-width: 768px) {
+  .board-page {
+    padding: 32px 16px;
+  }
+  
+  /* Mobile background positioning */
+  .dashboard-layout::before {
+    background-position: 
+      top 20% left -400%,
+      bottom 100% right -1000%;
+    background-size: 
+      400px auto,
+      400px auto;
+  }
+  
+  .board-page-title {
+    font-size: 32px;
+    font-weight: 700;
+  }
+  
+  .board-toolbar {
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
+  }
+  
+  .board-toolbar::-webkit-scrollbar {
+    display: none; /* WebKit browsers */
+  }
+  
+  .board-toolbar-tabs {
+    gap: 24px;
+    flex-wrap: nowrap;
+    min-width: max-content;
+  }
+  
+  .board-toolbar-tab {
+    width: auto;
+    min-width: 120px;
+    height: 40px;
+  }
+  
+  .create-task-btn {
+    align-self: flex-end;
+    width: 160px;
+    height: 48px;
+    font-size: 16px;
+  }
+  
+  .board-page .board-kanban {
+    flex-direction: row;
+    gap: 12px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  
+  .board-page .board-kanban::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .board-page .board-kanban-col {
+    flex: 0 0 auto;
+    width: 280px;
+    min-width: 280px;
+  }
+  
+  .board-page .board-task-card {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .board-page {
+    padding: 24px 16px;
+  }
+  
+  .board-toolbar-tabs {
+    gap: 16px;
+  }
+  
+  .board-page .board-kanban {
+    gap: 24px;
+  }
+}
+
+/* Modal Styling Overrides for Dark Theme - Global overrides for CSS modules */
+.board-page div[class*="modalBackdrop"] {
+  background-color: rgba(0, 0, 0, 0.7) !important;
+}
+
+.board-page div[class*="modalContent"] {
+  background: #2C2E33 !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.board-page div[class*="modalHeader"] h2 {
+  color: white !important;
+  font-family: 'Outfit', sans-serif !important;
+}
+
+.board-page button[class*="closeButton"] {
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: white !important;
+}
+
+.board-page button[class*="closeButton"]:hover {
+  background: rgba(255, 255, 255, 0.2) !important;
+}
+
+.board-page div[class*="formGroup"] label {
+  color: white !important;
+  font-family: 'Outfit', sans-serif !important;
+}
+
+.board-page input[class*="input"],
+.board-page textarea[class*="textarea"],
+.board-page select[class*="select"],
+.board-page input,
+.board-page textarea,
+.board-page select {
+  background: #3F4351 !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  color: #ADADAD !important;
+  font-family: 'Outfit', sans-serif !important;
+}
+
+.board-page input[class*="input"]::placeholder,
+.board-page textarea[class*="textarea"]::placeholder,
+.board-page input::placeholder,
+.board-page textarea::placeholder {
+  color: #ADADAD !important;
+}
+
+.board-page input[class*="input"]:focus,
+.board-page textarea[class*="textarea"]:focus,
+.board-page select[class*="select"]:focus,
+.board-page input:focus,
+.board-page textarea:focus,
+.board-page select:focus {
+  border-color: #F95738 !important;
+  outline: none !important;
+  box-shadow: 0 0 0 1px #F95738 !important;
+  background: #3F4351 !important;
+  color: #ADADAD !important;
+}
+
+/* Nuclear option - target ALL inputs in modals */
+.board-page div[class*="modal"] input,
+.board-page div[class*="modal"] textarea,
+.board-page div[class*="modal"] select,
+.board-page div[class*="Modal"] input,
+.board-page div[class*="Modal"] textarea,
+.board-page div[class*="Modal"] select {
+  background: #3F4351 !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  color: #ADADAD !important;
+  font-family: 'Outfit', sans-serif !important;
+}
+
+.board-page div[class*="modal"] input::placeholder,
+.board-page div[class*="modal"] textarea::placeholder,
+.board-page div[class*="Modal"] input::placeholder,
+.board-page div[class*="Modal"] textarea::placeholder {
+  color: #ADADAD !important;
+}
+
+.board-page div[class*="modal"] input:focus,
+.board-page div[class*="modal"] textarea:focus,
+.board-page div[class*="modal"] select:focus,
+.board-page div[class*="Modal"] input:focus,
+.board-page div[class*="Modal"] textarea:focus,
+.board-page div[class*="Modal"] select:focus {
+  background: #3F4351 !important;
+  color: #ADADAD !important;
+  border-color: #F95738 !important;
+  outline: none !important;
+  box-shadow: 0 0 0 1px #F95738 !important;
+}
+
+.board-page button[class*="submitButton"],
+.board-page button[class*="primaryButton"] {
+  background: #F95738 !important;
+  color: white !important;
+  border: none !important;
+  font-family: 'Outfit', sans-serif !important;
+}
+
+.board-page button[class*="submitButton"]:hover,
+.board-page button[class*="primaryButton"]:hover {
+  background: #E04527 !important;
+}
+
+.board-page button[class*="cancelButton"],
+.board-page button[class*="secondaryButton"] {
+  background: transparent !important;
+  color: white !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  font-family: 'Outfit', sans-serif !important;
+}
+
+.board-page button[class*="cancelButton"]:hover,
+.board-page button[class*="secondaryButton"]:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Task Details Modal specific styles */
+.board-page div[class*="detailsRow"] {
+  color: white !important;
+}
+
+.board-page span[class*="detailsLabel"],
+.board-page div[class*="detailsLabel"] {
+  color: rgba(255, 255, 255, 0.7) !important;
+  font-family: 'Outfit', sans-serif !important;
+}
+
+.board-page span[class*="detailsValue"],
+.board-page div[class*="detailsValue"] {
+  color: white !important;
+  font-family: 'Outfit', sans-serif !important;
+}
+
+.board-page button[class*="actionButton"] {
+  background: #F95738 !important;
+  color: white !important;
+  border: none !important;
+  font-family: 'Outfit', sans-serif !important;
+}
+
+.board-page button[class*="actionButton"]:hover {
+  background: #E04527 !important;
+}
+
+.board-page button[class*="deleteButton"] {
+  background: #DC2626 !important;
+  color: white !important;
+  border: none !important;
+  font-family: 'Outfit', sans-serif !important;
+}
+
+.board-page button[class*="deleteButton"]:hover {
+  background: #B91C1C !important;
+}
+
+/* Delete confirmation modal styles */
+.board-page div[class*="confirmationModal"] {
+  background: #2C2E33 !important;
+}
+
+.board-page p[class*="confirmationText"],
+.board-page div[class*="confirmationText"] {
+  color: white !important;
+  font-family: 'Outfit', sans-serif !important;
+}
+
+.board-page button[class*="confirmButton"] {
+  background: #DC2626 !important;
+  color: white !important;
+  border: none !important;
+  font-family: 'Outfit', sans-serif !important;
+}
+
+.board-page button[class*="confirmButton"]:hover {
+  background: #B91C1C !important;
+}
+
+/* Override any modal text to be white */
+.board-page div[class*="modal"] * {
+  color: white !important;
+}
+
+.board-page div[class*="modal"] label,
+.board-page div[class*="modal"] span,
+.board-page div[class*="modal"] p,
+.board-page div[class*="modal"] div:not([class*="button"]) {
+  color: white !important;
+  font-family: 'Outfit', sans-serif !important;
+}
+
+/* Fix attachments section background */
+.board-page div[class*="attachmentsSection"],
+.board-page [class*="attachmentsSection"] {
+  background: #3F4351 !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+.board-page div[class*="attachmentsHeader"] h3,
+.board-page [class*="attachmentsHeader"] h3 {
+  color: white !important;
+}
+
+.board-page div[class*="attachmentsSection"] *,
+.board-page [class*="attachmentsSection"] * {
+  color: white !important;
+}
+
+/* Fix Edit and Cancel buttons in task details modal */
+.board-page button[class*="buttonSecondary"] {
+  background: #3F4351 !important;
+  color: #ADADAD !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  font-family: 'Outfit', sans-serif !important;
+}
+
+.board-page button[class*="buttonSecondary"]:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: white !important;
 }
