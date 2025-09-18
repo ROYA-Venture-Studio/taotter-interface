@@ -138,7 +138,12 @@ const LoginPage = () => {
               alt="LeanSprint Logo"
               className="login-mobile-logo"
             />
-            <button className="login-mobile-back-btn">Back to home</button>
+            <button 
+              className="login-mobile-back-btn"
+              onClick={() => navigate("/")}
+            >
+              Back to home
+            </button>
           </div>
           <div className="login-mobile-container">
             <div className="login-mobile-title">Sign in</div>
@@ -286,7 +291,12 @@ const LoginPage = () => {
                 alt="LeanSprint Logo"
                 className="login-desktop-logo"
               />
-              <button className="login-desktop-back-btn">Back to home</button>
+              <button 
+                className="login-desktop-back-btn"
+                onClick={() => navigate("/")}
+              >
+                Back to home
+              </button>
             </div>
             <div className="login-form-title">Sign in</div>
             <div className="login-form-subtitle">

@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./FinalCTASection.css";
 import phoneImg from "./phone.png";
 import circleImg from "./circle.svg";
@@ -13,6 +14,7 @@ function isMobile() {
 }
 
 export default function FinalCTASectionSimple() {
+  const navigate = useNavigate();
   const mobile = isMobile();
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef(null);
@@ -61,7 +63,12 @@ export default function FinalCTASectionSimple() {
                 to meaningful traction?
               </h2>
               <div className="final-cta-buttons">
-                <button className="cta-primary">Start Your Sprint</button>
+                <button 
+                  className="cta-primary"
+                  onClick={() => navigate("/mvp/form")}
+                >
+                  Start Your Sprint
+                </button>
                 <button className="cta-secondary">
                   <img
                     src="https://api.builder.io/api/v1/image/assets/TEMP/3886e0f9f8638bd8b6162b1080583dec2050d482?width=48"
@@ -99,7 +106,12 @@ export default function FinalCTASectionSimple() {
 </h2>
 <div className="cta-spacing-43" />
 <div className="final-cta-buttons-mobile">
-                <button className="cta-primary-mobile">Start Your Sprint</button>
+                <button 
+                  className="cta-primary-mobile"
+                  onClick={() => navigate("/mvp/form")}
+                >
+                  Start Your Sprint
+                </button>
                 <button className="cta-secondary-mobile">
                   <img
                     src="https://api.builder.io/api/v1/image/assets/TEMP/3886e0f9f8638bd8b6162b1080583dec2050d482?width=48"
