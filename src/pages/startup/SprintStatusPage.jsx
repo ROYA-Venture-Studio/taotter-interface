@@ -160,45 +160,22 @@ You can only schedule once, so pick the time that works best. We’re excited to
       <div className="sprint-status-page">
         {isMobile ? (
           <>
-            {/* Mobile Header */}
             <div className="sprint-status-mobile-header">
-              <img src={leanSprintLogo} alt="LeanSprint" className="sprint-status-mobile-logo" />
-              <button className="sprint-status-mobile-back-btn" onClick={() => navigate("/")}>
-                Back to home
-              </button>
+              <div className="sprint-status-mobile-header-title">
+                Start Your Sprint
+              </div>
             </div>
-
             <div className="sprint-status-mobile-container">
               <div className="sprint-status-mobile-title">Loading...</div>
-              <div className="sprint-status-mobile-subtitle">Checking your sprint status...</div>
+              <p>Checking your sprint status...</p>
             </div>
           </>
         ) : (
           <div className="sprint-status-split-container">
             <div className="sprint-status-left">
-              {/* Desktop Header */}
-              <div className="sprint-status-desktop-header">
-                <img src={leanSprintLogo} alt="LeanSprint" className="sprint-status-desktop-logo" />
-                <button className="sprint-status-desktop-back-btn" onClick={() => navigate("/")}>
-                  Back to home
-                </button>
-              </div>
-
               <div className="sprint-status-form-title">Start Your Sprint</div>
               <div className="sprint-status-form-subtitle">
                 Checking your sprint status...
-              </div>
-
-              {/* Desktop Footer */}
-              <div className="sprint-status-form-footer">
-                <div className="sprint-status-form-footer-left">
-                  © Leansprintr 2025. All Rights Reserved
-                </div>
-                <div className="sprint-status-form-footer-right">
-                  <a href="/terms" className="sprint-status-terms-link">
-                    Terms of Services
-                  </a>
-                </div>
               </div>
             </div>
             <div className="sprint-status-right">
@@ -320,49 +297,25 @@ You can only schedule once, so pick the time that works best. We're excited to g
         <div className="sprint-status-page">
           {isMobile ? (
             <>
-              {/* Mobile Header */}
               <div className="sprint-status-mobile-header">
-                <img src={leanSprintLogo} alt="LeanSprint" className="sprint-status-mobile-logo" />
-                <button className="sprint-status-mobile-back-btn" onClick={() => navigate("/")}>
-                  Back to home
-                </button>
+                <div className="sprint-status-mobile-header-title">
+                  Start Your Sprint
+                </div>
               </div>
-
               <div className="sprint-status-mobile-container">
-                <div className="sprint-status-mobile-title">Loading sprints...</div>
-                <div className="sprint-status-mobile-subtitle">
-                  Please wait while we fetch your sprint options...
+                <div className="sprint-status-mobile-title">
+                  Loading sprints...
                 </div>
               </div>
             </>
           ) : (
             <div className="sprint-status-split-container">
               <div className="sprint-status-left">
-                {/* Desktop Header */}
-                <div className="sprint-status-desktop-header">
-                  <img src={leanSprintLogo} alt="LeanSprint" className="sprint-status-desktop-logo" />
-                  <button className="sprint-status-desktop-back-btn" onClick={() => navigate("/")}>
-                    Back to home
-                  </button>
-                </div>
-
                 <div className="sprint-status-form-title">
                   Start Your Sprint
                 </div>
                 <div className="sprint-status-form-subtitle">
                   Loading sprints...
-                </div>
-
-                {/* Desktop Footer */}
-                <div className="sprint-status-form-footer">
-                  <div className="sprint-status-form-footer-left">
-                    © Leansprintr 2025. All Rights Reserved
-                  </div>
-                  <div className="sprint-status-form-footer-right">
-                    <a href="/terms" className="sprint-status-terms-link">
-                      Terms of Services
-                    </a>
-                  </div>
                 </div>
               </div>
               <div className="sprint-status-right">
@@ -391,89 +344,64 @@ You can only schedule once, so pick the time that works best. We're excited to g
       <div className="sprint-status-page">
         {isMobile ? (
           <>
-            {/* Mobile Header */}
             <div className="sprint-status-mobile-header">
-              <img src={leanSprintLogo} alt="LeanSprint" className="sprint-status-mobile-logo" />
-              <button className="sprint-status-mobile-back-btn" onClick={() => navigate("/")}>
-                Back to home
-              </button>
+              <div className="sprint-status-mobile-header-title">
+                Start Your Sprint
+              </div>
             </div>
-
             <div className="sprint-status-mobile-container">
               <div className="sprint-status-mobile-title">
                 Select Your Sprint
               </div>
-              <div className="sprint-status-mobile-subtitle">
-                Choose from the available sprint options
-              </div>
               <div className="sprint-options">
-              {sprintData?.sprints.map((sprint) => (
-                <div key={sprint.id} className="sprint-option">
-                  <div className="sprint-info">
-                    <div className="sprint-number">
-                      ⚙ Sprint {sprint.number}
+                {sprintData?.sprints.map((sprint) => (
+                  <div key={sprint.id} className="sprint-option">
+                    <div className="sprint-info">
+                      <div className="sprint-number">
+                        ⚙ Sprint {sprint.number}
+                      </div>
+                      <div className="sprint-title">{sprint.title}</div>
+                      <div className="sprint-timeframe">
+                        Estimated Time: {sprint.estimatedWeeks} weeks
+                      </div>
+                      <div className="sprint-objective">
+                        Sprint Objective: {sprint.objective}
+                      </div>
+                      <div className="sprint-deliverables">
+                        <strong>Deliverables:</strong>
+                        <br />
+                        {Array.isArray(sprint.deliverables) ? (
+                          <ul>
+                            {sprint.deliverables.map((d, i) => (
+                              <li key={i}>{d}</li>
+                            ))}
+                          </ul>
+                        ) : (
+                          <span>{sprint.deliverables}</span>
+                        )}
+                      </div>
+                      <div className="sprint-hours">
+                        ⚠ Estimated Total Hours for Sprint {sprint.number}:{" "}
+                        {sprint.estimatedTotalHours} working hours
+                      </div>
+                      {/* NO CREDIT TIERS OR PAYMENT STATUS HERE */}
                     </div>
-                    <div className="sprint-title">{sprint.title}</div>
-                    <div className="sprint-timeframe">
-                      Estimated Time: {sprint.estimatedWeeks} weeks
-                    </div>
-                    <div className="sprint-objective">
-                      Sprint Objective: {sprint.objective}
-                    </div>
-                    <div className="sprint-deliverables">
-                      <strong>Deliverables:</strong>
-                      <br />
-                      {Array.isArray(sprint.deliverables) ? (
-                        <ul>
-                          {sprint.deliverables.map((d, i) => (
-                            <li key={i}>{d}</li>
-                          ))}
-                        </ul>
-                      ) : (
-                        <span>{sprint.deliverables}</span>
-                      )}
-                    </div>
-                    <div className="sprint-hours">
-                      ⚠ Estimated Total Hours for Sprint {sprint.number}:{" "}
-                      {sprint.estimatedTotalHours} working hours
+                    <div className="sprint-action">
+                      <button
+                        className="sprint-get-started-btn"
+                        onClick={() => handleGetStarted(sprint)}
+                      >
+                        {"Let's Get Started ---->"}
+                      </button>
                     </div>
                   </div>
-                  <div className="sprint-action">
-                    <button
-                      className="sprint-get-started-btn"
-                      onClick={() => handleGetStarted(sprint)}
-                    >
-                      Let's Get Started
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Mobile Footer */}
-            <div className="sprint-status-form-footer">
-              <div className="sprint-status-form-footer-right">
-                <a href="/terms" className="sprint-status-terms-link">
-                  Terms of Services
-                </a>
-              </div>
-              <div className="sprint-status-form-footer-left">
-                © Leansprintr 2025. All Rights Reserved
+                ))}
               </div>
             </div>
-          </div>
           </>
         ) : (
           <div className="sprint-status-split-container">
             <div className="sprint-status-left">
-              {/* Desktop Header */}
-              <div className="sprint-status-desktop-header">
-                <img src={leanSprintLogo} alt="LeanSprint" className="sprint-status-desktop-logo" />
-                <button className="sprint-status-desktop-back-btn" onClick={() => navigate("/")}>
-                  Back to home
-                </button>
-              </div>
-
               <div className="sprint-status-form-title">Select Your Sprint</div>
               <div className="sprint-status-form-subtitle">
                 Choose from the available sprint options
@@ -512,29 +440,18 @@ You can only schedule once, so pick the time that works best. We're excited to g
                         ⚠ Estimated Total Hours for Sprint {sprint.number}:{" "}
                         {sprint.estimatedTotalHours} working hours
                       </div>
+                      {/* NO CREDIT TIERS OR PAYMENT STATUS HERE */}
                     </div>
                     <div className="sprint-action">
                       <button
                         className="sprint-get-started-btn"
                         onClick={() => handleGetStarted(sprint)}
                       >
-                        Let's Get Started
+                        {"Let's Get Started ---->"}
                       </button>
                     </div>
                   </div>
                 ))}
-              </div>
-
-              {/* Desktop Footer */}
-              <div className="sprint-status-form-footer">
-                <div className="sprint-status-form-footer-left">
-                  © Leansprintr 2025. All Rights Reserved
-                </div>
-                <div className="sprint-status-form-footer-right">
-                  <a href="/terms" className="sprint-status-terms-link">
-                    Terms of Services
-                  </a>
-                </div>
               </div>
             </div>
             <div className="sprint-status-right">
