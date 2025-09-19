@@ -6,11 +6,11 @@ import './StartupLayout.css'
 const StartupLayout = () => {
   return (
     <div className="startup-layout">
-      <StartupHeader />
+      {/* <StartupHeader /> */}
       <main className="startup-main">
         <Outlet />
       </main>
-      <Footer />
+      {/* <Footer /> */}
     </div>
   )
 }

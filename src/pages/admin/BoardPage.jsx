@@ -1,12 +1,12 @@
 import React, { useMemo, useState, useEffect } from "react";
 import AdminLayout from "../../layouts/AdminLayout";
 import Breadcrumb from "../../components/ui/Breadcrumb/Breadcrumb";
-import BoardKanban from "../../components/admin/BoardKanban";
+import AdminBoardKanban from "../../components/admin/AdminBoardKanban";
 import { useGetBoardBySprintQuery } from "../../store/api/boardsApi";
 import PaymentRequiredModal from "../../components/ui/PaymentRequiredModal";
 import { useParams, useNavigate } from "react-router-dom";
-import TaskModal from "../../components/admin/TaskModal";
-import TaskDetailsModal from "../../components/admin/TaskDetailsModal";
+import AdminTaskModal from "../../components/admin/AdminTaskModal";
+import AdminTaskDetailsModal from "../../components/admin/AdminTaskDetailsModal";
 import { useCreateTaskMutation, useMoveTaskMutation, useDeleteTaskMutation, useEditTaskMutation } from "../../store/api/tasksApi";
 import { useGetAdminUsersQuery } from "../../store/api/adminApi";
 import "./BoardPage.css";
@@ -261,10 +261,10 @@ export default function BoardPage() {
   return (
     <AdminLayout>
       <PaymentRequiredModal open={showPaymentModal} onClose={() => navigate("/admin/sprints")} />
-      <div className="board-page">
-        <div className="board-page-header-row">
-          <div className="board-page-title">Board</div>
-          <div className="board-page-breadcrumb">
+      <div className="admin-board-page">
+        <div className="admin-board-page-header-row">
+          <div className="admin-board-page-title">Board</div>
+          <div className="admin-board-page-breadcrumb">
             <Breadcrumb
               items={[
                 { label: "Home", href: "/admin/dashboard" },
@@ -273,13 +273,13 @@ export default function BoardPage() {
             />
           </div>
         </div>
-        <div className="board-main-container">
-          <div className="board-toolbar">
-            <div className="board-toolbar-tabs">
+        <div className="admin-board-main-container">
+          <div className="admin-board-toolbar">
+            <div className="admin-board-toolbar-tabs">
               {FILTERS.map(tab => (
                 <button
                   key={tab.key}
-                  className={`board-toolbar-tab${filter === tab.key ? " active" : ""}`}
+                  className={`admin-board-toolbar-tab${filter === tab.key ? " active" : ""}`}
                   onClick={() => setFilter(tab.key)}
                 >
                   {tab.label}
@@ -287,7 +287,7 @@ export default function BoardPage() {
               ))}
             </div>
             <button
-              className="create-task-btn"
+              className="admin-create-task-btn"
               onClick={handleCreateClick}
               style={{
                 marginLeft: "auto",
@@ -312,7 +312,7 @@ export default function BoardPage() {
             <div>Error loading board</div>
           ) : (
             <>
-              <BoardKanban
+              <AdminBoardKanban
                 columns={localColumns || []}
                 onMoveTask={handleMoveTask}
                 onEditTask={handleEditTask}
@@ -322,21 +322,21 @@ export default function BoardPage() {
               {modalOpen && (
                 <div>
                   {modalMode === 'details' && selectedTask && (
-                    <TaskDetailsModal
+                    <AdminTaskDetailsModal
                       open={true}
                       onClose={closeModal}
                       task={selectedTask}
                       columns={boardColumns}
                       onEditTask={handleEditTask}
                       onDeleteTask={handleDeleteTask}
-                      onMoveTask={null}
+                      onMoveTask={handleMoveTask}
                       currentColumnId={selectedTask?.columnId}
                       admins={admins}
                       isStartupUser={false}
                     />
                   )}
                   {(modalMode === 'edit' || modalMode === 'create') && (
-                    <TaskModal
+                    <AdminTaskModal
                       open={true}
                       onClose={closeModal}
                       onSubmit={async (taskData) => {

@@ -80,6 +80,34 @@ export default function StartupBoardPage() {
       });
   }, [data, filter]);
 
+  // Calculate task counts for filter badges
+  const filterCounts = useMemo(() => {
+    if (!data?.data?.board) return { all: 0, todo: 0, inprogress: 0, review: 0, done: 0 };
+    
+    const board = data.data.board;
+    const allTasks = board.columns.flatMap(col => board.tasksByColumn[col._id] || []);
+    
+    // Count tasks by column name instead of status field
+    let counts = { all: allTasks.length, todo: 0, inprogress: 0, review: 0, done: 0 };
+    
+    board.columns.forEach(col => {
+      const tasksInColumn = board.tasksByColumn[col._id] || [];
+      const columnName = col.name.toLowerCase();
+      
+      if (columnName.includes("to do")) {
+        counts.todo += tasksInColumn.length;
+      } else if (columnName.includes("progress")) {
+        counts.inprogress += tasksInColumn.length;
+      } else if (columnName.includes("review")) {
+        counts.review += tasksInColumn.length;
+      } else if (columnName.includes("done")) {
+        counts.done += tasksInColumn.length;
+      }
+    });
+    
+    return counts;
+  }, [data]);
+
   // Sync localColumns with columns from backend on load/refetch/filter change
   React.useEffect(() => {
     setLocalColumns(columns);
@@ -284,31 +312,23 @@ export default function StartupBoardPage() {
                 <button
                   key={tab.key}
                   className={`board-toolbar-tab${filter === tab.key ? " active" : ""}`}
+                  data-filter={tab.key}
                   onClick={() => setFilter(tab.key)}
                 >
                   {tab.label}
+                  <span className="filter-count">
+                    {filterCounts[tab.key] || 0}
+                  </span>
                 </button>
               ))}
+              <button
+                className="create-task-btn"
+                onClick={handleCreateClick}
+                disabled={isCreating}
+              >
+                Add New Task
+              </button>
             </div>
-          <button
-              className="create-task-btn"
-              onClick={handleCreateClick}
-              style={{
-                marginLeft: "auto",
-                background: "#EB5E28",
-                color: "#fff",
-                border: "none",
-                borderRadius: "6px",
-                padding: "8px 16px",
-                fontSize: "1rem",
-                fontWeight: 500,
-                cursor: "pointer",
-                transition: "background 0.2s"
-              }}
-              disabled={isCreating}
-            >
-              + New Task
-            </button>
           </div>
           {isLoading ? (
             <div>Loading...</div>
@@ -340,7 +360,7 @@ export default function StartupBoardPage() {
                       columns={boardColumns}
                       onEditTask={handleEditTask}
                       onDeleteTask={handleDeleteTask}
-                      onMoveTask={null}
+                      onMoveTask={handleMoveTask}
                       currentColumnId={selectedTask?.columnId}
                       admins={[]}
                       isStartupUser={true}
