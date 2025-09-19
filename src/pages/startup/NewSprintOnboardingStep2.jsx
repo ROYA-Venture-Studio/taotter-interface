@@ -1,6 +1,7 @@
 import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useUploadDocumentsMutation, useGetSprintByIdQuery } from "../../store/api/sprintsApi";
+import leanSprintLogo from "../../assets/logo/LeanSprintNewLogo.png";
 import "./NewSprintOnboardingStep2.css";
 
 export default function NewSprintOnboardingStep2() {
@@ -17,6 +18,10 @@ export default function NewSprintOnboardingStep2() {
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0] || null);
+  };
+
+  const handleBack = () => {
+    navigate("/startup/dashboard");
   };
 
   const handleSubmit = async (e) => {
@@ -39,8 +44,24 @@ export default function NewSprintOnboardingStep2() {
   };
 
   return (
-    <div className="ns-step2-split-container">
-      <div className="ns-step2-left">
+    <div className="ns-step2-page">
+      {/* Mobile Header */}
+      <div className="ns-step2-mobile-header">
+        <img src={leanSprintLogo} alt="LeanSprint" className="ns-step2-mobile-logo" />
+        <button className="ns-step2-mobile-back-btn" onClick={handleBack}>
+          Back
+        </button>
+      </div>
+
+      {/* Desktop Header */}
+      <div className="ns-step2-desktop-header">
+        <img src={leanSprintLogo} alt="LeanSprint" className="ns-step2-desktop-logo" />
+        <button className="ns-step2-desktop-back-btn" onClick={handleBack}>
+          Back
+        </button>
+      </div>
+
+      <div className="ns-step2-container">
         <div className="ns-step2-form-title">Step 2: Upload Documents</div>
         <div className="ns-step2-form-subtitle">
           Please upload any required documents and provide additional info to proceed.
@@ -94,6 +115,12 @@ export default function NewSprintOnboardingStep2() {
             </button>
           </form>
         )}
+      </div>
+
+      {/* Footer */}
+      <div className="ns-step2-form-footer">
+        <span className="ns-step2-form-footer-left">© Leansprintr 2025. All Rights Reserved</span>
+        <span className="ns-step2-form-footer-right">Terms of Services</span>
       </div>
     </div>
   );

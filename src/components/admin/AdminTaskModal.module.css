@@ -1,0 +1,278 @@
+/* Import the Montserrat font */
+@import "https://fonts.googleapis.com/css?family=Montserrat:400,500,600&display=swap";
+
+/* Define CSS variables if they are not defined globally */
+:root {
+  --Background-Body: #FFF;
+  --Background-Body-Secondary: #F9FAFB;
+  --Text-Title-Color: #1D2939;
+  --Text-Text-Color: #344054;
+  --Text-Secondary-Text-Color: #667085;
+  --Text-Brand-Color: #465FFF;
+  --Border-Border-Tertiary: #D0D5DD;
+  --Utilities-Spacing-5: 20px;
+  --Utilities-Spacing-6: 24px;
+  --Utilities-Spacing-7: 28px;
+  --Utilities-Border-Radius-LG: 8px;
+  --Utilities-Border-Radius-2XL: 16px;
+}
+
+/* --- Modal Base Styles --- */
+.modalBackdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(16, 24, 40, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* MODIFIED: Aligns modal to the top */
+  z-index: 1000;
+  padding: 120px 1rem 2rem 1rem; /* MODIFIED: Added top padding to avoid header overlap */
+  overflow-y: auto; /* Added to allow the backdrop itself to scroll on very small screens */
+}
+
+.modalContent {
+  background: var(--Background-Body);
+  border-radius: var(--Utilities-Border-Radius-2XL);
+  padding: var(--Utilities-Spacing-6) var(--Utilities-Spacing-7);
+  width: 100%;
+  max-width: 560px;
+  max-height: 75vh; /* MODIFIED: Made the modal shorter */
+  overflow-y: auto; /* This adds the scrollbar when content overflows */
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--Utilities-Spacing-6);
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modalHeader h2 {
+  font-family: "Montserrat", sans-serif;
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--Text-Title-Color);
+  margin: 0;
+}
+
+.closeButton {
+  background: #F2F4F7;
+  border: none;
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+.closeButton:hover {
+  background-color: #E4E7EC;
+}
+
+/* --- Form Styles --- */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--Utilities-Spacing-5);
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.formGroup label {
+  font-family: "Montserrat", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--Text-Text-Color);
+}
+
+.formGroup input,
+.formGroup textarea,
+.formGroup select {
+  width: 100%;
+  padding: 10px 16px;
+  border-radius: var(--Utilities-Border-Radius-LG);
+  border: 1px solid var(--Border-Border-Tertiary);
+  background: var(--Background-Body);
+  box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
+  font-family: "Montserrat", sans-serif;
+  font-size: 14px;
+  color: var(--Text-Text-Color);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.formGroup input::placeholder,
+.formGroup textarea::placeholder {
+  color: #98A2B3;
+}
+.formGroup input:focus,
+.formGroup textarea:focus,
+.formGroup select:focus {
+  outline: none;
+  border-color: var(--Text-Brand-Color);
+  box-shadow: 0 0 0 3px rgba(70, 95, 255, 0.1);
+}
+
+.formGroup textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.formGroup select {
+  appearance: none;
+  background-image: url('data:image/svg+xml;charset=UTF-8,<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.79175 7.39581L10.0001 12.6041L15.2084 7.39581" stroke="%23344054" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" /></svg>');
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  cursor: pointer;
+}
+
+/* --- Attachments Section --- */
+.attachmentsSection {
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid #F2F4F7;
+  background: var(--Background-Body-Secondary);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.attachmentsHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.attachmentsHeader h3 {
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--Text-Title-Color);
+  margin: 0;
+}
+.attachmentsHeader::after {
+  content: '';
+  width: 1px;
+  height: 16px;
+  background-color: #E4E7EC;
+}
+
+.uploadButton {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--Text-Brand-Color);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.attachmentsList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.fileItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid #E4E7EC;
+  background: var(--Background-Body);
+  position: relative;
+}
+
+.fileIcon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.fileDetails {
+  display: flex;
+  flex-direction: column;
+}
+.fileName {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--Text-Title-Color);
+}
+.fileMeta {
+  font-size: 12px;
+  color: var(--Text-Secondary-Text-Color);
+}
+.removeFileButton {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: var(--Background-Body);
+  border: 1px solid #E4E7EC;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  padding: 0;
+}
+.removeFileButton svg {
+  width: 8px;
+  height: 8px;
+}
+
+/* --- Modal Footer --- */
+.modalFooter {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: var(--Utilities-Spacing-6);
+}
+
+.submitButton {
+  padding: 12px 16px;
+  border-radius: var(--Utilities-Border-Radius-LG);
+  border: 1px solid #EB5E28;
+  background: #EB5E28;
+  box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
+  color: #FFF;
+  font-family: "Montserrat", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.submitButton:hover {
+  background: #D45524;
+  border-color: #D45524;
+}
+
+/* --- Responsive Styles --- */
+@media (max-width: 768px) {
+  .modalContent {
+    padding: var(--Utilities-Spacing-5);
+    gap: var(--Utilities-Spacing-5);
+  }
+  .formGrid {
+    grid-template-columns: 1fr;
+    gap: var(--Utilities-Spacing-5);
+  }
+  .modalFooter {
+    margin-top: var(--Utilities-Spacing-5);
+  }
+}

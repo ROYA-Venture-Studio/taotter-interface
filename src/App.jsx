@@ -42,43 +42,41 @@ function App() {
         {/* HomePage route outside StartupLayout */}
         <Route path="/" element={<HomePage />} />
 
+        {/* Pages without header/footer */}
+        <Route path="mvp/form" element={<MvpFormPage />} />
+        <Route path="signup" element={<SignUpPage />} />
+        <Route path="startup/login" element={<LoginPage />} />
+        <Route
+          path="sprint/status"
+          element={
+            <StartupProtectedRoute>
+              <SprintStatusPage />
+            </StartupProtectedRoute>
+          }
+        />
+        <Route
+          path="sprint/:sprintId/onboarding/step-1"
+          element={
+            <StartupProtectedRoute>
+              <SprintOnboardingStep1 />
+            </StartupProtectedRoute>
+          }
+        />
+        <Route
+          path="sprint/:sprintId/onboarding/step-2"
+          element={
+            <StartupProtectedRoute>
+              <SprintOnboardingStep2 />
+            </StartupProtectedRoute>
+          }
+        />
+
         <Route path="/" element={<StartupLayout />}>
           {/* Remove index route for HomePage here */}
           <Route path="about" element={<AboutPage />} />
           <Route path="services" element={<ServicesPage />} />
           <Route path="contact" element={<ContactPage />} />
           <Route path="mvp" element={<MvpPage />} />
-          <Route path="mvp/form" element={<MvpFormPage />} />
-          <Route path="signup" element={<SignUpPage />} />
-          <Route path="startup/login" element={<LoginPage />} />
-          
-          {/* Sprint pages now wrapped in StartupLayout for header/footer */}
-          <Route
-            path="sprint/status"
-            element={
-              <StartupProtectedRoute>
-                <SprintStatusPage />
-              </StartupProtectedRoute>
-            }
-          />
-          
-          <Route
-            path="sprint/:sprintId/onboarding/step-1"
-            element={
-              <StartupProtectedRoute>
-                <SprintOnboardingStep1 />
-              </StartupProtectedRoute>
-            }
-          />
-          
-          <Route
-            path="sprint/:sprintId/onboarding/step-2"
-            element={
-              <StartupProtectedRoute>
-                <SprintOnboardingStep2 />
-              </StartupProtectedRoute>
-            }
-          />
 
           {/* NEW SPRINT ONBOARDING ROUTES */}
           <Route
@@ -147,6 +145,19 @@ function App() {
           }
         />
         
+        <Route
+          path="/startup/chat"
+          element={
+            <StartupProtectedRoute>
+              <StartupOnboardingGuard>
+                <DashboardLayout>
+                  <StartupChatPage />
+                </DashboardLayout>
+              </StartupOnboardingGuard>
+            </StartupProtectedRoute>
+          }
+        />
+
         <Route
           path="/startup/chat/:id"
           element={

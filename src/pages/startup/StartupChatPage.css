@@ -1,4 +1,7 @@
-.admin-chat-page {
+@import "https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Outfit:wght@400;500&display=swap";
+
+/* Main Chat Page Layout - Dark Theme */
+.startup-chat-page {
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
@@ -6,55 +9,318 @@
   display: flex;
   flex-direction: column;
   min-height: 80vh;
+  background: none;
 }
 
-.admin-chat-breadcrumb {
+.startup-chat-breadcrumb {
   margin-bottom: 18px;
   margin-top: 8px;
+  padding: 0 24px;
 }
 
-.admin-chat-main {
+.startup-chat-main {
   display: flex;
-  gap: 24px;
+  gap: 15px;
   width: 100%;
   height: 700px;
   min-height: 0;
+  flex: 1;
+  padding: 12px;
+  background: transparent;
 }
 
-.admin-chat-message-area {
+/* Chat List Section */
+.startup-chat-list {
+  width: 320px;
+  min-width: 320px;
+  height: 884px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Chat Message Area */
+.startup-chat-message-area {
   flex: 1;
-  background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 1px 4px rgba(52,64,84,0.04);
+  width: 100%;
+  height: 884px;
+  background: #2C2E33;
+  border: 1px solid #FFFFFF33;
+  border-radius: 12px;
   min-width: 0;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  height: 100%;
-  min-height: 0;
+  padding: 12px;
 }
 
-.admin-chat-empty-state {
+.startup-chat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  padding: 0 0 12px 0;
+  border-bottom: 1px solid #FFFFFF33;
+  background: transparent;
+}
+
+.startup-chat-header-contact {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.startup-chat-header-avatar {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.startup-chat-header-avatar img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #d3d3d3;
+}
+
+.startup-chat-header-status {
+  position: absolute;
+  right: 2px;
+  bottom: 2px;
+  width: 12px;
+  height: 12px;
+  border-radius: 6px;
+  border: 2px solid #2C2E33;
+  box-sizing: border-box;
+}
+
+.startup-chat-header-status.online {
+  background: #12b76a;
+}
+
+.startup-chat-header-status.offline {
+  background: #f04438;
+}
+
+.startup-chat-header-name {
+  color: white;
+  font-family: 'Outfit', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.startup-chat-header-menu {
+  background: none;
+  border: none;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+}
+
+.startup-chat-header-menu svg path {
+  fill: #FFFFFF66;
+}
+
+.startup-chat-messages {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  overflow-y: auto;
+  min-height: 0;
+  background: transparent;
+  padding: 0;
+  margin: 0;
+}
+
+.startup-chat-input-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: calc(100% + 24px);
+  background: transparent;
+  padding: 12px 12px 0 12px;
+  margin: 0;
+  box-sizing: border-box;
+  margin-top: auto;
+  border-top: 1px solid #FFFFFF33;
+  margin-left: -12px;
+  margin-right: -12px;
+}
+
+/* Override MessageInput component styles */
+.startup-chat-input-row input,
+.startup-chat-input-row textarea,
+.startup-chat-input-row [class*="input"],
+.startup-chat-input-row [class*="textArea"],
+.message-input-text {
+  background: #2C2E33 !important;
+  color: #A0A0A0 !important;
+  border: none !important;
+  font-family: 'Outfit', sans-serif !important;
+}
+
+.startup-chat-input-row input::placeholder,
+.startup-chat-input-row textarea::placeholder {
+  color: #A0A0A0 !important;
+}
+
+.startup-chat-input-row input:focus,
+.startup-chat-input-row textarea:focus {
+  outline: none !important;
+  border-color: #F95738 !important;
+}
+
+.startup-chat-empty-state {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   height: 100%;
-  min-height: 400px;
-  color: #667085;
-  gap: 8px;
+  background: #2C2E33;
+  color: white;
+  text-align: center;
+  padding: 40px;
 }
 
-.admin-chat-empty-state h2 {
-  color: #101828;
-  font-size: 1.5rem;
+.startup-chat-empty-state h2 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 24px;
   font-weight: 600;
-  margin-bottom: 4px;
+  color: white;
+  margin: 0 0 12px 0;
 }
 
-.admin-chat-empty-state p {
-  color: #667085;
-  font-size: 1rem;
+.startup-chat-empty-state p {
+  font-family: 'Outfit', sans-serif;
+  font-size: 16px;
+  color: #ADADAD;
+  margin: 0;
+}
+
+/* Loading and Error States */
+.startup-chat-loading,
+.startup-chat-error {
+  color: #ADADAD;
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  padding: 20px;
+  text-align: center;
+}
+
+.startup-chat-error {
+  color: #f04438;
+}
+
+.startup-chat-typing {
+  color: #ADADAD;
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  font-style: italic;
+  padding: 8px 0;
+}
+
+/* Message Bubble Styling for Sent Messages */
+.startup-chat-page .message-bubble.own {
+  background: #DADADA !important;
+  color: #3A3A3A !important;
+}
+
+.startup-chat-page .message-bubble.own *,
+.startup-chat-page .message-bubble.own .message-bubble-text,
+.startup-chat-page .message-bubble.own .message-bubble-meta,
+.startup-chat-page .message-bubble.own .message-bubble-file,
+.startup-chat-page .message-bubble.own .message-bubble-voice {
+  background: #DADADA !important;
+  color: #3A3A3A !important;
+}
+
+/* Reorder input elements and customize icons */
+.startup-chat-input-row {
+  flex-direction: row-reverse;
+}
+
+.startup-chat-input-row > div:first-child {
+  order: 3; /* MessageInput container */
+}
+
+.startup-chat-input-row > div:last-child {
+  order: 1; /* VoiceRecorder container */
+}
+
+/* Custom Voice Icon */
+.startup-chat-input-row .voice-recorder button {
+  background: none !important;
+  border: none !important;
+  padding: 4px !important;
+}
+
+.startup-chat-input-row .voice-recorder button img[src*="microphone"] {
+  display: none;
+}
+
+.startup-chat-input-row .voice-recorder button::after {
+  content: "";
+  display: block;
+  width: 13px;
+  height: 16px;
+  background: url("data:image/svg+xml,%3Csvg width='13' height='16' viewBox='0 0 13 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M3.5 2.66667C3.5 1.19391 4.84315 0 6.5 0C8.15685 0 9.5 1.19391 9.5 2.66667V8C9.5 9.47276 8.15685 10.6667 6.5 10.6667C4.84315 10.6667 3.5 9.47276 3.5 8V2.66667Z' fill='white'/%3E%3Cpath d='M2 7.68251C2 7.31432 1.66421 7.01584 1.25 7.01584C0.835786 7.01584 0.5 7.31432 0.5 7.68251V7.99997C0.5 10.7197 2.79027 12.964 5.75 13.292V14.6667H4.25C3.83579 14.6667 3.5 14.9651 3.5 15.3333C3.5 15.7015 3.83579 16 4.25 16H8.75C9.16421 16 9.5 15.7015 9.5 15.3333C9.5 14.9651 9.16421 14.6667 8.75 14.6667H7.25V13.292C10.2097 12.964 12.5 10.7197 12.5 7.99997V7.68251C12.5 7.31432 12.1642 7.01584 11.75 7.01584C11.3358 7.01584 11 7.31432 11 7.68251V7.99997C11 10.2091 8.98528 12 6.5 12C4.01472 12 2 10.2091 2 7.99997V7.68251Z' fill='white'/%3E%3C/svg%3E") no-repeat center;
+  background-size: contain;
+}
+
+/* Custom Attach Icon */
+.startup-chat-input-row .message-input-attach-btn {
+  order: 2;
+  background: none !important;
+  border: none !important;
+  padding: 4px !important;
+  margin-right: 16px !important;
+}
+
+.startup-chat-input-row .message-input-attach-btn img[src*="attachment"] {
+  display: none;
+}
+
+.startup-chat-input-row .message-input-attach-btn::after {
+  content: "";
+  display: block;
+  width: 17px;
+  height: 18px;
+  background: url("data:image/svg+xml,%3Csvg width='17' height='18' viewBox='0 0 17 18' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M14.9392 8.17301L11.6572 14.0691C11.0769 15.1117 10.0478 15.8285 8.79623 16.0619C7.54471 16.2954 6.17329 16.0263 4.98368 15.3139C3.79406 14.6016 2.8837 13.5042 2.45286 12.2633C2.02202 11.0224 2.10599 9.73954 2.6863 8.69701L4.65577 5.15882C4.71874 5.06384 4.82111 5.00078 4.94214 4.98241C5.06318 4.96404 5.19383 4.99174 5.30764 5.05989C5.42144 5.12804 5.50989 5.23156 5.55507 5.34946C5.60026 5.46736 5.59879 5.59085 5.55097 5.6949L3.58149 9.23309C3.34125 9.6457 3.19744 10.1123 3.15845 10.6058C3.11946 11.0993 3.18607 11.6097 3.35439 12.1073C3.52272 12.6049 3.7894 13.0798 4.13888 13.5042C4.48836 13.9286 4.91365 14.2941 5.38996 14.5793C5.86627 14.8645 6.38407 15.0638 6.91317 15.1655C7.44227 15.2672 7.97208 15.2694 8.47173 15.1718C8.97137 15.0742 9.43085 14.8788 9.82338 14.597C10.2159 14.3153 10.5336 13.9528 10.758 13.5307L14.04 7.63455C14.1919 7.37675 14.2832 7.08477 14.3088 6.77572C14.3343 6.46667 14.2935 6.14677 14.1887 5.83477C14.0839 5.52277 13.9172 5.22495 13.6984 4.95877C13.4797 4.69258 13.2132 4.46338 12.9147 4.28462C12.6162 4.10585 12.2916 3.9811 11.9599 3.91769C11.6283 3.85428 11.2963 3.85348 10.9834 3.91534C10.6705 3.9772 10.383 4.10047 10.1377 4.27793C9.89244 4.45539 9.69434 4.68347 9.55503 4.94879L6.71072 10.0586C6.5949 10.2667 6.57814 10.5227 6.66413 10.7704C6.75012 11.018 6.93181 11.2371 7.16923 11.3792C7.40665 11.5214 7.68036 11.5751 7.93013 11.5285C8.17991 11.4819 8.3853 11.3389 8.50112 11.1308L10.9083 6.80634C10.9341 6.75018 10.9726 6.70142 11.0215 6.66308C11.0703 6.62474 11.1285 6.59765 11.1923 6.58347C11.2562 6.56928 11.3243 6.56832 11.3926 6.58064C11.4609 6.59296 11.5278 6.6183 11.5892 6.65508C11.6507 6.69187 11.7053 6.73931 11.7497 6.79448C11.7941 6.84965 11.8274 6.91137 11.8475 6.97581C11.8676 7.04025 11.874 7.10604 11.8665 7.1691C11.8589 7.23217 11.8374 7.29116 11.8035 7.34242L9.3968 11.666C9.16465 12.0831 8.75296 12.3698 8.2523 12.4632C7.75163 12.5566 7.203 12.449 6.7271 12.164C6.25121 11.879 5.88702 11.44 5.71466 10.9436C5.54231 10.4472 5.5759 9.93398 5.80805 9.51692L8.65188 4.40795C8.84788 4.03805 9.12571 3.72031 9.46915 3.47328C9.81259 3.22624 10.2148 3.05487 10.6522 2.96915C11.0896 2.88344 11.5535 2.8851 12.0168 2.97404C12.4801 3.06299 12.9335 3.23743 13.3506 3.48719C13.7677 3.73695 14.1401 4.05702 14.446 4.42872C14.7519 4.80042 14.9852 5.21629 15.1324 5.65206C15.2795 6.08784 15.3375 6.53477 15.303 6.96679C15.2684 7.3988 15.142 7.80724 14.9312 8.16824L14.9392 8.17301Z' fill='white'/%3E%3C/svg%3E") no-repeat center;
+  background-size: contain;
+}
+
+/* Custom Send Button */
+.startup-chat-input-row .message-input-send-btn {
+  order: 4;
+  background: #F95738 !important;
+  border: none !important;
+  border-radius: 50% !important;
+  width: 24px !important;
+  height: 24px !important;
+  color: white !important;
+  font-size: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+}
+
+.startup-chat-input-row .message-input-send-btn::after {
+  content: "";
+  display: block;
+  width: 24px;
+  height: 24px;
+  background: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='0.5' y='0.5' width='23' height='23' rx='11.5' fill='%23F95738'/%3E%3Cpath d='M17.9912 6.86677L16.4919 16.5946C16.4749 16.7078 16.4323 16.8157 16.3672 16.9099C16.3022 17.004 16.2164 17.0821 16.1165 17.1379C16.0166 17.1938 15.9052 17.226 15.7909 17.2321C15.6766 17.2382 15.5624 17.218 15.4571 17.1731L12.5898 15.9747L11.3978 17.762C11.3573 17.8345 11.2981 17.8948 11.2264 17.9366C11.1547 17.9785 11.0731 18.0004 10.9901 18C10.8608 18 10.7368 17.9486 10.6454 17.8572C10.554 17.7658 10.5027 17.6418 10.5027 17.5126V15.2596C10.5021 15.093 10.5571 14.931 10.6589 14.7991L15.7499 8.25247L8.86881 14.4462L6.46508 13.4465C6.3319 13.391 6.21748 13.2984 6.13547 13.1797C6.05346 13.061 6.00732 12.9212 6.00254 12.777C5.99076 12.6367 6.02011 12.496 6.087 12.3721C6.1539 12.2482 6.25543 12.1465 6.37919 12.0795L16.8789 6.09889C17.0012 6.02887 17.1409 5.99481 17.2818 6.00064C17.4227 6.00647 17.559 6.05193 17.6752 6.13182C17.7914 6.21171 17.8827 6.32276 17.9386 6.45223C17.9945 6.58169 18.0127 6.7243 17.9912 6.86366V6.86677Z' fill='white'/%3E%3C/svg%3E") no-repeat center;
+  background-size: contain;
 }
 
 @media (max-width: 1200px) {
@@ -74,5 +340,73 @@
   .admin-chat-message-area {
     min-width: 0;
     margin-top: 18px;
+  }
+}
+
+/* Mobile responsive styles */
+@media (max-width: 768px) {
+  .startup-chat-page {
+    padding: 16px;
+  }
+
+  .startup-chat-main {
+    padding: 0;
+    gap: 0;
+    height: calc(100vh - 120px);
+  }
+
+  /* Mobile: Show only chat list initially */
+  .startup-chat-list {
+    width: 100%;
+    min-width: 100%;
+    height: 100%;
+    border: 1px solid #FFFFFF33;
+    border-radius: 12px;
+    background: #2C2E33;
+  }
+
+  .startup-chat-message-area {
+    display: none;
+  }
+
+  /* Mobile: When chat is selected, show only message area */
+  .startup-chat-main.mobile-chat-open .startup-chat-list {
+    display: none;
+  }
+
+  .startup-chat-main.mobile-chat-open .startup-chat-message-area {
+    display: flex;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Mobile back button in chat header */
+  .startup-chat-header-back {
+    display: none;
+    background: none;
+    border: none;
+    padding: 4px;
+    margin-right: 0px;
+    cursor: pointer;
+  }
+
+  .startup-chat-main.mobile-chat-open .startup-chat-header-back {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Reduce spacing in mobile header */
+  .startup-chat-main.mobile-chat-open .startup-chat-header-contact {
+    margin-left: 8px;
+  }
+
+  .startup-chat-header-back svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .startup-chat-header-back svg path {
+    fill: #FFFFFF;
   }
 }

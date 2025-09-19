@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "../../components/ui";
 import { useSelectPackageMutation, useGetSprintByIdQuery, useDeleteSprintMutation } from "../../store/api/sprintsApi";
+import leanSprintLogo from "../../assets/logo/LeanSprintNewLogo.png";
 import "./NewSprintOnboardingStep3.css";
 
 export default function NewSprintOnboardingStep3() {
@@ -90,9 +91,29 @@ export default function NewSprintOnboardingStep3() {
     }
   };
 
+  const handleBack = () => {
+    navigate("/startup/dashboard");
+  };
+
   return (
-    <div className="ns-step3-split-container">
-      <div className="ns-step3-left">
+    <div className="ns-step3-page">
+      {/* Mobile Header */}
+      <div className="ns-step3-mobile-header">
+        <img src={leanSprintLogo} alt="LeanSprint" className="ns-step3-mobile-logo" />
+        <button className="ns-step3-mobile-back-btn" onClick={handleBack}>
+          Back
+        </button>
+      </div>
+
+      {/* Desktop Header */}
+      <div className="ns-step3-desktop-header">
+        <img src={leanSprintLogo} alt="LeanSprint" className="ns-step3-desktop-logo" />
+        <button className="ns-step3-desktop-back-btn" onClick={handleBack}>
+          Back
+        </button>
+      </div>
+
+      <div className="ns-step3-container">
         <div className="ns-step3-form-title">Step 3: Select Package & Payment</div>
         <div className="ns-step3-form-subtitle">
           Choose a sprint package to continue. After selection, complete payment if required.
@@ -120,7 +141,7 @@ export default function NewSprintOnboardingStep3() {
                 <div className="ns-step3-tier-details">
                   <div className="ns-step3-tier-info">
                     <div className="ns-step3-tier-header">
-                      <span className="ns-step3-tier-name">{tier.name}</span>
+                      <div className="ns-step3-tier-name">{tier.name}</div>
                       <div className="ns-step3-tier-description">{tier.description}</div>
                     </div>
                     <div className="ns-step3-tier-pricing">
@@ -129,16 +150,16 @@ export default function NewSprintOnboardingStep3() {
                         <>
                           <div className="ns-step3-hourly-rate">
                             <span className="ns-step3-current-rate">
-                              Hourly Rate: <span style={{ color: "#222" }}>{tier.pricing.hourlyRate}</span>
+                              Hourly Rate: {tier.pricing.hourlyRate}
                             </span>
                           </div>
                           <div className="ns-step3-tier-breakdown">
-                            <span className="ns-step3-breakdown-label" style={{ fontWeight: 700 }}>QTY:</span> {tier.pricing.qty}<br />
-                            <span className="ns-step3-breakdown-label" style={{ fontWeight: 700 }}>Discount:</span> {tier.pricing.discount}<br />
-                            <span className="ns-step3-breakdown-label" style={{ fontWeight: 700 }}>Subtotal:</span> {tier.pricing.subtotal}<br />
+                            <span className="ns-step3-breakdown-label">QTY:</span> {tier.pricing.qty}<br />
+                            <span className="ns-step3-breakdown-label">Discount:</span> {tier.pricing.discount}<br />
+                            <span className="ns-step3-breakdown-label">Subtotal:</span> {tier.pricing.subtotal}<br />
                             {tier.pricing.discountAmount && (
                               <>
-                                <span className="ns-step3-breakdown-label" style={{ fontWeight: 700 }}>Discount Amount:</span> {tier.pricing.discountAmount}<br />
+                                <span className="ns-step3-breakdown-label">Discount Amount:</span> {tier.pricing.discountAmount}<br />
                               </>
                             )}
                           </div>
@@ -146,41 +167,41 @@ export default function NewSprintOnboardingStep3() {
                       )}
                       {tier.pricing.model === "fixed" && (
                         <div className="ns-step3-tier-breakdown">
-                          <span className="ns-step3-breakdown-label" style={{ fontWeight: 700 }}>Amount:</span> {tier.pricing.amount}<br />
-                          <span className="ns-step3-breakdown-label" style={{ fontWeight: 700 }}>Discount:</span> {tier.pricing.discount}<br />
+                          <span className="ns-step3-breakdown-label">Amount:</span> {tier.pricing.amount}<br />
+                          <span className="ns-step3-breakdown-label">Discount:</span> {tier.pricing.discount}<br />
                           {tier.pricing.discountAmount && (
                             <>
-                              <span className="ns-step3-breakdown-label" style={{ fontWeight: 700 }}>Discount Amount:</span> {tier.pricing.discountAmount}<br />
+                              <span className="ns-step3-breakdown-label">Discount Amount:</span> {tier.pricing.discountAmount}<br />
                             </>
                           )}
                         </div>
                       )}
-                      <div style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                      }}>
-                        <div className="ns-step3-tier-total">{tier.pricing.total}</div>
-                        <Button
-                          variant="primary"
-                          onClick={() => {
-                            handleTierSelection(tier.id);
-                            handlePayAndSelect(tier);
-                          }}
-                          className={`ns-step3-tier-select-btn${selectedPackage === tier.id ? " selected" : ""}`}
-                          disabled={selecting}
-                        >
-                          Pay
-                        </Button>
-                      </div>
                     </div>
                   </div>
+                  <div className="ns-step3-tier-action">
+                    <div className="ns-step3-tier-total">{tier.pricing.total}</div>
+                    <button
+                      onClick={() => {
+                        handleTierSelection(tier.id);
+                        handlePayAndSelect(tier);
+                      }}
+                      className={`ns-step3-tier-select-btn${selectedPackage === tier.id ? " selected" : ""}`}
+                      disabled={selecting}
+                    >
+                      Pay
+                    </button>
+                  </div>
                 </div>
-                {/* Removed duplicate Pay button and total */}
               </div>
             ))}
           </div>
         )}
+      </div>
+
+      {/* Footer */}
+      <div className="ns-step3-form-footer">
+        <span className="ns-step3-form-footer-left">© Leansprintr 2025. All Rights Reserved</span>
+        <span className="ns-step3-form-footer-right">Terms of Services</span>
       </div>
     </div>
   );

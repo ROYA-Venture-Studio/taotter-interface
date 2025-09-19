@@ -18,21 +18,25 @@
   flex-direction: row;
   width: 100vw;
   min-height: 100vh;
-  background: #fff;
+  background: #282c34;
   border-radius: 0;
   box-shadow: none;
   overflow: hidden;
 }
 
 .sprint-onboarding-left {
-  flex: 1 1 0;
+  flex: 0 0 50%;
   min-width: 400px;
-  padding: 112px 8vw 40px 8vw;
+  padding: 40px 6vw 77px 8vw;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  background: #fff;
+  background: #282c34 !important;
   box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
+  min-height: 100vh;
+  justify-content: space-between;
 }
 
 .sprint-onboarding-right {

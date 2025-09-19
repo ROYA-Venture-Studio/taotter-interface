@@ -1,0 +1,219 @@
+/* --- Modal Base Styles --- */
+.modalBackdrop {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(16, 24, 40, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    z-index: 1000;
+    padding: 120px 1rem 2rem 1rem;
+    overflow-y: auto;
+}
+
+.modalContent {
+    background: #fff;
+    border-radius: 16px;
+    padding: 24px 28px;
+    width: 100%;
+    max-width: 580px;
+    max-height: 85vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* --- Header --- */
+.modalHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #EAECF0;
+}
+
+.headerTitle {
+    font-size: 24px;
+    font-weight: 600;
+    color: #1D2939;
+    margin: 0;
+}
+
+.closeButton {
+    background: #F2F4F7;
+    border: none;
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.closeButton:hover {
+    background-color: #E4E7EC;
+}
+
+/* --- Top Actions (Edit/Delete) --- */
+.actionsHeader {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+/* --- Details Section --- */
+.detailsContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.detailItem {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.detailLabel {
+    font-size: 18px; /* MODIFIED: As requested */
+    font-weight: 500;
+    color: #344054;
+}
+
+.detailValue {
+    font-size: 15px;
+    color: #667085;
+    line-height: 1.5;
+}
+
+/* --- Attachments --- */
+.attachmentList {
+    list-style-type: disc;
+    padding-left: 20px;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.attachmentLink {
+    color: #2563eb;
+    text-decoration: none;
+    font-size: 15px;
+}
+
+.attachmentLink:hover {
+    text-decoration: underline;
+}
+
+/* --- Column Select --- */
+.columnSelect {
+    width: 100%;
+    padding: 10px 16px;
+    border-radius: 8px;
+    border: 1px solid #D0D5DD;
+    background: #fff;
+    box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
+    font-size: 15px;
+    color: #344054;
+    cursor: pointer;
+}
+
+/* --- Footer --- */
+.modalFooter {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: auto; /* Pushes footer to the bottom */
+    padding-top: 20px;
+    border-top: 1px solid #EAECF0;
+}
+
+/* --- General Button Styles --- */
+.buttonPrimary,
+.buttonSecondary,
+.buttonDelete {
+    height: 44px;
+    padding: 0 24px;
+    font-weight: 500;
+    font-size: 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.buttonPrimary {
+    background: #EB5E28;
+    border: 1px solid #EB5E28;
+    color: #fff;
+}
+
+.buttonPrimary:hover {
+    background: #D45524;
+    border-color: #D45524;
+}
+
+.buttonSecondary {
+    background: #fff;
+    border: 1px solid #D0D5DD;
+    color: #344054;
+}
+
+.buttonSecondary:hover {
+    background-color: #F9FAFB;
+}
+
+.buttonDelete {
+    background: #F04438;
+    border: 1px solid #F04438;
+    color: #fff;
+}
+
+.buttonDelete:hover {
+    background: #D92D20;
+    border-color: #D92D20;
+}
+
+/* --- Delete Confirmation Popup --- */
+.confirmBackdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.25);
+    z-index: 1100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.confirmBox {
+    background: #fff;
+    border-radius: 12px;
+    padding: 24px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    text-align: center;
+}
+
+.confirmTitle {
+    font-weight: 600;
+    font-size: 18px;
+    color: #1D2939;
+    margin: 0 0 8px 0;
+}
+
+.confirmText {
+    font-size: 14px;
+    color: #667085;
+    margin: 0 0 24px 0;
+}
+
+.confirmActions {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+}

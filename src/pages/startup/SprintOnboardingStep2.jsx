@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { Button } from '../../components/ui'
 import { useGetSprintByIdQuery, useSelectPackageMutation } from '../../store/api/sprintsApi'
 import longImage from '../../assets/images/long.png'
+import leanSprintLogo from "../../assets/logo/LeanSprintNewLogo.png"
 import './SprintOnboardingStep2.css'
 
 // Mobile detection hook
@@ -246,10 +247,17 @@ const SprintOnboardingStep2 = () => {
       {isMobile ? (
         <>
           <div className="sprint-onboarding-mobile-header">
-            <div className="sprint-onboarding-mobile-header-title">
-              Start Your Sprint
-            </div>
-            ...........................
+            <img 
+              src={leanSprintLogo} 
+              alt="LeanSprint" 
+              className="sprint-onboarding-mobile-logo" 
+            />
+            <button 
+              onClick={handleBack}
+              className="sprint-onboarding-mobile-back-btn"
+            >
+              Back
+            </button>
           </div>
           <div className="sprint-onboarding-mobile-container">
             <div className="sprint-onboarding-mobile-title">
@@ -307,6 +315,7 @@ const SprintOnboardingStep2 = () => {
                   </div>
                   
                   <div className="tier-action">
+                    <div className="tier-total">{tier.pricing.total}</div>
                     <Button
                       variant="primary"
                       onClick={() => {
@@ -317,7 +326,6 @@ const SprintOnboardingStep2 = () => {
                     >
                       Pay
                     </Button>
-                    <div className="tier-total">{tier.pricing.total}</div>
                   </div>
                 </div>
               ))}
@@ -342,16 +350,42 @@ const SprintOnboardingStep2 = () => {
               </Button>
             </div>
           </div>
+          
+          <div className="sprint-onboarding-form-footer">
+            <div className="sprint-onboarding-form-footer-left">
+              All rights reserved
+            </div>
+            <div className="sprint-onboarding-form-footer-right">
+              <a href="/terms" className="sprint-onboarding-terms-link">
+                Terms of Services
+              </a>
+            </div>
+          </div>
         </>
       ) : (
         <div className="sprint-onboarding-split-container">
           <div className="sprint-onboarding-left">
-            <div className="sprint-onboarding-form-title">
-              Choose your preferred Leansprintr Credit Tier
+            <div className="sprint-onboarding-desktop-header">
+              <img 
+                src={leanSprintLogo} 
+                alt="LeanSprint" 
+                className="sprint-onboarding-desktop-logo" 
+              />
+              <button 
+                onClick={handleBack}
+                className="sprint-onboarding-desktop-back-btn"
+              >
+                Back to Home
+              </button>
             </div>
-            <div className="sprint-onboarding-form-subtitle">
-              Select from the available tiers for {sprintData.data.sprint.name}
-            </div>
+            
+            <div className="sprint-onboarding-content">
+              <div className="sprint-onboarding-form-title">
+                Choose your preferred Leansprintr Credit Tier
+              </div>
+              <div className="sprint-onboarding-form-subtitle">
+                Select from the available tiers for {sprintData.data.sprint.name}
+              </div>
             
             <div className="credit-tiers">
               {creditTiers.map((tier) => (
@@ -403,6 +437,7 @@ const SprintOnboardingStep2 = () => {
                   </div>
                   
                   <div className="tier-action">
+                    <div className="tier-total">{tier.pricing.total}</div>
                     {tier.paymentLink ? (
                       <Button
                         variant="primary"
@@ -423,17 +458,16 @@ const SprintOnboardingStep2 = () => {
                         {selectedTier === tier.id ? 'Selected' : 'Select'}
                       </Button>
                     )}
-                    <div className="tier-total">{tier.pricing.total}</div>
                   </div>
                 </div>
               ))}
             </div>
 
-            <div className="sprint-onboarding-navigation">
+            <div className="sprint-onboarding-btn-row">
               <Button
                 variant="secondary"
                 onClick={handleBack}
-                className="nav-button back-button"
+                className="sprint-onboarding-btn-back"
               >
                 Back
               </Button>
@@ -442,10 +476,22 @@ const SprintOnboardingStep2 = () => {
                 variant="primary"
                 onClick={handleNext}
                 disabled={!selectedTier || (creditTiers.find(t => t.id === selectedTier)?.paymentLink && !hasPaid) || isSubmitting}
-                className="nav-button next-button"
+                className="sprint-onboarding-btn-next"
               >
                 {isSubmitting ? 'Selecting...' : 'Next'}
               </Button>
+            </div>
+            
+            <div className="sprint-onboarding-footer">
+              <div className="sprint-onboarding-footer-left">
+                  © Leansprintr 2025. All Rights Reserved
+              </div>
+              <div className="sprint-onboarding-footer-right">
+                <a href="/terms" className="sprint-onboarding-terms-link">
+                  Terms of Services
+                </a>
+              </div>
+            </div>
             </div>
           </div>
           <div className="sprint-onboarding-right">

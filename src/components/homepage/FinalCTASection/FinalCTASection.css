@@ -336,7 +336,7 @@
 /* Centering logic for screens >1440px - Revised */
 @media (min-width: 1442px) {
   .final-cta-section.simple {
-    margin: 100px auto !important;
+    margin: 0px auto !important;
     max-width: 1440px;
     width: 100%;
     text-align: center;
