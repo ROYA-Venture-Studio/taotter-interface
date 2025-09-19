@@ -95,7 +95,7 @@ if (hasProposals && sprint.questionnaireId) {
         };
         const handleScheduleMeeting = (e) => {
             e.stopPropagation();
-            alert('Schedule meeting flow not implemented yet.');
+            window.open('https://calendly.com/sophie-taotter/30-minute-discovery-call-leansprintr', '_blank');
         };
         return (
             <div className="dashboard-card-wrapper">
