@@ -108,7 +108,9 @@
   max-width: 1440px;
   /* margin: 0 auto; */
 }
-
+.motion{
+  font-style: italic;
+}
 .motion-header {
   text-align: center;
   margin-bottom: 6rem;
@@ -127,14 +129,6 @@
   right: 25%;
 }
 
-.motion-title {
-  font-size: 3rem;
-  font-weight: 700;
-  font-style: italic;
-  line-height: 1.2;
-  color: var(--text-primary);
-  margin-bottom: 1rem;
-}
 
 .motion-description {
   font-size: 1.5rem;

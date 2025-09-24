@@ -21,7 +21,7 @@ export default function MotionSection() {
             <>
               <div className="motion-header">
                 <h2 className="motion-title">
-                  One platform. <span className="title-highlight">Everything in motion.</span>
+                  One platform. <span className="title-highlight">Everything in <span class="motion">motion.</span></span>
                 </h2>
                 <p className="motion-description">
                   No more scattered tools (and efforts). Your business model, your milestones,
