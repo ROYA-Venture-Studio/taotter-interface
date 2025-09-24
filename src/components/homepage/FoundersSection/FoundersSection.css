@@ -34,6 +34,11 @@
   height: 32px;
 }
 
+.megaphone-icon {
+  width: 48px !important;
+  height: 48px !important;
+}
+
 .founders-images-row {
   display: flex;
   justify-content: center;

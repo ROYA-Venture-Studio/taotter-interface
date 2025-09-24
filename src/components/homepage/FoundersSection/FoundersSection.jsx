@@ -26,7 +26,7 @@ export default function FoundersSection() {
                 </span>{" "}
                 <span className="founders-subtitle">without the</span>{" "}
                 <span className="founders-accent">
-                  <img src={megaphoneIcon} alt="Noise icon" className="inline-icon" />
+                  <img src={megaphoneIcon} alt="Noise icon" className="inline-icon megaphone-icon" />
                   noise
                 </span>
               </h2>
@@ -73,7 +73,7 @@ export default function FoundersSection() {
               </span>{" "}
               <span className="founders-subtitle-mobile" style={{ color: "#C8C8C8" }}>without the</span>{" "}
               <span className="founders-accent-mobile" style={{ color: "#1986CA" }}>
-                <img src={megaphoneIcon} alt="Noise icon" className="inline-icon" />
+                <img src={megaphoneIcon} alt="Noise icon" className="inline-icon megaphone-icon" />
                 noise
               </span>
             </h2>
