@@ -427,20 +427,6 @@ const MvpFormPage = () => {
                         Part-time
                       </span>
                     </label>
-                    <label className="mvp-form-radio-btn">
-                      <input
-                        type="radio"
-                        name="timeCommitment"
-                        value="exploring"
-                        checked={formData.timeCommitment === "exploring"}
-                        onChange={() =>
-                          updateFormData("timeCommitment", "exploring")
-                        }
-                      />
-                      <span className="mvp-form-radio-btn-label">
-                        Just Exploring
-                      </span>
-                    </label>
                   </div>
                 </div>
                 <button

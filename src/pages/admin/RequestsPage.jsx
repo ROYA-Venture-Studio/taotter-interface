@@ -161,7 +161,6 @@ export default function RequestsPage() {
                   <th>Status</th>
                   <th>Sprint Status</th>
                   <th>Payment Status</th>
-                  <th>Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -235,15 +234,6 @@ export default function RequestsPage() {
                       ) : (
                         <span style={{ color: "#6b7280" }}>N/A</span>
                       )}
-                    </td>
-                    <td>
-                      <button
-                        className="admin-table-action-btn"
-                        title="Delete"
-                        onClick={e => e.stopPropagation()}
-                      >
-                        <Icon name="trash" size={20} />
-                      </button>
                     </td>
                   </tr>
                 ))}

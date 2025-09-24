@@ -12,7 +12,8 @@
 }
 
 .modalContent {
-    background: #fff;
+    background: #2C2E33;
+    border: 1px solid #3a3f47;
     border-radius: 16px;
     padding: 24px 28px;
     width: 100%;
@@ -22,7 +23,7 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
 }
 
 /* --- Header --- */
@@ -31,18 +32,18 @@
     justify-content: space-between;
     align-items: center;
     padding-bottom: 16px;
-    border-bottom: 1px solid #EAECF0;
+    border-bottom: 1px solid #3a3f47;
 }
 
 .headerTitle {
     font-size: 24px;
     font-weight: 600;
-    color: #1D2939;
+    color: #ffffff;
     margin: 0;
 }
 
 .closeButton {
-    background: #F2F4F7;
+    background: #3a3f47;
     border: none;
     border-radius: 50%;
     width: 44px;
@@ -55,7 +56,7 @@
 }
 
 .closeButton:hover {
-    background-color: #E4E7EC;
+    background-color: #4a4f57;
 }
 
 /* --- Top Actions (Edit/Delete) --- */
@@ -81,12 +82,12 @@
 .detailLabel {
     font-size: 18px; /* MODIFIED: As requested */
     font-weight: 500;
-    color: #344054;
+    color: #ffffff;
 }
 
 .detailValue {
     font-size: 15px;
-    color: #667085;
+    color: #ffffff;
     line-height: 1.5;
 }
 
@@ -101,7 +102,7 @@
 }
 
 .attachmentLink {
-    color: #2563eb;
+    color: #EB5E28;
     text-decoration: none;
     font-size: 15px;
 }
@@ -115,11 +116,11 @@
     width: 100%;
     padding: 10px 16px;
     border-radius: 8px;
-    border: 1px solid #D0D5DD;
-    background: #fff;
+    border: 1px solid #3a3f47;
+    background: #3a3f47;
     box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
     font-size: 15px;
-    color: #344054;
+    color: #ffffff;
     cursor: pointer;
 }
 
@@ -158,13 +159,13 @@
 }
 
 .buttonSecondary {
-    background: #fff;
-    border: 1px solid #D0D5DD;
-    color: #344054;
+    background: #3a3f47;
+    border: 1px solid #3a3f47;
+    color: #ffffff;
 }
 
 .buttonSecondary:hover {
-    background-color: #F9FAFB;
+    background-color: #4a4f57;
 }
 
 .buttonDelete {
@@ -182,7 +183,7 @@
 .confirmBackdrop {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.25);
+    background: rgba(0, 0, 0, 0.7);
     z-index: 1100;
     display: flex;
     align-items: center;
@@ -190,25 +191,26 @@
 }
 
 .confirmBox {
-    background: #fff;
+    background: #2C2E33;
+    border: 1px solid #3a3f47;
     border-radius: 12px;
     padding: 24px;
     width: 90%;
     max-width: 400px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
     text-align: center;
 }
 
 .confirmTitle {
     font-weight: 600;
     font-size: 18px;
-    color: #1D2939;
+    color: #ffffff;
     margin: 0 0 8px 0;
 }
 
 .confirmText {
     font-size: 14px;
-    color: #667085;
+    color: #ffffff;
     margin: 0 0 24px 0;
 }
 

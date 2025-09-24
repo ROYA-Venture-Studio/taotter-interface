@@ -20,7 +20,6 @@ export default function MotionSection() {
           {!mobile ? (
             <>
               <div className="motion-header">
-                <div className="motion-subtitle">motion.</div>
                 <h2 className="motion-title">
                   One platform. <span className="title-highlight">Everything in motion.</span>
                 </h2>

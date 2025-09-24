@@ -12,7 +12,7 @@
 .footer-content {
   display: flex;
   align-items: flex-start;
-  gap: 6.25rem;
+  justify-content: space-between;
   margin-bottom: 3rem;
 }
 
@@ -23,8 +23,9 @@
 
 .footer-links {
   display: flex;
-  gap: 6.25rem;
+  gap: 4rem;
   flex: 1;
+  justify-content: space-evenly;
 }
 
 .footer-column {
@@ -139,6 +140,10 @@
 
 /* Mobile */
 @media (max-width: 768px) {
+  .footer {
+  background: #242321;
+  padding: 24px 0 0 0;
+}
   .footer-container {
     padding: 0 16px;
   }

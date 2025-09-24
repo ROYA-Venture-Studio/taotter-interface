@@ -1,9 +1,8 @@
 import React from "react";
 import "./FooterSection.css";
 import facebookIcon from "./facebook.png";
-import twitterIcon from "./twitter.png";
 import instagramIcon from "./instagram.png";
-import youtubeIcon from "./youtube.png";
+import linkedinIcon from "./linkedin.svg";
 
 export default function FooterSection() {
   return (
@@ -21,34 +20,54 @@ export default function FooterSection() {
           <div className="footer-links">
             <div className="footer-column">
               <div className="footer-section">
-                <a href="#" className="footer-link">About us</a>
-                <a href="#" className="footer-link">Talk to a Startup Specialist</a>
-                <a href="#" className="footer-link">Contact Us</a>
+                <a 
+                  href="#process" 
+                  className="footer-link"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    const section = document.querySelector('.process-section');
+                    if (section) {
+                      section.scrollIntoView({ behavior: 'smooth' });
+                    }
+                  }}
+                >
+                  How it Works
+                </a>
+                <a 
+                  href="#founders" 
+                  className="footer-link"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    const section = document.querySelector('.founders-section');
+                    if (section) {
+                      section.scrollIntoView({ behavior: 'smooth' });
+                    }
+                  }}
+                >
+                  Who's It For
+                </a>
+                <a href="https://leanstack.com/taotter/leansprintr" className="footer-link" target="_blank" rel="noopener noreferrer">Community</a>
               </div>
             </div>
 
             <div className="footer-column">
               <a href="#" className="footer-link">Privacy Policy</a>
               <a href="#" className="footer-link">Terms of Services</a>
-              <a href="#" className="footer-link">Cookie Settings</a>
             </div>
 
             <div className="footer-column">
               <div className="follow-us">
                 <p className="follow-title">Follow us</p>
                 <div className="social-icons">
-<a href="#" className="social-icon facebook">
-  <img src={facebookIcon} alt="Facebook" width={40} height={40} />
-</a>
-<a href="#" className="social-icon twitter">
-  <img src={twitterIcon} alt="Twitter" width={40} height={40} />
-</a>
-<a href="#" className="social-icon instagram">
-  <img src={instagramIcon} alt="Instagram" width={40} height={40} />
-</a>
-<a href="#" className="social-icon youtube">
-  <img src={youtubeIcon} alt="YouTube" width={40} height={40} />
-</a>
+                  <a href="https://www.facebook.com/profile.php?id=61580243300238" className="social-icon facebook" target="_blank" rel="noopener noreferrer">
+                    <img src={facebookIcon} alt="Facebook" width={40} height={40} />
+                  </a>
+                  <a href="https://www.instagram.com/leansprintr" className="social-icon instagram" target="_blank" rel="noopener noreferrer">
+                    <img src={instagramIcon} alt="Instagram" width={40} height={40} />
+                  </a>
+                  <a href="https://www.linkedin.com/showcase/leansprintr/about/" className="social-icon linkedin" target="_blank" rel="noopener noreferrer">
+                    <img src={linkedinIcon} alt="LinkedIn" width={40} height={40} />
+                  </a>
                 </div>
               </div>
             </div>
