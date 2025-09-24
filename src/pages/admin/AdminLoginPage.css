@@ -122,6 +122,7 @@
 
 .checkbox-text {
   user-select: none;
+  color: #000000;
 }
 
 .forgot-password-link {

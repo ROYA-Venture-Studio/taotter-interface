@@ -2514,6 +2514,10 @@ body {
 
 /* Small Mobile */
 @media (max-width: 480px) {
+  .footer {
+  background: #242321;
+  padding: 24px 0 0 0;
+}
   .founders-title {
     font-size: 1.75rem;
   }
@@ -2651,7 +2655,7 @@ body {
   .leansprint-homepage .signup-section,
   .leansprint-homepage .footer {
     margin-block: 0 !important;
-    padding-block: 75px !important;
+    padding-block: 25px !important;
   }
 }
 /* --- Stacking Context Fix: Ensure homepage-background-images is always below all content --- */

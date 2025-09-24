@@ -3,6 +3,7 @@ import AdminLayout from "../../layouts/AdminLayout";
 import Breadcrumb from "../../components/ui/Breadcrumb/Breadcrumb";
 import AdminBoardKanban from "../../components/admin/AdminBoardKanban";
 import { useGetBoardBySprintQuery } from "../../store/api/boardsApi";
+import { useGetSprintByIdQuery } from "../../store/api/sprintsApi";
 import PaymentRequiredModal from "../../components/ui/PaymentRequiredModal";
 import { useParams, useNavigate } from "react-router-dom";
 import AdminTaskModal from "../../components/admin/AdminTaskModal";
@@ -40,6 +41,11 @@ export default function BoardPage() {
 
   // Fetch board by sprintId (you may need to adjust this to fetch by boardId if needed)
   const { data, isLoading, error, refetch } = useGetBoardBySprintQuery(sprintId);
+  
+  // Fetch sprint details to check if it's completed
+  const { data: sprintData } = useGetSprintByIdQuery(sprintId);
+  const isSprintCompleted = sprintData?.data?.sprint?.status === 'completed';
+  
   const [showPaymentModal, setShowPaymentModal] = useState(false);
 
   useEffect(() => {
@@ -178,12 +184,20 @@ export default function BoardPage() {
   };
 
   const handleEditTask = (task) => {
+    if (isSprintCompleted) {
+      alert("Cannot edit tasks in a completed sprint. This sprint is now read-only.");
+      return;
+    }
     setEditTask(task);
     setModalMode('edit');
     setModalOpen(true);
   };
 
   const handleCreateClick = () => {
+    if (isSprintCompleted) {
+      alert("Cannot create new tasks in a completed sprint. This sprint is now read-only.");
+      return;
+    }
     setSelectedTask(null);
     setEditTask(null);
     setModalMode('create');
@@ -204,6 +218,11 @@ export default function BoardPage() {
 
   // Delete task handler
   const handleDeleteTask = async (taskId) => {
+    if (isSprintCompleted) {
+      alert("Cannot delete tasks in a completed sprint. This sprint is now read-only.");
+      return;
+    }
+    
     console.log("handleDeleteTask called with:", taskId);
     if (!taskId) return;
     try {
@@ -217,6 +236,11 @@ export default function BoardPage() {
 
   // Move task handler for drag-and-drop (optimistic UI)
   const handleMoveTask = async (taskId, targetColumnId) => {
+    if (isSprintCompleted) {
+      alert("Cannot move tasks in a completed sprint. This sprint is now read-only.");
+      return;
+    }
+    
     // Find the target column and the new position (end of column)
     const col = localColumns.find(c => c.key === targetColumnId);
     const position = col ? col.tasks.length : 0;
@@ -264,6 +288,19 @@ export default function BoardPage() {
       <div className="admin-board-page">
         <div className="admin-board-page-header-row">
           <div className="admin-board-page-title">Board</div>
+          {isSprintCompleted && (
+            <div style={{
+              backgroundColor: "#f59e0b",
+              color: "#fff",
+              padding: "4px 12px",
+              borderRadius: "6px",
+              fontSize: "0.875rem",
+              fontWeight: "500",
+              marginLeft: "16px"
+            }}>
+              ✓ Completed Sprint - Read Only
+            </div>
+          )}
           <div className="admin-board-page-breadcrumb">
             <Breadcrumb
               items={[
@@ -291,17 +328,18 @@ export default function BoardPage() {
               onClick={handleCreateClick}
               style={{
                 marginLeft: "auto",
-                background: "#EB5E28",
+                background: isSprintCompleted ? "#9ca3af" : "#EB5E28",
                 color: "#fff",
                 border: "none",
                 borderRadius: "6px",
                 padding: "8px 16px",
                 fontSize: "1rem",
                 fontWeight: 500,
-                cursor: "pointer",
+                cursor: isSprintCompleted ? "not-allowed" : "pointer",
                 transition: "background 0.2s"
               }}
-              disabled={adminsLoading}
+              disabled={adminsLoading || isSprintCompleted}
+              title={isSprintCompleted ? "Cannot create tasks in a completed sprint" : ""}
             >
               + New Task
             </button>
@@ -318,6 +356,7 @@ export default function BoardPage() {
                 onEditTask={handleEditTask}
                 onDeleteTask={handleDeleteTask}
                 onCardClick={handleCardClick}
+                isReadOnly={isSprintCompleted}
               />
               {modalOpen && (
                 <div>

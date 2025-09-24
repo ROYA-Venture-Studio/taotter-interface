@@ -3,6 +3,7 @@ import Breadcrumb from "../../components/ui/Breadcrumb/Breadcrumb";
 import BoardKanban from "../../components/admin/BoardKanban";
 import { useParams } from "react-router-dom";
 import { useGetStartupBoardBySprintQuery } from "../../store/api/boardsApi";
+import { useGetSprintByIdQuery } from "../../store/api/sprintsApi";
 import { useCreateStartupTaskMutation, useMoveStartupTaskMutation, useEditStartupTaskMutation, useDeleteStartupTaskMutation } from "../../store/api/tasksApi";
 import TaskModal from "../../components/admin/TaskModal";
 import TaskDetailsModal from "../../components/admin/TaskDetailsModal";
@@ -36,6 +37,10 @@ export default function StartupBoardPage() {
 
   // Fetch board by sprintId
   const { data, isLoading, error, refetch } = useGetStartupBoardBySprintQuery(sprintId);
+  
+  // Fetch sprint details to check if it's completed
+  const { data: sprintData } = useGetSprintByIdQuery(sprintId);
+  const isSprintCompleted = sprintData?.data?.sprint?.status === 'completed';
 
   // Create, edit, and move task mutations
   const [createStartupTask, { isLoading: isCreating }] = useCreateStartupTaskMutation();
@@ -121,6 +126,12 @@ export default function StartupBoardPage() {
   }
 
   function handleEditTask(task) {
+    // Check if sprint is completed
+    if (isSprintCompleted) {
+      setAdminProtectModal({ open: true, message: "Cannot edit tasks in a completed sprint. This sprint is now read-only." });
+      return;
+    }
+
     if (task && task.createdByModel === "Admin") {
       setAdminProtectModal({ open: true, message: "You cannot edit tasks created by the admin." });
       return;
@@ -131,6 +142,12 @@ export default function StartupBoardPage() {
   }
 
   function handleCreateClick() {
+    // Check if sprint is completed
+    if (isSprintCompleted) {
+      setAdminProtectModal({ open: true, message: "Cannot create new tasks in a completed sprint. This sprint is now read-only." });
+      return;
+    }
+
     setSelectedTask(null);
     setEditTask(null);
     setModalMode('create');
@@ -171,6 +188,12 @@ export default function StartupBoardPage() {
 
   // Move task handler for drag-and-drop (optimistic UI)
   const handleMoveTask = async (taskId, targetColumnId) => {
+    // Check if sprint is completed
+    if (isSprintCompleted) {
+      setAdminProtectModal({ open: true, message: "Cannot move tasks in a completed sprint. This sprint is now read-only." });
+      return;
+    }
+
     // Find the task object
     const allTasks = localColumns.flatMap(col => col.tasks);
     const task = allTasks.find(t => t.id === taskId);
@@ -221,6 +244,12 @@ export default function StartupBoardPage() {
 
   // Named delete handler for TaskDetailsModal (mimic admin)
   async function handleDeleteTask(taskId) {
+    // Check if sprint is completed
+    if (isSprintCompleted) {
+      setAdminProtectModal({ open: true, message: "Cannot delete tasks in a completed sprint. This sprint is now read-only." });
+      return;
+    }
+
     // Prevent deleting admin-created tasks
     const allTasks = localColumns.flatMap(col => col.tasks);
     const task = allTasks.find(t => t.id === taskId);
@@ -252,27 +281,28 @@ export default function StartupBoardPage() {
             alignItems: "center",
             justifyContent: "center",
             zIndex: 9999,
-            background: "rgba(0,0,0,0.25)"
+            background: "rgba(0,0,0,0.7)"
           }}
           onClick={() => setAdminProtectModal({ open: false, message: "" })}
         >
           <div
             style={{
-              background: "#fff",
+              background: "#282c34",
               borderRadius: "10px",
-              boxShadow: "0 2px 16px rgba(0,0,0,0.18)",
+              boxShadow: "0 2px 16px rgba(0,0,0,0.5)",
               padding: "32px",
               minWidth: "320px",
               maxWidth: "90vw",
               textAlign: "center",
-              position: "relative"
+              position: "relative",
+              border: "1px solid #3a3f47"
             }}
             onClick={e => e.stopPropagation()}
           >
-            <div style={{ fontSize: "1.5rem", fontWeight: 700, marginBottom: "8px", color: "#222", textAlign: "center", paddingTop: "8px" }}>
-              Unable to Move Task
+            <div style={{ fontSize: "1.5rem", fontWeight: 700, marginBottom: "8px", color: "#ffffff", textAlign: "center", paddingTop: "8px" }}>
+              {isSprintCompleted ? "Sprint Completed" : "Unable to Move Task"}
             </div>
-            <div style={{ marginBottom: "24px", color: "#444", textAlign: "center" }}>
+            <div style={{ marginBottom: "24px", color: "#ffffff", textAlign: "center" }}>
               {adminProtectModal.message}
             </div>
             <button
@@ -295,6 +325,19 @@ export default function StartupBoardPage() {
       )}
         <div className="board-page-header-row">
           <div className="board-page-title">Sprint Board</div>
+          {isSprintCompleted && (
+            <div style={{
+              backgroundColor: "#f59e0b",
+              color: "#fff",
+              padding: "4px 12px",
+              borderRadius: "6px",
+              fontSize: "0.875rem",
+              fontWeight: "500",
+              marginLeft: "16px"
+            }}>
+              ✓ Completed Sprint - Read Only
+            </div>
+          )}
           <div className="board-page-breadcrumb">
             {/* <Breadcrumb
               items={[
@@ -324,7 +367,9 @@ export default function StartupBoardPage() {
               <button
                 className="create-task-btn"
                 onClick={handleCreateClick}
-                disabled={isCreating}
+                disabled={isCreating || isSprintCompleted}
+                style={isSprintCompleted ? { opacity: 0.5, cursor: 'not-allowed' } : {}}
+                title={isSprintCompleted ? "Cannot create tasks in a completed sprint" : ""}
               >
                 Add New Task
               </button>
@@ -343,6 +388,7 @@ export default function StartupBoardPage() {
                 onDeleteTask={handleDeleteTask}
                 onCardClick={handleCardClick}
                 isAdminTask={task => task.createdByModel === "Admin"} // Pass utility to BoardKanban
+                isReadOnly={isSprintCompleted}
               />
               {/* 
                 To fully prevent drag-and-drop and show tooltips for admin tasks,

@@ -1,15 +1,15 @@
 /* Import the Montserrat font */
 @import "https://fonts.googleapis.com/css?family=Montserrat:400,500,600&display=swap";
 
-/* Define CSS variables if they are not defined globally */
+/* Define CSS variables for dark theme */
 :root {
-  --Background-Body: #FFF;
-  --Background-Body-Secondary: #F9FAFB;
-  --Text-Title-Color: #1D2939;
-  --Text-Text-Color: #344054;
-  --Text-Secondary-Text-Color: #667085;
-  --Text-Brand-Color: #465FFF;
-  --Border-Border-Tertiary: #D0D5DD;
+  --Background-Body: #2C2E33;
+  --Background-Body-Secondary: #3a3f47;
+  --Text-Title-Color: #ffffff;
+  --Text-Text-Color: #ffffff;
+  --Text-Secondary-Text-Color: #ffffff;
+  --Text-Brand-Color: #EB5E28;
+  --Border-Border-Tertiary: #3a3f47;
   --Utilities-Spacing-5: 20px;
   --Utilities-Spacing-6: 24px;
   --Utilities-Spacing-7: 28px;
@@ -32,6 +32,7 @@
 
 .modalContent {
   background: var(--Background-Body);
+  border: 1px solid var(--Border-Border-Tertiary);
   border-radius: var(--Utilities-Border-Radius-2XL);
   padding: var(--Utilities-Spacing-6) var(--Utilities-Spacing-7);
   width: 100%;
@@ -42,6 +43,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--Utilities-Spacing-6);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
 }
 
 .modalHeader {
