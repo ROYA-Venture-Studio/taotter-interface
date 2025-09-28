@@ -267,7 +267,7 @@ You can only schedule once, so pick the time that works best. We're excited to g
           <div className="hang-tight-logo">
             <img src={leanSprintLogo} alt="LeanSprint" className="logo-image" />
           </div>
-          <button className="hang-tight-back-btn">Back to home</button>
+          <button className="hang-tight-back-btn" onClick={() => navigate("/")}>Back to home</button>
         </div>
 
         {/* Main Content */}
