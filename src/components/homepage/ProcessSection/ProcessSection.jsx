@@ -1,12 +1,10 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import "./ProcessSection.css";
 import process1 from "./process1.svg";
 import process2 from "./process2.svg";
 import process3 from "./process3.svg";
 import bg4 from "../../../assets/images/background/3.png";
 import bg5 from "../../../assets/images/background/5.png";
-
-const CLONE_COUNT = 1;
 
 export default function ProcessSection() {
   const originalItems = [
@@ -15,82 +13,15 @@ export default function ProcessSection() {
     { src: process3, alt: "Process Card 3" },
   ];
 
-  const [loopedItems, setLoopedItems] = useState([]);
   const carouselRef = useRef(null);
-  const trackRef = useRef(null);
-  const isJumping = useRef(false);
 
   useEffect(() => {
-    const clonesStart = originalItems.slice(-CLONE_COUNT);
-    const clonesEnd = originalItems.slice(0, CLONE_COUNT);
-    setLoopedItems([...clonesStart, ...originalItems, ...clonesEnd]);
+    // Ensure the carousel starts at the beginning (first card)
+    if (carouselRef.current) {
+      carouselRef.current.scrollLeft = 0;
+    }
   }, []);
 
-  useEffect(() => {
-    if (!carouselRef.current || !trackRef.current || loopedItems.length === 0) {
-      return;
-    }
-
-    const carousel = carouselRef.current;
-    const track = trackRef.current;
-
-    const card = track.children[0];
-    if (!card) return;
-
-    const cardWidth = card.offsetWidth;
-    const gap = parseInt(window.getComputedStyle(track).gap, 10) || 32;
-    const singleItemWidth = cardWidth + gap;
-
-    const initialScrollLeft = singleItemWidth * CLONE_COUNT;
-    carousel.scrollLeft = initialScrollLeft;
-
-    const handleScroll = () => {
-      if (isJumping.current) return;
-
-      const { scrollLeft, clientWidth, scrollWidth } = carousel;
-
-      // ==================================================================
-      // THE FIX IS HERE 👇
-      // This is a more reliable way to check for the end of the scroll.
-      // It checks if the scrolled distance + visible width is at the end.
-      // A 1px buffer is added to prevent rounding errors.
-      if (scrollLeft + clientWidth >= scrollWidth - 1) {
-      // ==================================================================
-        isJumping.current = true;
-        carousel.classList.add("no-scroll-transition");
-        carousel.scrollLeft = initialScrollLeft;
-      }
-
-      if (scrollLeft <= 0) {
-        isJumping.current = true;
-        carousel.classList.add("no-scroll-transition");
-        carousel.scrollLeft = singleItemWidth * originalItems.length;
-      }
-    };
-
-    const handleTransitionEnd = () => {
-        isJumping.current = false;
-        carousel.classList.remove("no-scroll-transition");
-    };
-
-    carousel.addEventListener("scroll", handleScroll);
-    carousel.addEventListener("transitionend", handleTransitionEnd);
-
-    const scrollTimeout = setInterval(() => {
-        if (isJumping.current) {
-            isJumping.current = false;
-            carousel.classList.remove("no-scroll-transition");
-        }
-    }, 200);
-
-    return () => {
-      carousel.removeEventListener("scroll", handleScroll);
-      carousel.removeEventListener("transitionend", handleTransitionEnd);
-      clearInterval(scrollTimeout);
-    };
-  }, [loopedItems, originalItems.length]);
-
-  // ... the rest of your return statement is unchanged ...
   return (
     <section className="process-section">
       {/* Background images */}
@@ -118,8 +49,8 @@ export default function ProcessSection() {
           </h2>
           <div style={{ height: "33px" }} />
           <div ref={carouselRef} className="process-carousel">
-            <div ref={trackRef} className="carousel-track">
-              {loopedItems.map((item, index) => (
+            <div className="carousel-track">
+              {originalItems.map((item, index) => (
                 <img key={index} src={item.src} alt={item.alt} className="process-card-img" />
               ))}
             </div>
