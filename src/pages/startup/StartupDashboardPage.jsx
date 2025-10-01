@@ -33,9 +33,30 @@ function SprintDetails({ sprint }) {
         );
     }
 
-    const { name, description, currency, engagementHours, hourlyRate, discount } = sprint.selectedPackage;
-    const finalPrice = (hourlyRate * engagementHours) - (discount || 0);
-    const formattedPrice = new Intl.NumberFormat('en-US', { style: 'currency', currency: currency || 'USD' }).format(finalPrice);
+    const { name, description, currency, engagementHours, hourlyRate, discount, amount, price } = sprint.selectedPackage;
+    
+    // Calculate price more robustly - handle different package types
+    let finalPrice = 0;
+    
+    if (amount && !isNaN(Number(amount))) {
+        // Fixed amount package
+        finalPrice = Number(amount);
+    } else if (price && !isNaN(Number(price))) {
+        // Price field package
+        finalPrice = Number(price);
+    } else if (hourlyRate && engagementHours && !isNaN(Number(hourlyRate)) && !isNaN(Number(engagementHours))) {
+        // Hourly rate package
+        const subtotal = Number(hourlyRate) * Number(engagementHours);
+        const discountAmount = discount && !isNaN(Number(discount)) ? Number(discount) : 0;
+        finalPrice = subtotal - discountAmount;
+    } else {
+        // Fallback if no valid price found
+        finalPrice = 0;
+    }
+    
+    const formattedPrice = finalPrice > 0 
+        ? new Intl.NumberFormat('en-US', { style: 'currency', currency: currency || 'USD' }).format(finalPrice)
+        : 'Price not available';
     const formattedDate = new Date(sprint.createdAt).toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'long',
@@ -603,7 +624,6 @@ function StartSprintModal({ onClose, onSprintCreated }) {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [errors, setErrors] = useState({});
     const [formData, setFormData] = useState({
-        startupName: '',
         taskName: '',
         taskDescription: '',
         stage: '',
@@ -617,9 +637,9 @@ function StartSprintModal({ onClose, onSprintCreated }) {
     // Options
     const stageOptions = [
         { value: '', label: 'Select Stage' },
-        { value: 'idea', label: 'Idea' },
-        { value: 'validation', label: 'Validation' },
-        { value: 'growth', label: 'Growth' }
+        { value: 'pre-seed', label: 'Pre-seed' },
+        { value: 'seed-a', label: 'Seed A' },
+        { value: 'seed-b', label: 'Seed B' }
     ];
     const timelineOptions = [
         { value: '', label: 'Select Timeline' },
@@ -647,18 +667,13 @@ function StartSprintModal({ onClose, onSprintCreated }) {
     // Validation
     const validateStep1 = () => {
         const newErrors = {};
-        if (!formData.startupName.trim()) newErrors.startupName = 'Startup name is required';
         if (!formData.taskName.trim()) newErrors.taskName = 'Task name is required';
         if (!formData.taskDescription.trim()) {
             newErrors.taskDescription = 'Task description is required';
-        } else if (formData.taskDescription.trim().length < 10) {
-            newErrors.taskDescription = 'Task description must be at least 10 characters long';
         }
         if (!formData.stage) newErrors.stage = 'Please select a stage';
         if (!formData.keyGoals.trim()) {
             newErrors.keyGoals = 'Key goals are required';
-        } else if (formData.keyGoals.trim().length < 10) {
-            newErrors.keyGoals = 'Key goals must be at least 10 characters long';
         }
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
@@ -698,43 +713,36 @@ function StartSprintModal({ onClose, onSprintCreated }) {
         if (!validateStep3()) return;
         setIsSubmitting(true);
         try {
-            // Map frontend fields to backend schema
+            // Get startup name from authenticated user
+            let startupName = 'My Startup'; // default fallback
+            try {
+                const user = JSON.parse(localStorage.getItem('user'));
+                startupName = user?.profile?.companyName || user?.companyName || startupName;
+            } catch (e) {
+                console.warn('Could not get startup name from user data');
+            }
+
+            // Map frontend fields to backend schema - only send allowed fields
             const questionnaireData = {
                 basicInfo: {
-                    startupName: formData.startupName,
+                    startupName: startupName,
                     taskType: formData.taskName,
                     taskDescription: formData.taskDescription,
-                    startupStage: formData.stage || 'idea',
+                    startupStage: formData.stage || 'pre-seed',
                     keyGoals: formData.keyGoals,
                     timeCommitment: formData.timeCommitment,
                 },
                 requirements: {
                     milestones: [],
-                    customMilestone: '',
                     timeline: formData.timeline,
-                    budgetRange: formData.budgetRange,
-                    additionalRequirements: ''
+                    budgetRange: formData.budgetRange
                 },
                 serviceSelection: {
                     selectedService: '',
-                    customRequest: formData.customRequest,
                     isCustom: true,
                     urgency: 'medium'
                 }
             };
-
-            // Get startupId from localStorage user object
-            let startupId = null;
-            try {
-                const user = JSON.parse(localStorage.getItem('user'));
-                console.log('User object from localStorage:', user);
-                startupId = user && user.id ? user.id : null;
-            } catch (e) {
-                startupId = null;
-            }
-            if (startupId) {
-                questionnaireData.startupId = startupId;
-            }
 
             console.log('Questionnaire payload:', questionnaireData);
             const response = await createQuestionnaire(questionnaireData).unwrap();
@@ -746,9 +754,9 @@ function StartSprintModal({ onClose, onSprintCreated }) {
             const createTempSprintRTK = async (qid) => {
                 const sprintResponse = await createTempSprint({
                     questionnaireId: qid,
-                    name: formData.startupName,
+                    name: startupName, // Use the startup name from authenticated user
                     description: formData.taskDescription,
-                    type: formData.stage ? (['idea', 'validation', 'growth'].includes(formData.stage) ? { idea: 'custom', validation: 'validation', growth: 'mvp' }[formData.stage] : 'custom') : 'custom',
+                    type: formData.stage ? (['pre-seed', 'seed-a', 'seed-b'].includes(formData.stage) ? { 'pre-seed': 'custom', 'seed-a': 'validation', 'seed-b': 'mvp' }[formData.stage] : 'custom') : 'custom',
                     estimatedDuration: 14
                 }).unwrap();
                 const sprint = sprintResponse.data.sprint;
@@ -776,10 +784,18 @@ function StartSprintModal({ onClose, onSprintCreated }) {
 
     return (
         <div className="dashboard-modal-backdrop">
-            <div className="dashboard-modal" style={{ width: "100%", maxWidth: "600px", borderRadius: "16px", padding: "32px", marginTop: "80px" }}>
+            <div className="dashboard-modal" style={{ 
+                width: "100%", 
+                maxWidth: "500px", 
+                borderRadius: "16px", 
+                padding: "24px", 
+                maxHeight: "85vh",
+                overflowY: "auto",
+                margin: "auto"
+            }}>
                 <h2>Start New Sprint</h2>
 <div style={{ marginTop: 16, width: '100%', boxSizing: 'border-box' }}>
-<div style={{ display: 'flex', gap: 8, marginBottom: 24, width: '100%', boxSizing: 'border-box' }}>
+<div style={{ display: 'flex', gap: 8, marginBottom: 20, width: '100%', boxSizing: 'border-box' }}>
                         {[1, 2, 3].map(step => (
                             <div
                                 key={step}
@@ -804,27 +820,7 @@ function StartSprintModal({ onClose, onSprintCreated }) {
                     {/* Step 1 */}
                     {currentStep === 1 && (
                         <>
-<div style={{ marginBottom: 20, width: '100%', boxSizing: 'border-box' }}>
-                                <label style={{ color: "white", textAlign: "left", display: "block" }}>Startup Name</label>
-<input
-                                    value={formData.startupName}
-                                    onChange={e => updateFormData('startupName', e.target.value)}
-                                    placeholder="Enter Name"
-                                    style={{
-                                        width: '100%',
-                                        border: "1px solid #3a3f47",
-                                        borderRadius: "8px",
-                                        minHeight: "44px",
-                                        padding: "0 12px",
-                                        fontSize: "16px",
-                                        boxSizing: "border-box",
-                                        backgroundColor: "#3a3f47",
-                                        color: "#FFFFFF"
-                                    }}
-                                />
-                                {errors.startupName && <div style={{ color: 'red', fontSize: 12 }}>{errors.startupName}</div>}
-                            </div>
-                            <div style={{ marginBottom: 20 }}>
+                            <div style={{ marginBottom: 16 }}>
                                 <label style={{ color: "white", textAlign: "left", display: "block" }}>Task Name</label>
 <input
                                     value={formData.taskName}
@@ -844,12 +840,12 @@ function StartSprintModal({ onClose, onSprintCreated }) {
                                 />
                                 {errors.taskName && <div style={{ color: 'red', fontSize: 12 }}>{errors.taskName}</div>}
                             </div>
-                            <div style={{ marginBottom: 20 }}>
+                            <div style={{ marginBottom: 16 }}>
                                 <label style={{ color: "white", textAlign: "left", display: "block" }}>Task Description</label>
 <input
                                     value={formData.taskDescription}
                                     onChange={e => updateFormData('taskDescription', e.target.value)}
-                                    placeholder="Give us a brief of the task (minimum 10 characters)"
+                                    placeholder="Give us a brief of the task"
                                     style={{
                                         width: '100%',
                                         border: "1px solid #3a3f47",
@@ -864,7 +860,7 @@ function StartSprintModal({ onClose, onSprintCreated }) {
                                 />
                                 {errors.taskDescription && <div style={{ color: 'red', fontSize: 12 }}>{errors.taskDescription}</div>}
                             </div>
-                            <div style={{ marginBottom: 20 }}>
+                            <div style={{ marginBottom: 16 }}>
                                 <label style={{ color: "white", textAlign: "left", display: "block" }}>Stage</label>
 <select
                                     value={formData.stage}
@@ -887,12 +883,12 @@ function StartSprintModal({ onClose, onSprintCreated }) {
                                 </select>
                                 {errors.stage && <div style={{ color: 'red', fontSize: 12 }}>{errors.stage}</div>}
                             </div>
-                            <div style={{ marginBottom: 20 }}>
+                            <div style={{ marginBottom: 16 }}>
                                 <label style={{ color: "white", textAlign: "left", display: "block" }}>Key Goals</label>
 <textarea
                                     value={formData.keyGoals}
                                     onChange={e => updateFormData('keyGoals', e.target.value)}
-                                    placeholder="e.g. Build MVP, Get First Users (minimum 10 characters)"
+                                    placeholder="e.g. Build MVP, Get First Users"
                                     rows={2}
                                     style={{
                                         width: '100%',
@@ -908,7 +904,7 @@ function StartSprintModal({ onClose, onSprintCreated }) {
                                 />
                                 {errors.keyGoals && <div style={{ color: 'red', fontSize: 12 }}>{errors.keyGoals}</div>}
                             </div>
-                            <div style={{ marginBottom: 20 }}>
+                            <div style={{ marginBottom: 16 }}>
                                 <label style={{ color: "white", textAlign: "left", display: "block" }}>Time Commitment</label>
 <div style={{ display: 'flex', gap: 16, width: '100%', boxSizing: 'border-box', justifyContent: 'flex-start' }}>
 <label style={{ color: "white" }}>
@@ -938,8 +934,8 @@ function StartSprintModal({ onClose, onSprintCreated }) {
                     {/* Step 2 */}
                     {currentStep === 2 && (
                         <>
-                            <div style={{ marginBottom: 20 }}>
-                                <label style={{ color: "white", textAlign: "left", display: "block" }}>Timeline in Mind?</label>
+                            <div style={{ marginBottom: 16 }}>
+                                <label style={{ color: "white", textAlign: "left", display: "block" }}>Timeline in mind?</label>
 <select
                                     value={formData.timeline}
                                     onChange={e => updateFormData('timeline', e.target.value)}
@@ -961,12 +957,12 @@ function StartSprintModal({ onClose, onSprintCreated }) {
                                 </select>
                                 {errors.timeline && <div style={{ color: 'red', fontSize: 12 }}>{errors.timeline}</div>}
                             </div>
-                            <div style={{ marginBottom: 20 }}>
-                                <label style={{ color: "white", textAlign: "left", display: "block" }}>Budget Range</label>
+                            <div style={{ marginBottom: 16 }}>
+                                <label style={{ color: "white", textAlign: "left", display: "block" }}>Budget</label>
 <input
                                     value={formData.budgetRange}
                                     onChange={e => updateFormData('budgetRange', e.target.value)}
-                                    placeholder="Enter an estimated budget (in QAR)"
+                                    placeholder="Enter an estimated budget (in USD)"
                                     style={{
                                         width: '100%',
                                         border: "1px solid #3a3f47",
@@ -986,7 +982,7 @@ function StartSprintModal({ onClose, onSprintCreated }) {
                     {/* Step 3 */}
                     {currentStep === 3 && (
                         <>
-                            <div style={{ marginBottom: 20 }}>
+                            <div style={{ marginBottom: 16 }}>
                                 <label style={{ color: "white", textAlign: "left", display: "block" }}>Additional Information</label>
 <input
                                     value={formData.customRequest}
@@ -1007,7 +1003,7 @@ function StartSprintModal({ onClose, onSprintCreated }) {
                             </div>
                         </>
                     )}
-<div style={{ marginTop: 24, display: 'flex', gap: 16, width: '100%', boxSizing: 'border-box', justifyContent: 'space-between' }}>
+<div style={{ marginTop: 20, display: 'flex', gap: 16, width: '100%', boxSizing: 'border-box', justifyContent: 'space-between' }}>
                         {currentStep > 1 && (
                             <button
                                 type="button"

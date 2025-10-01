@@ -192,7 +192,7 @@ You can only schedule once, so pick the time that works best. We’re excited to
               {/* Desktop Footer */}
               <div className="sprint-status-form-footer">
                 <div className="sprint-status-form-footer-left">
-                  © Leansprintr 2025. All Rights Reserved
+                  © Leansprintr by Taotter. All Rights Reserved.
                 </div>
                 <div className="sprint-status-form-footer-right">
                   <a href="/terms" className="sprint-status-terms-link">
@@ -302,7 +302,7 @@ You can only schedule once, so pick the time that works best. We're excited to g
         {/* Footer */}
         <div className="hang-tight-footer">
           <div className="hang-tight-footer-left">
-            © Leansprintr 2025. All Rights Reserved
+            © Leansprintr by Taotter. All Rights Reserved.
           </div>
           <div className="hang-tight-footer-right">
             <a href="/terms" className="hang-tight-terms-link">
@@ -356,7 +356,7 @@ You can only schedule once, so pick the time that works best. We're excited to g
                 {/* Desktop Footer */}
                 <div className="sprint-status-form-footer">
                   <div className="sprint-status-form-footer-left">
-                    © Leansprintr 2025. All Rights Reserved
+                    © Leansprintr by Taotter. All Rights Reserved.
                   </div>
                   <div className="sprint-status-form-footer-right">
                     <a href="/terms" className="sprint-status-terms-link">
@@ -458,7 +458,7 @@ You can only schedule once, so pick the time that works best. We're excited to g
                 </a>
               </div>
               <div className="sprint-status-form-footer-left">
-                © Leansprintr 2025. All Rights Reserved
+                © Leansprintr by Taotter. All Rights Reserved.
               </div>
             </div>
           </div>
@@ -528,7 +528,7 @@ You can only schedule once, so pick the time that works best. We're excited to g
               {/* Desktop Footer */}
               <div className="sprint-status-form-footer">
                 <div className="sprint-status-form-footer-left">
-                  © Leansprintr 2025. All Rights Reserved
+                  © Leansprintr by Taotter. All Rights Reserved.
                 </div>
                 <div className="sprint-status-form-footer-right">
                   <a href="/terms" className="sprint-status-terms-link">

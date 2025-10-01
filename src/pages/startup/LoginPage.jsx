@@ -246,7 +246,7 @@ const LoginPage = () => {
 
             {/* Footer */}
             <div className="login-form-footer">
-              <div className="login-form-footer-left">© Leansprintr 2025. All Rights Reserved</div>
+              <div className="login-form-footer-left">© Leansprintr by Taotter. All Rights Reserved.</div>
               <div className="login-form-footer-right">Terms of Services</div>
             </div>
           </div>
@@ -371,7 +371,7 @@ const LoginPage = () => {
 
             {/* Footer */}
             <div className="login-form-footer">
-              <div className="login-form-footer-left">© Leansprintr 2025. All Rights Reserved</div>
+              <div className="login-form-footer-left">© Leansprintr by Taotter. All Rights Reserved.</div>
               <div className="login-form-footer-right">Terms of Services</div>
             </div>
           </div>

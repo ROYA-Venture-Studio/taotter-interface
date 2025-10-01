@@ -119,7 +119,7 @@ export default function NewSprintOnboardingStep2() {
 
       {/* Footer */}
       <div className="ns-step2-form-footer">
-        <span className="ns-step2-form-footer-left">© Leansprintr 2025. All Rights Reserved</span>
+        <span className="ns-step2-form-footer-left">© Leansprintr by Taotter. All Rights Reserved.</span>
         <span className="ns-step2-form-footer-right">Terms of Services</span>
       </div>
     </div>

@@ -23,7 +23,12 @@ export default function Header() {
 >
   Login
 </button>
-          <button className="homepage-nav-button">Join the Community</button>
+          <button 
+            className="homepage-nav-button"
+            onClick={() => window.open("https://leanstack.com/taotter/leansprintr", "_blank", "noopener,noreferrer")}
+          >
+            Join the Community
+          </button>
         </nav>
       </div>
     </header>

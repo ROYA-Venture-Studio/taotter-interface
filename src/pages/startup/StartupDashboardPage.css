@@ -478,6 +478,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 20px;
+    box-sizing: border-box;
 }
 
 .dashboard-modal {
@@ -485,13 +487,16 @@
     border-radius: 20px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     padding: 24px;
-    width: 585px;
-    max-width: 90vw;
+    width: 100%;
+    max-width: 500px;
+    max-height: 85vh;
+    overflow-y: auto;
     text-align: center;
     font-family: 'Outfit', sans-serif;
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin: auto;
 }
 
 .dashboard-modal h2 {

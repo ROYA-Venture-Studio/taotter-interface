@@ -484,7 +484,7 @@ const SprintOnboardingStep2 = () => {
             
             <div className="sprint-onboarding-footer">
               <div className="sprint-onboarding-footer-left">
-                  © Leansprintr 2025. All Rights Reserved
+                  © Leansprintr by Taotter. All Rights Reserved.
               </div>
               <div className="sprint-onboarding-footer-right">
                 <a href="/terms" className="sprint-onboarding-terms-link">

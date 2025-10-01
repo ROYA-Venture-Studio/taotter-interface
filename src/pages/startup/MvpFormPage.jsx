@@ -67,9 +67,9 @@ const MvpFormPage = () => {
   // Form options
   const stageOptions = [
     { value: "", label: "Select Stage" },
-    { value: "idea", label: "Idea" },
-    { value: "validation", label: "Validation" },
-    { value: "growth", label: "Growth" },
+    { value: "pre-seed", label: "Pre-seed" },
+    { value: "seed-a", label: "Seed A" },
+    { value: "seed-b", label: "Seed B" },
   ];
 
   const timelineOptions = [
@@ -81,10 +81,16 @@ const MvpFormPage = () => {
     { value: "6+ months", label: "6+ months" },
   ];
 
+  const handleBudgetChange = (e) => {
+    // Only allow numbers
+    const value = e.target.value.replace(/[^0-9]/g, '');
+    updateFormData("budgetRange", value);
+  };
+
   const handleBudgetBlur = () => {
     const val = formData.budgetRange.trim();
-    if (val && !val.toLowerCase().includes("qar")) {
-      updateFormData("budgetRange", val + " QAR");
+    if (val && !val.toLowerCase().includes("usd")) {
+      updateFormData("budgetRange", val + " USD");
     }
   };
 
@@ -112,21 +118,16 @@ const MvpFormPage = () => {
       newErrors.startupName = "Startup name is required";
     if (!formData.taskName.trim()) newErrors.taskName = "Task name is required";
 
-    // Task description validation with minimum 10 characters
+    // Task description validation - removed minimum character requirement
     if (!formData.taskDescription.trim()) {
       newErrors.taskDescription = "Task description is required";
-    } else if (formData.taskDescription.trim().length < 10) {
-      newErrors.taskDescription =
-        "Task description must be at least 10 characters long";
     }
 
     if (!formData.stage) newErrors.stage = "Please select a stage";
 
-    // Key goals validation with minimum 10 characters
+    // Key goals validation - removed minimum character requirement
     if (!formData.keyGoals.trim()) {
       newErrors.keyGoals = "Key goals are required";
-    } else if (formData.keyGoals.trim().length < 10) {
-      newErrors.keyGoals = "Key goals must be at least 10 characters long";
     }
 
     setErrors(newErrors);
@@ -207,14 +208,11 @@ const MvpFormPage = () => {
         },
         requirements: {
           milestones: [],
-          customMilestone: "",
           timeline: formData.timeline,
           budgetRange: formData.budgetRange,
-          additionalRequirements: "",
         },
         serviceSelection: {
           selectedService: "",
-          customRequest: formData.customRequest,
           isCustom: true,
           urgency: "medium",
         },
@@ -445,7 +443,7 @@ const MvpFormPage = () => {
                 <div className="mvp-form-row">
                   <div className="mvp-form-col">
                     <label className="mvp-form-label" htmlFor="timeline">
-                      Timeline in Mind?
+                      Timeline in mind?
                     </label>
                     <select
                       id="timeline"
@@ -470,7 +468,7 @@ const MvpFormPage = () => {
                 <div className="mvp-form-row">
                   <div className="mvp-form-col">
                     <label className="mvp-form-label" htmlFor="budgetRange">
-                      Budget Range
+                      Budget
                     </label>
                     <input
                       id="budgetRange"
@@ -480,7 +478,7 @@ const MvpFormPage = () => {
                         updateFormData("budgetRange", e.target.value)
                       }
                       onBlur={handleBudgetBlur}
-                      placeholder="Enter an estimated budget (in QAR)"
+                      placeholder="Enter an estimated budget (in USD)"
                       required
                     />
                     {errors.budgetRange && (
@@ -521,7 +519,7 @@ const MvpFormPage = () => {
                           marginTop: 4,
                         }}
                       >
-                        Tell us what else do you need and we will set the right
+                        Tell us what else you need, and we will set up the right
                         tools for you.
                       </div>
                     </label>
@@ -550,19 +548,19 @@ const MvpFormPage = () => {
                     Back
                   </button>
                   <button
-                    className="mvp-form-btn-start"
-                    onClick={handleNext}
+                    className="mvp-form-btn-next"
+                    onClick={handleSubmit}
                     disabled={isSubmitting}
                   >
-                    {isSubmitting ? "Starting Sprint..." : "Start Sprint"}
+                    {isSubmitting ? "Submitting..." : "Submit"}
                   </button>
                 </div>
               </>
             )}
-            
-            {/* Footer */}
-            <div className="mvp-form-footer">
-              <div className="mvp-form-footer-left">© Leansprintr 2025. All Rights Reserved</div>
+          </div>
+          <div className="mvp-form-footer">
+            <div className="mvp-form-footer-container">
+              <div className="mvp-form-footer-left">© Leansprintr by Taotter. All Rights Reserved.</div>
               <div className="mvp-form-footer-right">Terms of Services</div>
             </div>
           </div>
@@ -760,7 +758,7 @@ const MvpFormPage = () => {
                 <div className="mvp-form-row">
                   <div className="mvp-form-col">
                     <label className="mvp-form-label" htmlFor="timeline">
-                      Timeline in Mind?
+                      Timeline in mind?
                     </label>
                     <select
                       id="timeline"
@@ -785,7 +783,7 @@ const MvpFormPage = () => {
                 <div className="mvp-form-row">
                   <div className="mvp-form-col">
                     <label className="mvp-form-label" htmlFor="budgetRange">
-                      Budget Range
+                      Budget
                     </label>
                     <input
                       id="budgetRange"
@@ -795,7 +793,7 @@ const MvpFormPage = () => {
                         updateFormData("budgetRange", e.target.value)
                       }
                       onBlur={handleBudgetBlur}
-                      placeholder="Enter an estimated budget (in QAR)"
+                      placeholder="Enter an estimated budget (in USD)"
                       required
                     />
                     {errors.budgetRange && (
@@ -836,7 +834,7 @@ const MvpFormPage = () => {
                           marginTop: 4,
                         }}
                       >
-                        Tell us what else do you need and we will set the right
+                        Tell us what else you need, and we will set up the right
                         tools for you.
                       </div>
                     </label>
@@ -867,7 +865,7 @@ const MvpFormPage = () => {
                   </button>
                   <button
                     className="mvp-form-btn-start"
-                    onClick={handleNext}
+                    onClick={handleSubmit}
                     disabled={isSubmitting}
                   >
                     {isSubmitting ? "Starting Sprint..." : "Start Sprint"}
@@ -878,7 +876,7 @@ const MvpFormPage = () => {
             
             {/* Footer */}
             <div className="mvp-form-footer">
-              <div className="mvp-form-footer-left">© Leansprintr 2025. All Rights Reserved</div>
+              <div className="mvp-form-footer-left">© Leansprintr by Taotter. All Rights Reserved.</div>
               <div className="mvp-form-footer-right">Terms of Services</div>
             </div>
           </div>
