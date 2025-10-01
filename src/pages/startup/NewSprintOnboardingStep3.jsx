@@ -69,9 +69,16 @@ export default function NewSprintOnboardingStep3() {
 
   const handlePayAndSelect = async (tier) => {
     if (!sprint || !tier) return;
+    
     try {
+      // First, select the package
       await selectPackage({ id: sprint.id, packageId: tier.id }).unwrap();
-      if (tier.paymentLink) window.open(tier.paymentLink, "_blank", "noopener,noreferrer");
+      
+      // Then open payment link in new tab AFTER package selection succeeds
+      if (tier.paymentLink) {
+        window.open(tier.paymentLink, "_blank", "noopener,noreferrer");
+      }
+      
       setHasPaid(true);
 
       // Delete draft sprint after payment
@@ -85,8 +92,13 @@ export default function NewSprintOnboardingStep3() {
         localStorage.removeItem("draftSprintId");
       }
 
-      navigate("/startup/dashboard");
+      // Navigate to dashboard after a short delay to allow payment window to open
+      setTimeout(() => {
+        navigate("/startup/dashboard");
+      }, 1000);
+      
     } catch (error) {
+      console.error("Package selection failed:", error);
       alert("Failed to select package. Please try again.");
     }
   };
@@ -200,7 +212,7 @@ export default function NewSprintOnboardingStep3() {
 
       {/* Footer */}
       <div className="ns-step3-form-footer">
-        <span className="ns-step3-form-footer-left">© Leansprintr 2025. All Rights Reserved</span>
+        <span className="ns-step3-form-footer-left">© Leansprintr by Taotter. All Rights Reserved.</span>
         <span className="ns-step3-form-footer-right">Terms of Services</span>
       </div>
     </div>

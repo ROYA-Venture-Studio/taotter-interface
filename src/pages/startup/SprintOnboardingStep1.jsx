@@ -158,7 +158,7 @@ const SprintOnboardingStep1 = () => {
                   </a>
                 </div>
                 <div className="sprint-onboarding-form-footer-left">
-                  © Leansprintr 2025. All Rights Reserved
+                  © Leansprintr by Taotter. All Rights Reserved.
                 </div>
               </div>
             </div>
@@ -240,38 +240,6 @@ const SprintOnboardingStep1 = () => {
                       }}
                     >
                       <span style={{ flex: 1 }}>Upload Doc or File</span>
-                      <span
-                        className="upload-icon"
-                        style={{ display: "flex", alignItems: "center" }}
-                      >
-                        <svg
-                          width="17"
-                          height="17"
-                          viewBox="0 0 17 17"
-                          fill="none"
-                        >
-                          <path
-                            d="M0.499573 12.585V15.085C0.499573 15.9134 1.17115 16.585 1.99957 16.585H15.0004C15.8289 16.585 16.5004 15.9134 16.5004 15.085V12.585"
-                            stroke="#323544"
-                            strokeWidth="1.5"
-                            strokeLinecap="round"
-                          />
-                          <path
-                            d="M5.50156 0.584961L5.50156 12.585"
-                            stroke="#323544"
-                            strokeWidth="1.5"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                          <path
-                            d="M0.874604 5.2098L5.49945 0.587891L10.1246 5.2098"
-                            stroke="#323544"
-                            strokeWidth="1.5"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                        </svg>
-                      </span>
                     </span>
                   </label>
                   {formData.brandGuidelines && (
@@ -351,7 +319,7 @@ const SprintOnboardingStep1 = () => {
                 </a>
               </div>
               <div className="sprint-onboarding-form-footer-left">
-                © Leansprintr 2025. All Rights Reserved
+                © Leansprintr by Taotter. All Rights Reserved.
               </div>
             </div>
           </div>
@@ -408,38 +376,6 @@ const SprintOnboardingStep1 = () => {
                         }}
                       >
                         <span style={{ flex: 1 }}>Upload Doc or File</span>
-                        <span
-                          className="upload-icon"
-                          style={{ display: "flex", alignItems: "center" }}
-                        >
-                          <svg
-                            width="17"
-                            height="17"
-                            viewBox="0 0 17 17"
-                            fill="none"
-                          >
-                            <path
-                              d="M0.499573 12.585V15.085C0.499573 15.9134 1.17115 16.585 1.99957 16.585H15.0004C15.8289 16.585 16.5004 15.9134 16.5004 15.085V12.585"
-                              stroke="#323544"
-                              strokeWidth="1.5"
-                              strokeLinecap="round"
-                            />
-                            <path
-                              d="M5.50156 0.584961L5.50156 12.585"
-                              stroke="#323544"
-                              strokeWidth="1.5"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                            />
-                            <path
-                              d="M0.874604 5.2098L5.49945 0.587891L10.1246 5.2098"
-                              stroke="#323544"
-                              strokeWidth="1.5"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                            />
-                          </svg>
-                        </span>
                       </span>
                     </label>
                     {formData.brandGuidelines && (
@@ -516,7 +452,7 @@ const SprintOnboardingStep1 = () => {
               {/* Footer */}
               <div className="sprint-onboarding-footer">
                 <div className="sprint-onboarding-footer-left">
-                  © Leansprintr 2025. All Rights Reserved
+                  © Leansprintr by Taotter. All Rights Reserved.
                 </div>
                 <div className="sprint-onboarding-footer-right">
                   <a href="#" className="sprint-onboarding-terms-link">

@@ -37,7 +37,7 @@ const PaymentPendingPage = () => {
         {/* Footer */}
         <div className="payment-pending-footer">
           <div className="payment-pending-footer-left">
-© Leansprintr 2025. All Rights Reserved          </div>
+© Leansprintr by Taotter. All Rights Reserved.          </div>
           <div className="payment-pending-footer-right">
             <a href="/terms" className="payment-pending-terms-link">
               Terms of Services
@@ -73,7 +73,7 @@ const PaymentPendingPage = () => {
         {/* Footer */}
         <div className="payment-pending-footer">
           <div className="payment-pending-footer-left">
-© Leansprintr 2025. All Rights Reserved          </div>
+© Leansprintr by Taotter. All Rights Reserved.          </div>
           <div className="payment-pending-footer-right">
             <a href="/terms" className="payment-pending-terms-link">
               Terms of Services
@@ -120,7 +120,7 @@ const PaymentPendingPage = () => {
       {/* Footer */}
       <div className="payment-pending-footer">
         <div className="payment-pending-footer-left">
-© Leansprintr 2025. All Rights Reserved        </div>
+© Leansprintr by Taotter. All Rights Reserved.        </div>
         <div className="payment-pending-footer-right">
           <a href="/terms" className="payment-pending-terms-link">
             Terms of Services

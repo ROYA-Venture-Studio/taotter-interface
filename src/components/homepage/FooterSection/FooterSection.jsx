@@ -77,7 +77,7 @@ export default function FooterSection() {
         <div className="footer-bottom">
           <div className="footer-divider"></div>
           <div className="copyright">
-            <p>© Leansprintr 2025. All Rights Reserved</p>
+            <p>© Leansprintr by Taotter. All Rights Reserved.</p>
           </div>
         </div>
       </div>

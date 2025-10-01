@@ -448,9 +448,9 @@
 }
 
 .country-code-dropdown {
-  width: 20%;
-  max-width: 90px;
-  min-width: 70px;
+  width: 25%;
+  max-width: 110px;
+  min-width: 85px;
   border: none;
   border-right: 1px solid #3a3f47;
   background: #3a3f47;
@@ -464,7 +464,7 @@
 }
 
 .mobile-number-input {
-  width: 80%;
+  width: 75%;
   flex: 1;
   border: none;
   background: #3a3f47;
@@ -811,5 +811,125 @@
     padding: 16px 24px;
     margin-top: 0;
     border-top: 1px solid #3a3f47;
+  }
+}
+
+/* Success Popup Styles */
+.success-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.success-popup {
+  background: #282c34;
+  border-radius: 12px;
+  border: 1px solid #3a3f47;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  max-width: 400px;
+  width: 90%;
+  animation: slideUp 0.3s ease-out;
+}
+
+.success-popup-content {
+  padding: 40px 32px;
+  text-align: center;
+}
+
+.success-icon {
+  width: 60px;
+  height: 60px;
+  background: #4CAF50;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 24px;
+  font-size: 28px;
+  font-weight: bold;
+  color: white;
+  animation: scaleIn 0.5s ease-out 0.2s both;
+}
+
+.success-popup h3 {
+  color: #ffffff;
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0 0 12px 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.success-popup p {
+  color: #b0b0b0;
+  font-size: 16px;
+  line-height: 1.5;
+  margin: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .success-popup {
+    margin: 20px;
+    max-width: none;
+  }
+  
+  .success-popup-content {
+    padding: 32px 24px;
+  }
+  
+  .success-icon {
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .success-popup h3 {
+    font-size: 20px;
+  }
+  
+  .success-popup p {
+    font-size: 14px;
   }
 }
