@@ -223,7 +223,7 @@ const SignUpPage = () => {
             <div className="success-popup-content">
               <div className="success-icon">✓</div>
               <h3>Account Created Successfully!</h3>
-              <p>Welcome to Taotter! You'll be redirected to the login page shortly.</p>
+              <p>Welcome to Leansprintr! You'll be redirected to the login page shortly.</p>
             </div>
           </div>
         </div>
