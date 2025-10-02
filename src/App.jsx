@@ -2,6 +2,8 @@ import { Routes, Route } from 'react-router-dom'
 import { StartupLayout } from './layouts'
 import { HomePage, AboutPage, ServicesPage, ContactPage, MvpPage, MvpFormPage, SignUpPage } from './pages/startup'
 import LoginPage from './pages/startup/LoginPage'
+import ForgotPasswordPage from './pages/startup/ForgotPasswordPage'
+import ResetPasswordPage from './pages/startup/ResetPasswordPage'
 import { 
   StartupDashboardPage,
   SprintStatusPage, 
@@ -46,6 +48,8 @@ function App() {
         <Route path="mvp/form" element={<MvpFormPage />} />
         <Route path="signup" element={<SignUpPage />} />
         <Route path="startup/login" element={<LoginPage />} />
+        <Route path="forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="reset-password" element={<ResetPasswordPage />} />
         <Route
           path="sprint/status"
           element={

@@ -30,11 +30,19 @@ export const authApi = api.injectEndpoints({
       }),
     }),
     
+    verifyResetCode: builder.mutation({
+      query: ({ email, code }) => ({
+        url: '/startup/auth/verify-reset-code',
+        method: 'POST',
+        body: { email, code },
+      }),
+    }),
+    
     startupResetPassword: builder.mutation({
-      query: ({ token, password }) => ({
+      query: ({ email, code, newPassword }) => ({
         url: '/startup/auth/reset-password',
         method: 'POST',
-        body: { token, password },
+        body: { email, code, newPassword },
       }),
     }),
     
@@ -108,6 +116,7 @@ export const {
   useStartupLoginMutation,
   useStartupRegisterMutation,
   useStartupForgotPasswordMutation,
+  useVerifyResetCodeMutation,
   useStartupResetPasswordMutation,
   useVerifyStartupEmailMutation,
   useAdminLoginMutation,

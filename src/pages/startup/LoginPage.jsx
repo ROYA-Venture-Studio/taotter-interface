@@ -124,8 +124,7 @@ const LoginPage = () => {
   };
 
   const handleForgotPassword = () => {
-    // TODO: Navigate to forgot password page or show modal
-    console.log("Forgot password clicked");
+    navigate('/forgot-password');
   };
 
   return (
