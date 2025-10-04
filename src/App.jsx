@@ -4,6 +4,7 @@ import { HomePage, AboutPage, ServicesPage, ContactPage, MvpPage, MvpFormPage, S
 import LoginPage from './pages/startup/LoginPage'
 import ForgotPasswordPage from './pages/startup/ForgotPasswordPage'
 import ResetPasswordPage from './pages/startup/ResetPasswordPage'
+import DirectChatPage from './pages/startup/DirectChatPage'
 import { 
   StartupDashboardPage,
   SprintStatusPage, 
@@ -171,6 +172,15 @@ function App() {
                   <StartupChatPage />
                 </DashboardLayout>
               </StartupOnboardingGuard>
+            </StartupProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/startup/direct-chat"
+          element={
+            <StartupProtectedRoute>
+              <DirectChatPage />
             </StartupProtectedRoute>
           }
         />
