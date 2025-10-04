@@ -10,6 +10,14 @@ export const chatApi = api.injectEndpoints({
       }),
       invalidatesTags: ['Chat'],
     }),
+    createChat: builder.mutation({
+      query: ({ adminEmail, message }) => ({
+        url: '/chat/create',
+        method: 'POST',
+        body: { adminEmail, message }
+      }),
+      invalidatesTags: ['Chat'],
+    }),
     getChatList: builder.query({
       query: () => '/chat/list',
       providesTags: ['Chat'],
@@ -40,6 +48,7 @@ export const chatApi = api.injectEndpoints({
 
 export const {
   useStartChatMutation,
+  useCreateChatMutation,
   useGetChatListQuery,
   useGetMessagesQuery,
   useSendMessageMutation,

@@ -321,6 +321,12 @@
   line-height: 1.5;
 }
 
+.hang-tight-buttons {
+  display: flex;
+  gap: 12px;
+  flex-direction: column;
+}
+
 .hang-tight-schedule-btn {
   width: 100%;
   height: 48px;
@@ -342,6 +348,25 @@
 .hang-tight-schedule-btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+.hang-tight-chat-btn {
+  width: 100%;
+  height: 48px;
+  background: #2C2E33;
+  color: #ffffff;
+  border: 1px solid #FFFFFF33;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: "Aspekta", sans-serif;
+  transition: all 0.15s;
+}
+
+.hang-tight-chat-btn:hover {
+  background: #3a3f47;
+  border-color: #FFFFFF55;
 }
 
 /* Footer */
@@ -983,7 +1008,12 @@
     margin-bottom: 24px;
   }
 
-  .hang-tight-schedule-btn {
+  .hang-tight-buttons {
+    gap: 8px;
+  }
+
+  .hang-tight-schedule-btn,
+  .hang-tight-chat-btn {
     height: 44px;
     font-size: 14px;
   }

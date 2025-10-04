@@ -47,51 +47,66 @@ export default function AdminChatPage() {
   // Real-time socket integration
   const socket = useSocket({
     onMessage: (msg) => {
-      if (msg.conversationId === chatId) {
-        // Ownership logic: mine true if senderType is 'admin' and current user is admin/super_admin
-        const isMyMessage = msg.senderType === 'admin' && (currentUser?.role === 'admin' || currentUser?.role === 'super_admin');
-        let messageType = msg.messageType || "text";
-        let imageUrl = null;
-        let voiceUrl = null;
-        const fileUrl = msg.fileUrl || msg.file || null;
-        if (messageType === "image" && fileUrl) {
-          imageUrl = fileUrl;
-        } else if (messageType === "voice" && fileUrl) {
-          voiceUrl = fileUrl;
-        }
-        const newMsg = {
-          id: msg._id,
-          sender: msg.senderType === 'admin' ? 'Admin' : (contact?.name || "Unknown"),
-          avatar: msg.senderType === 'admin' ? "/assets/icons/User.svg" : (contact?.avatar || "/assets/icons/User.svg"),
-          content: msg.content || "",
-          time: new Date(msg.createdAt).toLocaleTimeString(),
-          mine: isMyMessage,
-          imageUrl,
-          messageType,
-          fileUrl: fileUrl,
-          fileName: msg.fileName || null,
-          mimeType: msg.mimeType || null,
-          voiceUrl,
-          voiceDuration: msg.voiceDuration || null,
-          createdAt: msg.createdAt
-        };
-        setMessages(prev => {
-          // Deduplicate: don't add if already present by id or (content+createdAt within 5s)
-          const exists = prev.some(
-            m =>
-              (m.id && m.id === newMsg.id) ||
-              (
-                m.content === newMsg.content &&
-                Math.abs(new Date(m.createdAt) - new Date(newMsg.createdAt)) < 5000
-              )
-          );
-          if (exists) return prev;
-          return [...prev, newMsg];
-        });
+      console.log('Admin received socket message:', msg);
+      
+      // Check if message belongs to current chat (using both possible field names)
+      const msgChatId = msg.conversationId || msg.chatId;
+      if (msgChatId !== chatId) {
+        console.log('Message not for current chat:', msgChatId, 'vs', chatId);
+        return;
       }
+
+      // Ownership logic: mine true if senderType is 'admin' and current user is admin/super_admin
+      const isMyMessage = msg.senderType === 'admin' && (currentUser?.role === 'admin' || currentUser?.role === 'super_admin');
+      let messageType = msg.messageType || "text";
+      let imageUrl = null;
+      let voiceUrl = null;
+      const fileUrl = msg.fileUrl || msg.file || null;
+      
+      if (messageType === "image" && fileUrl) {
+        imageUrl = fileUrl;
+      } else if (messageType === "voice" && fileUrl) {
+        voiceUrl = fileUrl;
+      }
+      
+      const newMsg = {
+        id: msg._id,
+        sender: msg.senderType === 'admin' ? 'Admin' : (contact?.name || "Unknown"),
+        avatar: msg.senderType === 'admin' ? "/assets/icons/User.svg" : (contact?.avatar || "/assets/icons/User.svg"),
+        content: msg.content || "",
+        time: new Date(msg.createdAt).toLocaleTimeString(),
+        mine: isMyMessage,
+        imageUrl,
+        messageType,
+        fileUrl: fileUrl,
+        fileName: msg.fileName || null,
+        mimeType: msg.mimeType || null,
+        voiceUrl,
+        voiceDuration: msg.voiceDuration || null,
+        createdAt: msg.createdAt
+      };
+      
+      setMessages(prev => {
+        // Deduplicate: don't add if already present by id or (content+createdAt within 5s)
+        const exists = prev.some(
+          m =>
+            (m.id && m.id === newMsg.id) ||
+            (
+              m.content === newMsg.content &&
+              Math.abs(new Date(m.createdAt) - new Date(newMsg.createdAt)) < 5000
+            )
+        );
+        if (exists) {
+          console.log('Message already exists, skipping');
+          return prev;
+        }
+        console.log('Adding new socket message:', newMsg);
+        return [...prev, newMsg];
+      });
     },
     onUserTyping: (data) => {
-      if (data.conversationId === chatId) {
+      const typingChatId = data.conversationId || data.chatId;
+      if (typingChatId === chatId) {
         setIsTyping(data.isTyping);
       }
     }
@@ -100,15 +115,17 @@ export default function AdminChatPage() {
   // Join chat room on mount/change
   useEffect(() => {
     if (chatId && socket.joinConversation) {
+      console.log('Admin joining conversation:', chatId);
       socket.joinConversation(chatId);
     }
     return () => {
       if (chatId && socket.leaveConversation) {
+        console.log('Admin leaving conversation:', chatId);
         socket.leaveConversation(chatId);
       }
     };
     // eslint-disable-next-line
-  }, [chatId]);
+  }, [chatId, socket]);
 
   // Load messages from API and transform them
   useEffect(() => {

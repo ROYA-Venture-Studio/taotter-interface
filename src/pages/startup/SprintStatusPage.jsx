@@ -119,8 +119,12 @@ const SprintStatusPage = () => {
         s.status === "documents_submitted" || s.status === "meeting_scheduled"
     ) || null;
 
-  // Determine if meeting is already scheduled
-  const meetingAlreadyScheduled = pendingSprint?.status === "meeting_scheduled";
+  // Determine if meeting is already scheduled based on user onboarding
+  const meetingAlreadyScheduled = 
+    userData?.data?.user?.onboarding?.meetingScheduled === true ||
+    userData?.data?.user?.onboarding?.currentStep === "meeting_scheduled" ||
+    userData?.data?.user?.onboarding?.currentStep === "active_sprint" ||
+    userData?.data?.user?.onboarding?.currentStep === "completed";
 
   const handleScheduleCall = async () => {
     setCalendlyClicked(true);
@@ -153,6 +157,10 @@ You can only schedule once, so pick the time that works best. We’re excited to
         setIsSubmitting(false);
       }
     }
+  };
+
+  const handleChatWithUs = () => {
+    navigate('/startup/direct-chat');
   };
 
   if (userLoading || mySprintsLoading) {
@@ -218,10 +226,20 @@ You can only schedule once, so pick the time that works best. We’re excited to
 
   // "Hang tight" screen with Calendly scheduling (questionnaire-based)
   if (onboardingStep === "pending_review" && latestQuestionnaire) {
-    const meetingAlreadyScheduled =
-      latestQuestionnaire.status === "meeting_scheduled";
+    // Use the same meeting status check as the main flow
+    const meetingAlreadyScheduledQuestionnaire = 
+      userData?.data?.user?.onboarding?.meetingScheduled === true ||
+      userData?.data?.user?.onboarding?.currentStep === "meeting_scheduled" ||
+      userData?.data?.user?.onboarding?.currentStep === "active_sprint" ||
+      userData?.data?.user?.onboarding?.currentStep === "completed";
 
     const handleQuestionnaireScheduleCall = async () => {
+      // Prevent scheduling if already scheduled
+      if (meetingAlreadyScheduledQuestionnaire) {
+        alert('You have already scheduled a meeting with our team. Please check your email for meeting details.');
+        return;
+      }
+
       setCalendlyClicked(true);
       const calendlyWindow = window.open(
         calendlyUrl,
@@ -231,33 +249,20 @@ You can only schedule once, so pick the time that works best. We’re excited to
       if (calendlyWindow) {
         calendlyWindow.focus();
       }
-      alert(`Hi ${userData?.data?.user?.profile?.founderFirstName || "there"},
+      
+      const userName = userData?.data?.user?.profile?.founderFirstName || "there";
+      alert(`Hi ${userName},
 
-Please finish scheduling your meeting in the new window or tab. Once booked, return here to continue.
+Please finish scheduling your meeting in the new window or tab. Once you complete the booking on Calendly, your status will automatically update.
 
-You can only schedule once, so pick the time that works best. We're excited to get you started!`);
-      if (questionnaireId && !meetingAlreadyScheduled) {
-        setIsSubmitting(true);
-        try {
-          console.log(
-            "Scheduling meeting for questionnaireId:",
-            questionnaireId
-          );
-          const result = await scheduleMeeting({
-            id: questionnaireId,
-          }).unwrap();
-          console.log("Schedule meeting API result:", result);
-        } catch (error) {
-          console.error("Schedule meeting API error:", error);
-        } finally {
-          setIsSubmitting(false);
-        }
-      } else {
-        console.warn("No questionnaireId or meeting already scheduled", {
-          questionnaireId,
-          meetingAlreadyScheduled,
-        });
-      }
+Important: You can only schedule once, so pick the time that works best for you. We're excited to get you started!`);
+
+      // Don't call scheduleMeeting API immediately - wait for Calendly webhook
+      // The webhook will update the user's onboarding status automatically
+    };
+
+    const handleQuestionnaireChat = () => {
+      navigate('/startup/direct-chat');
     };
 
     return (
@@ -281,20 +286,28 @@ You can only schedule once, so pick the time that works best. We're excited to g
             </p>
 
             <div className="hang-tight-cta">
-              <h2 className="hang-tight-cta-title">Schedule a kickoff call:</h2>
+              <h2 className="hang-tight-cta-title">Connect with our team:</h2>
               <p className="hang-tight-cta-description">
                 To help us process your request faster, please schedule a
-                kickoff call with our team.
+                kickoff call or start a chat with our team.
               </p>
-              <button
-                className="hang-tight-schedule-btn"
-                onClick={handleQuestionnaireScheduleCall}
-                disabled={meetingAlreadyScheduled || isSubmitting}
-              >
-                {meetingAlreadyScheduled
-                  ? "You have already scheduled a meeting"
-                  : "Schedule with Calendly"}
-              </button>
+              <div className="hang-tight-buttons">
+                <button
+                  className="hang-tight-schedule-btn"
+                  onClick={handleQuestionnaireScheduleCall}
+                  disabled={meetingAlreadyScheduledQuestionnaire || isSubmitting}
+                >
+                  {meetingAlreadyScheduledQuestionnaire
+                    ? "Meeting Already Scheduled"
+                    : "📅 Schedule Call"}
+                </button>
+                <button
+                  className="hang-tight-chat-btn"
+                  onClick={handleQuestionnaireChat}
+                >
+                  💬 Chat with Us
+                </button>
+              </div>
             </div>
           </div>
         </div>
