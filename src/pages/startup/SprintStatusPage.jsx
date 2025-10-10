@@ -37,7 +37,7 @@ const calendlyUrl = "https://calendly.com/sophie-taotter/30-minute-discovery-cal
 const SprintStatusPage = () => {
   const isMobile = useIsMobile();
   const navigate = useNavigate();
-  const { data: userData, isLoading: userLoading } = useGetCurrentUserQuery();
+  const { data: userData, isLoading: userLoading, refetch: refetchUser } = useGetCurrentUserQuery();
   const { data: questionnairesData, isLoading: questionnairesLoading } =
     useGetQuestionnairesQuery();
   const [showSprints, setShowSprints] = useState(false);
@@ -99,14 +99,18 @@ const SprintStatusPage = () => {
   // Auto-refresh user data periodically to catch webhook updates
   useEffect(() => {
     if (calendlyWindowOpened && !meetingAlreadyScheduled) {
+      console.log('🔄 Setting up polling for webhook updates...');
       const interval = setInterval(() => {
-        // Trigger refetch of user data to check for webhook updates
-        // This will happen automatically with RTK Query's cache invalidation
-      }, 30000); // Check every 30 seconds
+        console.log('🔄 Polling for meeting status update...');
+        refetchUser(); // Force refetch user data to check for webhook updates
+      }, 10000); // Check every 10 seconds
 
-      return () => clearInterval(interval);
+      return () => {
+        console.log('🔄 Stopping webhook polling');
+        clearInterval(interval);
+      };
     }
-  }, [calendlyWindowOpened, meetingAlreadyScheduled]);
+  }, [calendlyWindowOpened, meetingAlreadyScheduled, refetchUser]);
 
   // Only set showSprints based on onboarding step
   useEffect(() => {
