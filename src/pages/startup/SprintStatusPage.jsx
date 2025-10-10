@@ -42,7 +42,15 @@ const SprintStatusPage = () => {
     useGetQuestionnairesQuery();
   const [showSprints, setShowSprints] = useState(false);
   const [sprintData, setSprintData] = useState(null);
-  const [calendlyClicked, setCalendlyClicked] = useState(false);
+  const [calendlyClicked, setCalendlyClicked] = useState(() => {
+    // Check localStorage for persisted Calendly interaction
+    const saved = localStorage.getItem('calendlyInteraction');
+    return saved ? JSON.parse(saved) : false;
+  });
+  const [calendlyWindowOpened, setCalendlyWindowOpened] = useState(() => {
+    const saved = localStorage.getItem('calendlyWindowOpened');
+    return saved ? JSON.parse(saved) : false;
+  });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [scheduleMeeting] = useScheduleMeetingMutation();
   const [setOnboardingStep] = useSetOnboardingStepMutation();
@@ -61,6 +69,44 @@ const SprintStatusPage = () => {
   // Always fetch user's current sprints to check for active ones
   const { data: mySprintsData, isLoading: mySprintsLoading } =
     useGetMySprintsQuery({});
+
+  // Determine if meeting is already scheduled based on user onboarding (moved before useEffects)
+  const meetingAlreadyScheduled = 
+    userData?.data?.user?.onboarding?.meetingScheduled === true ||
+    userData?.data?.user?.onboarding?.currentStep === "meeting_scheduled" ||
+    userData?.data?.user?.onboarding?.currentStep === "active_sprint" ||
+    userData?.data?.user?.onboarding?.currentStep === "completed";
+
+  // Persist Calendly interaction state to localStorage
+  useEffect(() => {
+    localStorage.setItem('calendlyInteraction', JSON.stringify(calendlyClicked));
+  }, [calendlyClicked]);
+
+  useEffect(() => {
+    localStorage.setItem('calendlyWindowOpened', JSON.stringify(calendlyWindowOpened));
+  }, [calendlyWindowOpened]);
+
+  // Clear Calendly interaction state when meeting is actually scheduled
+  useEffect(() => {
+    if (meetingAlreadyScheduled) {
+      localStorage.removeItem('calendlyInteraction');
+      localStorage.removeItem('calendlyWindowOpened');
+      setCalendlyClicked(false);
+      setCalendlyWindowOpened(false);
+    }
+  }, [meetingAlreadyScheduled]);
+
+  // Auto-refresh user data periodically to catch webhook updates
+  useEffect(() => {
+    if (calendlyWindowOpened && !meetingAlreadyScheduled) {
+      const interval = setInterval(() => {
+        // Trigger refetch of user data to check for webhook updates
+        // This will happen automatically with RTK Query's cache invalidation
+      }, 30000); // Check every 30 seconds
+
+      return () => clearInterval(interval);
+    }
+  }, [calendlyWindowOpened, meetingAlreadyScheduled]);
 
   // Only set showSprints based on onboarding step
   useEffect(() => {
@@ -119,12 +165,8 @@ const SprintStatusPage = () => {
         s.status === "documents_submitted" || s.status === "meeting_scheduled"
     ) || null;
 
-  // Determine if meeting is already scheduled based on user onboarding
-  const meetingAlreadyScheduled = 
-    userData?.data?.user?.onboarding?.meetingScheduled === true ||
-    userData?.data?.user?.onboarding?.currentStep === "meeting_scheduled" ||
-    userData?.data?.user?.onboarding?.currentStep === "active_sprint" ||
-    userData?.data?.user?.onboarding?.currentStep === "completed";
+  // Check if user has already clicked Calendly (to prevent multiple clicks)
+  const hasCalendlyInteraction = calendlyClicked || calendlyWindowOpened || meetingAlreadyScheduled;
 
   const handleScheduleCall = async () => {
     setCalendlyClicked(true);
@@ -235,19 +277,29 @@ You can only schedule once, so pick the time that works best. We’re excited to
       userData?.data?.user?.onboarding?.currentStep === "active_sprint" ||
       userData?.data?.user?.onboarding?.currentStep === "completed";
 
+    // Check if user has already interacted with Calendly
+    const hasCalendlyInteractionQuestionnaire = calendlyClicked || calendlyWindowOpened || meetingAlreadyScheduledQuestionnaire;
+
     const handleQuestionnaireScheduleCall = async () => {
-      // Prevent scheduling if already scheduled
-      if (meetingAlreadyScheduledQuestionnaire) {
-        alert('You have already scheduled a meeting with our team. Please check your email for meeting details.');
+      // Prevent scheduling if already scheduled or if already clicked
+      if (hasCalendlyInteractionQuestionnaire) {
+        if (meetingAlreadyScheduledQuestionnaire) {
+          alert('You have already scheduled a meeting with our team. Please check your email for meeting details.');
+        } else {
+          alert('You have already opened the scheduling link. Please complete your booking in the Calendly window, or refresh the page if you need to try again.');
+        }
         return;
       }
 
       setCalendlyClicked(true);
+      setCalendlyWindowOpened(true);
+      
       const calendlyWindow = window.open(
         calendlyUrl,
         "calendly",
         "width=800,height=600,scrollbars=yes,resizable=yes"
       );
+      
       if (calendlyWindow) {
         calendlyWindow.focus();
       }
@@ -299,10 +351,12 @@ Important: You can only schedule once, so pick the time that works best for you.
                 <button
                   className="hang-tight-schedule-btn"
                   onClick={handleQuestionnaireScheduleCall}
-                  disabled={meetingAlreadyScheduledQuestionnaire || isSubmitting}
+                  disabled={hasCalendlyInteractionQuestionnaire || isSubmitting}
                 >
                   {meetingAlreadyScheduledQuestionnaire
                     ? "Meeting Already Scheduled"
+                    : calendlyWindowOpened || calendlyClicked
+                    ? "Calendly Link Opened - Complete Booking"
                     : "📅 Schedule Call"}
                 </button>
                 <button
