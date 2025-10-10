@@ -160,7 +160,9 @@ You can only schedule once, so pick the time that works best. We’re excited to
   };
 
   const handleChatWithUs = () => {
-    navigate('/startup/direct-chat');
+    // Open chat in new tab instead of navigating
+    const chatUrl = `${window.location.origin}/startup/direct-chat`;
+    window.open(chatUrl, '_blank', 'noopener,noreferrer');
   };
 
   if (userLoading || mySprintsLoading) {
@@ -262,7 +264,9 @@ Important: You can only schedule once, so pick the time that works best for you.
     };
 
     const handleQuestionnaireChat = () => {
-      navigate('/startup/direct-chat');
+      // Open chat in new tab instead of navigating
+      const chatUrl = `${window.location.origin}/startup/direct-chat`;
+      window.open(chatUrl, '_blank', 'noopener,noreferrer');
     };
 
     return (
