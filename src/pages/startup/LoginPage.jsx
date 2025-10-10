@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Icon } from "../../components/ui";
+import { Icon, ForgotPasswordModal } from "../../components/ui";
 import authImage from "../../assets/images/form.png";
 import leanSprintLogo from "../../assets/logo/LeanSprintNewLogo.png";
 import "./LoginPage.css";
@@ -36,6 +36,7 @@ const LoginPage = () => {
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showForgotPasswordModal, setShowForgotPasswordModal] = useState(false);
 
   const updateFormData = (field, value) => {
     setFormData((prev) => ({
@@ -124,7 +125,7 @@ const LoginPage = () => {
   };
 
   const handleForgotPassword = () => {
-    navigate('/forgot-password');
+    setShowForgotPasswordModal(true);
   };
 
   return (
@@ -385,6 +386,12 @@ const LoginPage = () => {
           </div>
         </div>
       )}
+
+      {/* Forgot Password Modal */}
+      <ForgotPasswordModal 
+        isOpen={showForgotPasswordModal} 
+        onClose={() => setShowForgotPasswordModal(false)} 
+      />
     </div>
   );
 };

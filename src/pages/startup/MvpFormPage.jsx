@@ -94,6 +94,16 @@ const MvpFormPage = () => {
     }
   };
 
+  const handleBudgetFocus = () => {
+    // Remove appended USD when focusing so user can edit numbers only
+    const val = formData.budgetRange || '';
+    if (val.toUpperCase().includes('USD')) {
+      // Remove any non-digits as well, keep only numbers
+      const digits = val.replace(/[^0-9]/g, '');
+      updateFormData('budgetRange', digits);
+    }
+  };
+
   // Handle form field updates
   const updateFormData = (field, value) => {
     setFormData((prev) => ({
@@ -474,10 +484,9 @@ const MvpFormPage = () => {
                       id="budgetRange"
                       className="mvp-form-input mvp-form-input-wide"
                       value={formData.budgetRange}
-                      onChange={(e) =>
-                        updateFormData("budgetRange", e.target.value)
-                      }
+                      onChange={handleBudgetChange}
                       onBlur={handleBudgetBlur}
+                      onFocus={handleBudgetFocus}
                       placeholder="Enter an estimated budget (in USD)"
                       required
                     />
@@ -789,10 +798,9 @@ const MvpFormPage = () => {
                       id="budgetRange"
                       className="mvp-form-input mvp-form-input-wide"
                       value={formData.budgetRange}
-                      onChange={(e) =>
-                        updateFormData("budgetRange", e.target.value)
-                      }
+                      onChange={handleBudgetChange}
                       onBlur={handleBudgetBlur}
+                      onFocus={handleBudgetFocus}
                       placeholder="Enter an estimated budget (in USD)"
                       required
                     />
