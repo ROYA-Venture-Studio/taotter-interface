@@ -389,6 +389,70 @@ Important: You can only schedule once, so pick the time that works best for you.
     );
   }
 
+  // Meeting scheduled success screen
+  if (onboardingStep === "meeting_scheduled") {
+    return (
+      <div className="hang-tight-page">
+        {/* Header */}
+        <div className="hang-tight-header">
+          <div className="hang-tight-logo">
+            <img src={leanSprintLogo} alt="LeanSprint" className="logo-image" />
+          </div>
+          <button className="hang-tight-back-btn" onClick={() => navigate("/")}>Back to home</button>
+        </div>
+
+        {/* Main Content */}
+        <div className="hang-tight-main">
+          <div className="hang-tight-modal">
+            <h1 className="hang-tight-title">
+              🎉 Meeting Confirmed!
+            </h1>
+            <p className="hang-tight-subtitle">
+              Your discovery call has been scheduled successfully.
+            </p>
+
+            <div className="hang-tight-cta">
+              <h2 className="hang-tight-cta-title">What's Next?</h2>
+              <p className="hang-tight-cta-description">
+                We'll review your submission and prepare for our call. You'll receive a confirmation email with the meeting details.
+              </p>
+              <div className="hang-tight-buttons">
+                <button
+                  className="hang-tight-schedule-btn"
+                  style={{ backgroundColor: '#28a745', cursor: 'default' }}
+                  disabled
+                >
+                  ✅ Meeting Already Scheduled
+                </button>
+                <button
+                  className="hang-tight-chat-btn"
+                  onClick={() => {
+                    const chatUrl = `${window.location.origin}/startup/direct-chat`;
+                    window.open(chatUrl, '_blank', 'noopener,noreferrer');
+                  }}
+                >
+                  💬 Chat with Us
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="hang-tight-footer">
+          <div className="hang-tight-footer-left">
+            © Leansprintr by Taotter. All Rights Reserved.
+          </div>
+          <div className="hang-tight-footer-right">
+            <a href="/terms" className="hang-tight-terms-link">
+              Terms of Services
+            </a>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (onboardingStep === "sprint_selection") {
     if (sprintsLoading || !sprintData) {
       return (
