@@ -105,12 +105,11 @@ const LoginPage = () => {
         if (
           onboardingStep === "completed" ||
           onboardingStep === "active_sprint" ||
-          onboardingStep === "document_upload" ||
-          onboardingStep === "meeting_scheduled"
+          onboardingStep === "document_upload"
         ) {
           navigate("/startup/dashboard");
         } else {
-          // Only send to sprint status if onboarding is incomplete
+          // Send to sprint status for: pending_review, meeting_scheduled, sprint_selection
           navigate("/sprint/status");
         }
       } else {

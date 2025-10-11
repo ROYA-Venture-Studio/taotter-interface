@@ -87,7 +87,7 @@ const StartupOnboardingGuard = ({ children }) => {
     const isAllowedRoute = allowedRoutes.some(route => currentPath.startsWith(route));
 
     if (
-      ["sprint_selection", "document_upload", "meeting_scheduling"].includes(onboardingStep) &&
+      ["sprint_selection", "document_upload", "meeting_scheduling", "meeting_scheduled", "pending_review"].includes(onboardingStep) &&
       !isAllowedRoute
     ) {
       navigate("/startup/dashboard", { replace: true });
