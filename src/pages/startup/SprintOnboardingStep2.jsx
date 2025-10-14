@@ -94,8 +94,14 @@ const SprintOnboardingStep2 = () => {
 
   const handlePay = (tier) => {
     if (tier.paymentLink) {
-      window.open(tier.paymentLink, "_blank", "noopener,noreferrer")
-      setHasPaid(true)
+      // Ensure the link has http:// or https://
+      let url = tier.paymentLink.trim();
+      if (!url.startsWith('http://') && !url.startsWith('https://')) {
+        url = 'https://' + url;
+      }
+      console.log('Opening payment link:', url); // Debug log
+      window.open(url, "_blank", "noopener,noreferrer");
+      setHasPaid(true);
     }
   }
 
@@ -283,8 +289,8 @@ const SprintOnboardingStep2 = () => {
                         {tier.pricing.model === "hourly" && (
                           <>
 <div className="hourly-rate">
-  <span className="current-rate">
-    Hourly Rate: <span style={{ color: "#000" }}>{tier.pricing.hourlyRate}</span>
+  <span className="current-rate" style={{ color: "#adadad" }}>
+    Hourly Rate: <span style={{ color: "#FFFFFF" }}>{tier.pricing.hourlyRate}</span>
   </span>
 </div>
 <div className="tier-breakdown">
@@ -318,9 +324,11 @@ const SprintOnboardingStep2 = () => {
                     <div className="tier-total">{tier.pricing.total}</div>
                     <Button
                       variant="primary"
-                      onClick={() => {
-                        handleTierSelection(tier.id)
-                        handlePay(tier)
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        handleTierSelection(tier.id);
+                        handlePay(tier);
                       }}
                       className={`tier-select-btn ${selectedTier === tier.id ? 'selected' : ''}`}
                     >
@@ -405,8 +413,8 @@ const SprintOnboardingStep2 = () => {
 {tier.pricing.model === "hourly" && (
   <>
 <div className="hourly-rate">
-  <span className="current-rate">
-    Hourly Rate: <span style={{ color: "#000" }}>{tier.pricing.hourlyRate}</span>
+  <span className="current-rate" style={{ color: "#adadad" }}>
+    Hourly Rate: <span style={{ color: "#FFFFFF" }}>{tier.pricing.hourlyRate}</span>
   </span>
 </div>
     <div className="tier-breakdown">
@@ -441,9 +449,11 @@ const SprintOnboardingStep2 = () => {
                     {tier.paymentLink ? (
                       <Button
                         variant="primary"
-                        onClick={() => {
-                          handleTierSelection(tier.id)
-                          handlePay(tier)
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          handleTierSelection(tier.id);
+                          handlePay(tier);
                         }}
                         className={`tier-select-btn ${selectedTier === tier.id ? 'selected' : ''}`}
                       >
