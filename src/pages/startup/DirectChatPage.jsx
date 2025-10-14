@@ -237,9 +237,6 @@ export default function DirectChatPage() {
     return (
       <div className="direct-chat-page">
         <div className="direct-chat-header">
-          <button className="direct-chat-back-btn" onClick={() => navigate(-1)}>
-            ← Back
-          </button>
           <img src={leanSprintLogo} alt="Leansprintr" className="direct-chat-logo" />
         </div>
         <div className="direct-chat-loading">
@@ -254,9 +251,6 @@ export default function DirectChatPage() {
     <div className="direct-chat-page">
       {/* Header */}
       <div className="direct-chat-header">
-        <button className="direct-chat-back-btn" onClick={() => navigate(-1)}>
-          ← Back
-        </button>
         <img src={leanSprintLogo} alt="Leansprintr" className="direct-chat-logo" />
       </div>
 
