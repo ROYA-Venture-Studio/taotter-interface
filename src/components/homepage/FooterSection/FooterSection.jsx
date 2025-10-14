@@ -51,8 +51,8 @@ export default function FooterSection() {
             </div>
 
             <div className="footer-column">
-              <a href="#" className="footer-link">Privacy Policy</a>
-              <a href="#" className="footer-link">Terms of Services</a>
+              <a href="https://docs.google.com/document/d/12SfF1SF50_gD2XTJ4XuRDcQNsYCgx1nG2eg9EF0lWIY/edit?tab=t.0" target="_blank" rel="noopener noreferrer" className="footer-link">Privacy Policy</a>
+              <a href="https://docs.google.com/document/d/1lJUfsQIu6KmIx6mPEQz98gUYaQxmWZMopOQ4mw87v6M/edit?usp=sharing" target="_blank" rel="noopener noreferrer" className="footer-link">Terms of Services</a>
             </div>
 
             <div className="footer-column">

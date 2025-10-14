@@ -251,7 +251,7 @@ You can only schedule once, so pick the time that works best. We’re excited to
                   © Leansprintr by Taotter. All Rights Reserved.
                 </div>
                 <div className="sprint-status-form-footer-right">
-                  <a href="/terms" className="sprint-status-terms-link">
+                  <a href="https://docs.google.com/document/d/1lJUfsQIu6KmIx6mPEQz98gUYaQxmWZMopOQ4mw87v6M/edit?usp=sharing" target="_blank" rel="noopener noreferrer" className="sprint-status-terms-link">
                     Terms of Services
                   </a>
                 </div>
@@ -380,7 +380,7 @@ Important: You can only schedule once, so pick the time that works best for you.
             © Leansprintr by Taotter. All Rights Reserved.
           </div>
           <div className="hang-tight-footer-right">
-            <a href="/terms" className="hang-tight-terms-link">
+            <a href="https://docs.google.com/document/d/1lJUfsQIu6KmIx6mPEQz98gUYaQxmWZMopOQ4mw87v6M/edit?usp=sharing" target="_blank" rel="noopener noreferrer" className="hang-tight-terms-link">
               Terms of Services
             </a>
           </div>
@@ -444,7 +444,7 @@ Important: You can only schedule once, so pick the time that works best for you.
             © Leansprintr by Taotter. All Rights Reserved.
           </div>
           <div className="hang-tight-footer-right">
-            <a href="/terms" className="hang-tight-terms-link">
+            <a href="https://docs.google.com/document/d/1lJUfsQIu6KmIx6mPEQz98gUYaQxmWZMopOQ4mw87v6M/edit?usp=sharing" target="_blank" rel="noopener noreferrer" className="hang-tight-terms-link">
               Terms of Services
             </a>
           </div>
@@ -498,7 +498,7 @@ Important: You can only schedule once, so pick the time that works best for you.
                     © Leansprintr by Taotter. All Rights Reserved.
                   </div>
                   <div className="sprint-status-form-footer-right">
-                    <a href="/terms" className="sprint-status-terms-link">
+                    <a href="https://docs.google.com/document/d/1lJUfsQIu6KmIx6mPEQz98gUYaQxmWZMopOQ4mw87v6M/edit?usp=sharing" target="_blank" rel="noopener noreferrer" className="sprint-status-terms-link">
                       Terms of Services
                     </a>
                   </div>
@@ -592,7 +592,7 @@ Important: You can only schedule once, so pick the time that works best for you.
             {/* Mobile Footer */}
             <div className="sprint-status-form-footer">
               <div className="sprint-status-form-footer-right">
-                <a href="/terms" className="sprint-status-terms-link">
+                <a href="https://docs.google.com/document/d/1lJUfsQIu6KmIx6mPEQz98gUYaQxmWZMopOQ4mw87v6M/edit?usp=sharing" target="_blank" rel="noopener noreferrer" className="sprint-status-terms-link">
                   Terms of Services
                 </a>
               </div>
@@ -670,7 +670,7 @@ Important: You can only schedule once, so pick the time that works best for you.
                   © Leansprintr by Taotter. All Rights Reserved.
                 </div>
                 <div className="sprint-status-form-footer-right">
-                  <a href="/terms" className="sprint-status-terms-link">
+                  <a href="https://docs.google.com/document/d/1lJUfsQIu6KmIx6mPEQz98gUYaQxmWZMopOQ4mw87v6M/edit?usp=sharing" target="_blank" rel="noopener noreferrer" className="sprint-status-terms-link">
                     Terms of Services
                   </a>
                 </div>

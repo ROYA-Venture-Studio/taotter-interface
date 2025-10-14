@@ -39,7 +39,7 @@ const PaymentPendingPage = () => {
           <div className="payment-pending-footer-left">
 © Leansprintr by Taotter. All Rights Reserved.          </div>
           <div className="payment-pending-footer-right">
-            <a href="/terms" className="payment-pending-terms-link">
+            <a href="https://docs.google.com/document/d/1lJUfsQIu6KmIx6mPEQz98gUYaQxmWZMopOQ4mw87v6M/edit?usp=sharing" target="_blank" rel="noopener noreferrer" className="payment-pending-terms-link">
               Terms of Services
             </a>
           </div>
@@ -75,7 +75,7 @@ const PaymentPendingPage = () => {
           <div className="payment-pending-footer-left">
 © Leansprintr by Taotter. All Rights Reserved.          </div>
           <div className="payment-pending-footer-right">
-            <a href="/terms" className="payment-pending-terms-link">
+            <a href="https://docs.google.com/document/d/1lJUfsQIu6KmIx6mPEQz98gUYaQxmWZMopOQ4mw87v6M/edit?usp=sharing" target="_blank" rel="noopener noreferrer" className="payment-pending-terms-link">
               Terms of Services
             </a>
           </div>
@@ -122,7 +122,7 @@ const PaymentPendingPage = () => {
         <div className="payment-pending-footer-left">
 © Leansprintr by Taotter. All Rights Reserved.        </div>
         <div className="payment-pending-footer-right">
-          <a href="/terms" className="payment-pending-terms-link">
+          <a href="https://docs.google.com/document/d/1lJUfsQIu6KmIx6mPEQz98gUYaQxmWZMopOQ4mw87v6M/edit?usp=sharing" target="_blank" rel="noopener noreferrer" className="payment-pending-terms-link">
             Terms of Services
           </a>
         </div>
