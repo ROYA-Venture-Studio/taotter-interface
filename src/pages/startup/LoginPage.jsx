@@ -117,7 +117,39 @@ const LoginPage = () => {
       }
     } catch (error) {
       console.error("Login error:", error);
-      setErrors({ submit: "Login failed. Please try again." });
+      
+      // Try to extract the actual error message from various possible formats
+      let errorMessage = "Login failed. Please try again.";
+      
+      // Check if error has a data property (RTK Query format)
+      if (error?.data) {
+        // If data is HTML (like the error response you're getting)
+        if (typeof error.data === 'string' && error.data.includes('<pre>')) {
+          // Extract error message from HTML
+          const match = error.data.match(/<pre>(.*?)<br>/);
+          if (match && match[1]) {
+            errorMessage = match[1].replace('Error: ', '');
+          }
+        } 
+        // If data is JSON with message property
+        else if (error.data.message) {
+          errorMessage = error.data.message;
+        }
+        // If data is JSON with error property
+        else if (error.data.error) {
+          errorMessage = error.data.error;
+        }
+      } 
+      // Check if error is a string
+      else if (typeof error === 'string') {
+        errorMessage = error;
+      }
+      // Check if error has a message property
+      else if (error?.message) {
+        errorMessage = error.message;
+      }
+      
+      setErrors({ submit: errorMessage });
     } finally {
       setIsSubmitting(false);
     }
