@@ -40,8 +40,8 @@ const Footer = ({
   ]
 
   const footerLinks = [
-    { label: 'Privacy Policy', href: '#' },
-    { label: 'Terms of Service', href: '#' },
+    { label: 'Privacy Policy', href: 'https://docs.google.com/document/d/12SfF1SF50_gD2XTJ4XuRDcQNsYCgx1nG2eg9EF0lWIY/edit?tab=t.0' },
+    { label: 'Terms of Service', href: 'https://docs.google.com/document/d/1lJUfsQIu6KmIx6mPEQz98gUYaQxmWZMopOQ4mw87v6M/edit?usp=sharing' },
     { label: 'Cookie Settings', href: '#' }
   ]
 

@@ -598,7 +598,7 @@ const SignUpPage = () => {
                   <span className="terms-checkbox-label">
                     By signing up, you agree to our{" "}
                     <a
-                      href="/terms-and-conditions"
+                      href="https://docs.google.com/document/d/1lJUfsQIu6KmIx6mPEQz98gUYaQxmWZMopOQ4mw87v6M/edit?usp=sharing"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="terms-link"
@@ -607,8 +607,8 @@ const SignUpPage = () => {
                     </a>
                     , and our{" "}
                     <a
-                      href="/privacy-policy"
-                      target="_blank"
+                      href="https://docs.google.com/document/d/12SfF1SF50_gD2XTJ4XuRDcQNsYCgx1nG2eg9EF0lWIY/edit?tab=t.0" 
+                      target="_blank" 
                       rel="noopener noreferrer"
                       className="terms-link"
                     >
@@ -634,7 +634,11 @@ const SignUpPage = () => {
 
             <div className="signup-form-footer">
               <div className="signup-form-footer-left">© Leansprintr by Taotter. All Rights Reserved.</div>
-              <div className="signup-form-footer-right">Terms of Services</div>
+              <div className="signup-form-footer-right">
+                <a href="https://docs.google.com/document/d/1lJUfsQIu6KmIx6mPEQz98gUYaQxmWZMopOQ4mw87v6M/edit?usp=sharing" target="_blank" rel="noopener noreferrer">
+                  Terms of Services
+                </a>
+              </div>
             </div>
           </div>
         </>
@@ -1026,7 +1030,7 @@ const SignUpPage = () => {
                   <span className="terms-checkbox-label">
                     By signing up, you agree to our{" "}
                     <a
-                      href="/terms-and-conditions"
+                      href="https://docs.google.com/document/d/1lJUfsQIu6KmIx6mPEQz98gUYaQxmWZMopOQ4mw87v6M/edit?usp=sharing"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="terms-link"
@@ -1035,8 +1039,8 @@ const SignUpPage = () => {
                     </a>
                     , and our{" "}
                     <a
-                      href="/privacy-policy"
-                      target="_blank"
+                      href="https://docs.google.com/document/d/12SfF1SF50_gD2XTJ4XuRDcQNsYCgx1nG2eg9EF0lWIY/edit?tab=t.0" 
+                      target="_blank" 
                       rel="noopener noreferrer"
                       className="terms-link"
                     >
@@ -1062,7 +1066,11 @@ const SignUpPage = () => {
 
             <div className="signup-form-footer">
               <div className="signup-form-footer-left">© Leansprintr by Taotter. All Rights Reserved.</div>
-              <div className="signup-form-footer-right">Terms of Services</div>
+              <div className="signup-form-footer-right">
+                <a href="https://docs.google.com/document/d/1lJUfsQIu6KmIx6mPEQz98gUYaQxmWZMopOQ4mw87v6M/edit?usp=sharing" target="_blank" rel="noopener noreferrer">
+                  Terms of Services
+                </a>
+              </div>
             </div>
           </div>
           <div className="signup-right">

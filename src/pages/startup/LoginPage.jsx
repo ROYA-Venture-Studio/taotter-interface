@@ -238,7 +238,7 @@ const LoginPage = () => {
             {/* Sign up link */}
             <div className="login-signup-link">
               Don't have an account?{" "}
-              <a href="/signup" className="signup-link">
+              <a href="/mvp/form" className="signup-link">
                 Sign up
               </a>
             </div>
@@ -246,7 +246,9 @@ const LoginPage = () => {
             {/* Footer */}
             <div className="login-form-footer">
               <div className="login-form-footer-left">© Leansprintr by Taotter. All Rights Reserved.</div>
-              <div className="login-form-footer-right">Terms of Services</div>
+              <div className="login-form-footer-right">                <a href="https://docs.google.com/document/d/1lJUfsQIu6KmIx6mPEQz98gUYaQxmWZMopOQ4mw87v6M/edit?usp=sharing" target="_blank" rel="noopener noreferrer">
+                  Terms of Services
+                </a></div>
             </div>
           </div>
         </>
@@ -363,7 +365,7 @@ const LoginPage = () => {
             {/* Sign up link */}
             <div className="login-signup-link">
               Don't have an account?{" "}
-              <a href="/signup" className="signup-link">
+              <a href="/mvp/form" className="signup-link">
                 Sign up
               </a>
             </div>
@@ -371,7 +373,9 @@ const LoginPage = () => {
             {/* Footer */}
             <div className="login-form-footer">
               <div className="login-form-footer-left">© Leansprintr by Taotter. All Rights Reserved.</div>
-              <div className="login-form-footer-right">Terms of Services</div>
+              <div className="login-form-footer-right">                <a href="https://docs.google.com/document/d/1lJUfsQIu6KmIx6mPEQz98gUYaQxmWZMopOQ4mw87v6M/edit?usp=sharing" target="_blank" rel="noopener noreferrer">
+                  Terms of Services
+                </a></div>
             </div>
           </div>
 

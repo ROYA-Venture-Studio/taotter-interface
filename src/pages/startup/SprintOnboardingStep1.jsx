@@ -153,7 +153,7 @@ const SprintOnboardingStep1 = () => {
               {/* Mobile Footer */}
               <div className="sprint-onboarding-form-footer">
                 <div className="sprint-onboarding-form-footer-right">
-                  <a href="/terms" className="sprint-onboarding-terms-link">
+                  <a href="https://docs.google.com/document/d/1lJUfsQIu6KmIx6mPEQz98gUYaQxmWZMopOQ4mw87v6M/edit?usp=sharing" target="_blank" rel="noopener noreferrer" className="sprint-onboarding-terms-link">
                     Terms of Services
                   </a>
                 </div>
@@ -314,7 +314,7 @@ const SprintOnboardingStep1 = () => {
             {/* Mobile Footer */}
             <div className="sprint-onboarding-form-footer">
               <div className="sprint-onboarding-form-footer-right">
-                <a href="/terms" className="sprint-onboarding-terms-link">
+                <a href="https://docs.google.com/document/d/1lJUfsQIu6KmIx6mPEQz98gUYaQxmWZMopOQ4mw87v6M/edit?usp=sharing" target="_blank" rel="noopener noreferrer" className="sprint-onboarding-terms-link">
                   Terms of Services
                 </a>
               </div>
@@ -455,9 +455,9 @@ const SprintOnboardingStep1 = () => {
                   © Leansprintr by Taotter. All Rights Reserved.
                 </div>
                 <div className="sprint-onboarding-footer-right">
-                  <a href="#" className="sprint-onboarding-terms-link">
-                    Terms of Services
-                  </a>
+                <a href="https://docs.google.com/document/d/1lJUfsQIu6KmIx6mPEQz98gUYaQxmWZMopOQ4mw87v6M/edit?usp=sharing" target="_blank" rel="noopener noreferrer" className="sprint-onboarding-terms-link">
+                  Terms of Services
+                </a>
                 </div>
               </div>
             </div>
