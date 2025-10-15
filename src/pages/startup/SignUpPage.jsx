@@ -111,6 +111,20 @@ const SignUpPage = () => {
   const parseErrorMessage = (error) => {
     if (error?.data) {
       if (typeof error.data === 'string') {
+        // Extract error from HTML response
+        if (error.data.includes('<pre>')) {
+          const match = error.data.match(/<pre>(.*?)<br>/);
+          if (match && match[1]) {
+            const errorText = match[1].replace('Error: ', '');
+            if (errorText.includes('email')) {
+              return 'An account with this email address already exists.';
+            }
+            if (errorText.includes('phone')) {
+              return 'An account with this mobile number already exists.';
+            }
+            return errorText;
+          }
+        }
         if (error.data.includes('Startup already exists with this email')) {
           return 'An account with this email address already exists.';
         }
