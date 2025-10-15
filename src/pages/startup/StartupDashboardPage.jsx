@@ -637,9 +637,9 @@ function StartSprintModal({ onClose, onSprintCreated }) {
     // Options
     const stageOptions = [
         { value: '', label: 'Select Stage' },
-        { value: 'pre-seed', label: 'Pre-seed' },
-        { value: 'seed-a', label: 'Seed A' },
-        { value: 'seed-b', label: 'Seed B' }
+        { value: 'pre-seed', label: 'Pre-Seed' },
+        { value: 'seed', label: 'Seed' },
+        { value: 'series-a-plus', label: 'Series A+' }
     ];
     const timelineOptions = [
         { value: '', label: 'Select Timeline' },
@@ -756,7 +756,7 @@ function StartSprintModal({ onClose, onSprintCreated }) {
                     questionnaireId: qid,
                     name: startupName, // Use the startup name from authenticated user
                     description: formData.taskDescription,
-                    type: formData.stage ? (['pre-seed', 'seed-a', 'seed-b'].includes(formData.stage) ? { 'pre-seed': 'custom', 'seed-a': 'validation', 'seed-b': 'mvp' }[formData.stage] : 'custom') : 'custom',
+                    type: formData.stage ? (['pre-seed', 'seed', 'series-a-plus'].includes(formData.stage) ? { 'pre-seed': 'custom', 'seed': 'validation', 'series-a-plus': 'mvp' }[formData.stage] : 'custom') : 'custom',
                     estimatedDuration: 14
                 }).unwrap();
                 const sprint = sprintResponse.data.sprint;

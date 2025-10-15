@@ -67,9 +67,9 @@ const MvpFormPage = () => {
   // Form options
   const stageOptions = [
     { value: "", label: "Select Stage" },
-    { value: "pre-seed", label: "Pre-seed" },
-    { value: "seed-a", label: "Seed A" },
-    { value: "seed-b", label: "Seed B" },
+    { value: "pre-seed", label: "Pre-Seed" },
+    { value: "seed", label: "Seed" },
+    { value: "series-a-plus", label: "Series A+" },
   ];
 
   const timelineOptions = [
