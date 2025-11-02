@@ -4,6 +4,7 @@ import { Button } from '../../components/ui';
 import { useGetMySprintsQuery, useGetProposalsByQuestionnaireQuery } from '../../store/api/sprintsApi';
 import { useGetStartupBoardBySprintQuery } from '../../store/api/boardsApi';
 import { useFinishSprintMutation } from '../../store/api/sprintsApi';
+import VoiceflowChat from '../../components/chat/VoiceflowChat';
 import './StartupDashboardPage.css';
 
 const statusColors = {
@@ -611,6 +612,9 @@ const StartupDashboardPage = () => {
                     </div>
                 </div>
             )}
+
+            {/* Voiceflow Startup Coach Chat */}
+            <VoiceflowChat />
         </div>
     );
 }
